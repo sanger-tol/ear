@@ -1,0 +1,19 @@
+assembly_id: Oscheius_DF5033
+reference_file: /lustre/scratch123/tol/resources/treeval/treeval-testdata/TreeValSmallData/Oscheius_DF5033/assembly/draft/DF5033.hifiasm.noTelos.20211120/DF5033.noTelos.hifiasm.purged.noCont.noMito.fasta
+longread:
+  type: hifi
+  dir: /lustre/scratch123/tol/resources/treeval/treeval-testdata/TreeValSmallData/Oscheius_DF5033/genomic_data/nxOscSpes1/pacbio/fasta/
+curationpretext:
+  aligner: minimap2
+  telomere_motif: TTAGG
+  hic_dir: /lustre/scratch123/tol/resources/treeval/treeval-testdata/TreeValSmallData/Oscheius_DF5033/genomic_data/nxOscSpes1/hic-arima2/full/
+btk:
+  nt_database: /home/runner/work/ascc/ascc/blastdb/
+  nt_database_prefix: tiny_plasmodium_blastdb.fa
+  diamond_uniprot_database_path: /home/runner/work/ascc/ascc/diamond.dmnd
+  diamond_nt_database_path: /home/runner/work/ascc/ascc/diamond.dmnd
+  ncbi_taxonomy_path: /home/runner/work/ascc/ascc/ncbi_taxdump/
+  ncbi_rankedlineage_path: /home/runner/work/ascc/ascc/ncbi_taxdump/rankedlineage.dmp
+  btk_yaml: /nfs/users/nfs_d/dp24/sanger-tol-ear/assets/btk_draft.yaml
+  taxid: 352914
+  gca_accession: GCA_0001
