@@ -15,22 +15,22 @@ workflow SE_MAPPING {
     //
     // PROCESS: GETS PACBIO READ PATHS FROM READS_PATH
     //
-    ch_grabbed_reads_path       = GrabFiles( pacbio_tuple )
+    ch_grabbed_reads_path       = GrabFiles(pacbio_tuple)
 
     ch_grabbed_reads_path
-        .map { meta, files ->
-            tuple( files )
+        .map {meta, files ->
+            tuple(files)
         }
         .flatten()
-        .set { ch_reads_path }
+        .set {ch_reads_path}
 
     //
     // PROCESS: MAKE MINIMAP INPUT CHANNEL AND MAKE BRANCHES BASED ON INPUT READ TYPE
     //
-    reference_tuple
-        .combine( ch_reads_path )
+    ch_reads_path
+        .combine( reference_tuple )
         .combine( reads_type )
-        .map { meta, ref, reads_path, reads_type ->
+        .map { reads_path, meta, ref, reads_type ->
             tuple(
                 [   id          : meta.id,
                     single_end  : true,
@@ -44,7 +44,7 @@ workflow SE_MAPPING {
                 reads_type
             )
         }
-        .set { minimap_se_input }
+        .set {minimap_se_input}
 
     //
     // PROCESS: MULTIMAP TO MAKE BOOLEAN ARGUMENTS FOR MINIMAP HIFI MAPPING INPUT
@@ -52,7 +52,7 @@ workflow SE_MAPPING {
     minimap_se_input
         .multiMap { meta, reads_path, ref, bam_output, cigar_paf, cigar_bam, reads_type ->
             read_tuple          : tuple( meta, reads_path)
-            ref                 : ref
+            ref                 : tuple( meta, ref)
             bool_bam_ouput      : bam_output
             bool_cigar_paf      : cigar_paf
             bool_cigar_bam      : cigar_bam

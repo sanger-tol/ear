@@ -6,6 +6,7 @@
 
 include { NEXTFLOW_RUN as CURATIONPRETEXT   } from '../modules/local/nextflow/run'
 include { NEXTFLOW_RUN as BLOBTOOLKIT       } from '../modules/local/nextflow/run'
+include { SANGER_TOL_BTK                    } from '../modules/local/sanger_tol_btk'
 
 include { YAML_INPUT                        } from '../subworkflows/local/yaml_input'
 include { GENERATE_SAMPLESHEET              } from '../modules/local/generate_samplesheet'
@@ -39,13 +40,15 @@ workflow EAR {
     // MODULE: YAML_INPUT
     //
     YAML_INPUT(ch_input)
-    reference = YAML_INPUT.out.reference
-    reference.view()
 
     //
     // MODULE: Run Sanger-ToL/CurationPretext
     //         - This was built using: https://github.com/mahesh-panchal/nf-cascade
     //
+    reference = YAML_INPUT.out.reference_path.get()
+    hic_dir = YAML_INPUT.out.cpretext_hic_dir_raw.get()
+    longread_dir = YAML_INPUT.out.longread_dir.get()
+
     CURATIONPRETEXT(
         "sanger-tol/curationpretext",
         [
@@ -53,23 +56,23 @@ workflow EAR {
             "--input",
             reference,
             "--longread",
-            YAML_INPUT.out.longread_dir,
+            longread_dir,
             "--cram",
-            YAML_INPUT.out.cpretext_hic_dir,
-            "$params.outdir/curationpretext",
+            hic_dir,
             "-profile singularity,sanger"
-        ].join(" ").trim(),                                            // workflow opts
+        ].join(" ").trim(), // workflow opts
         Channel.value([]),  //readWithDefault( params.demo.params_file, Channel.value([]) ), // params file
         Channel.value([]),  // samplesheet - not used by this pipeline
         Channel.value([])   //readWithDefault( params.demo.add_config, Channel.value([]) ),  // custom config
-
+        //"$params.outdir/curationpretext",
     )
 
     //
     // MODULE: ASSEMBLY STATISTICS FOR THE FASTA
     //
+
     GFASTATS(
-        YAML_INPUT.out.reference,
+        YAML_INPUT.out.reference_hap1,
         "fasta",
         [],
         [],
@@ -79,38 +82,45 @@ workflow EAR {
         []
     )
 
-    // //
-    // // LOGIC:  REFORMAT A BUNCH OF CHANNELS FOR MERQUERYFK
-    // //
-    // YAML_INPUT.out.reference
-    //     .combine()
-    //     .combine()
-    //     .combine()
-    //     .map{ meta, primary, haplotigs, fastk_hist, fastk_ktab ->
-    //         tuple(  meta,
-    //                 fastk_hist,
-    //                 fastk_ktab,
-    //                 primary,
-    //                 haplotigs
-    //         )
-    //     }
-    //     .set { merquryfk_input }
+    //
+    // LOGIC:  REFORMAT A BUNCH OF CHANNELS FOR MERQUERYFK
+    //
 
-    // //
-    // // MODULE: MERQURYFK PLOTS OF GENOME
-    // //
+    if (params.reference_hap2) {
+        YAML_INPUT.out.reference_hap1
+            .combine(YAML_INPUT.out.reference_hap2)
+            .combine(YAML_INPUT.out.fastk_hist)
+            .combine(YAML_INPUT.out.fastk_ktab)
+            .map{ meta, primary, haplotigs, fastk_hist, fastk_ktab ->
+                tuple(  meta,
+                        fastk_hist,
+                        fastk_ktab,
+                        primary,
+                        haplotigs
+                )
+            }
+            .set { merquryfk_input }
 
-    // MERQURYFK(
-    //     merquryfk_input
-    // )
+        //
+        // MODULE: MERQURYFK PLOTS OF GENOME
+        //
+
+        MERQURYFK(
+            merquryfk_input
+        )
+    }
 
     //
-    // LOGIC: SANGER-TOL/BLOBTOOLKIT expects the pacbio data to be already mapped
+    // LOGIC: SANGER-TOL/BLOBTOOLKIT expects the pacbio data to be already mapped -> this has been changed but seeing as BTK and genomenote need it then we may as well keep it.
+    //          This is also a requirement for genomenote
     //
     platform = YAML_INPUT.out.longread_type
 
     YAML_INPUT.out.sample_id
         .combine(YAML_INPUT.out.longread_dir)
+        .map{ sample, dir ->
+            tuple([id: sample], dir )
+        }
         .set {pacbio_tuple}
 
     if ( platform.filter { it == "hifi" } || platform.filter { it == "clr" } || platform.filter { it == "ont" } ) {
@@ -118,8 +128,8 @@ workflow EAR {
         // SUBWORKFLOW: SINGLE END MAPPING FOR ALIGNING LONGREAD DATA
         //
         SE_MAPPING (
-            YAML_INPUT.out.reference,
-            pacbio_tuple,
+            YAML_INPUT.out.reference_hap1,
+            YAML_INPUT.out.pacbio_tuple,
             platform
         )
         ch_versions = ch_versions.mix(SE_MAPPING.out.versions)
@@ -133,8 +143,8 @@ workflow EAR {
         // SUBWORKFLOW: PAIRED END MAPPING FOR ALIGNING LONGREAD DATA
         //
         PE_MAPPING  (
-            YAML_INPUT.out.reference,
-            pacbio_tuple,
+            YAML_INPUT.out.reference_hap1,
+            YAML_INPUT.out.pacbio_tuple,
             platform
         )
         ch_versions = ch_versions.mix(PE_MAPPING.out.versions)
@@ -149,7 +159,7 @@ workflow EAR {
     //
     SAMTOOLS_SORT (
         merged_bam,
-        YAML_INPUT.out.reference
+        YAML_INPUT.out.reference_hap1
     )
     ch_versions = ch_versions.mix( SAMTOOLS_SORT.out.versions )
 
@@ -174,34 +184,49 @@ workflow EAR {
     // MODULE: Run Sanger-ToL/BlobToolKit
     //         - This was built using: https://github.com/mahesh-panchal/nf-cascade
     //
+
     // BLOBTOOLKIT(
     //     "sanger-tol/blobtoolkit",
     //     [
-    //         "-r 0.4.0",
+    //         "-r 0.5.0",
     //         "--input",
     //         GENERATE_SAMPLESHEET.out.csv,
     //         "--fasta",
     //         reference,
-    //         "--accession",
-    //         YAML_INPUT.out.btk_gca_accession,
+    //         "--yaml",
+    //         btk_yaml,
     //         "-taxon",
-    //         YAML_INPUT.out.btk_taxid,
+    //         btk_taxon,
     //         "--taxdump",
-    //         YAML_INPUT.out.btk_ncbi_taxonomy_path,
+    //         btk_taxdump,
     //         "--blastp",
-    //         YAML_INPUT.out.btk_nt_diamond_database,
+    //         btk_blastp,
     //         "--blastn",
-    //         YAML_INPUT.out.btk_nt_database,
+    //         btk_blastn,
     //         "--blastx",
-    //         YAML_INPUT.out.btk_nt_diamond_database,
-    //         "$params.outdir/blobtoolkit",
+    //         btk_uniprot,
     //         "-profile singularity,sanger"
     //     ].join(" ").trim(),                                                                 // workflow opts
     //     Channel.value([]),//readWithDefault( params.demo.params_file, Channel.value([]) ),  // params file
     //     Channel.value([]),//readWithDefault( params.demo.input, Channel.value([]) ),        // samplesheet
     //     Channel.value([])//readWithDefault( params.demo.add_config, Channel.value([]) ),    // custom config
-
     // )
+
+        SANGER_TOL_BTK (
+            YAML_INPUT.out.reference_hap1,
+            samplesheet_input,
+            GENERATE_SAMPLESHEET.out.csv,
+            YAML_INPUT.out.btk_un_diamond_database,
+            YAML_INPUT.out.btk_nt_diamond_database,
+            YAML_INPUT.out.btk_un_diamond_database,
+            [],
+            YAML_INPUT.out.btk_ncbi_taxonomy_path,
+            YAML_INPUT.out.btk_yaml,
+            YAML_INPUT.out.busco_lineages,
+            YAML_INPUT.out.btk_taxid,
+            'GCA_0001'
+        )
+        ch_versions              = ch_versions.mix(SANGER_TOL_BTK.out.versions)
 
     //
     // Collate and save software versions
@@ -222,6 +247,20 @@ workflow EAR {
 
     emit:
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
+}
+
+
+process RenameDatabase {
+    tag "Rename DMND Database"
+    executor 'local'
+
+    input:
+    db_path
+
+    output:
+    path "UN.dmnd"
+
+    "true"
 }
 
 /*
