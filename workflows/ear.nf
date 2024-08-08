@@ -216,21 +216,21 @@ workflow EAR {
     //     Channel.value([])//readWithDefault( params.demo.add_config, Channel.value([]) ),    // custom config
     // )
 
-        SANGER_TOL_BTK (
-            YAML_INPUT.out.reference_hap1,
-            samplesheet_input,
-            GENERATE_SAMPLESHEET.out.csv,
-            YAML_INPUT.out.btk_un_diamond_database,
-            YAML_INPUT.out.btk_nt_diamond_database,
-            YAML_INPUT.out.btk_un_diamond_database,
-            [],
-            YAML_INPUT.out.btk_ncbi_taxonomy_path,
-            YAML_INPUT.out.btk_yaml,
-            YAML_INPUT.out.busco_lineages,
-            YAML_INPUT.out.btk_taxid,
-            'GCA_0001'
-        )
-        ch_versions              = ch_versions.mix(SANGER_TOL_BTK.out.versions)
+    SANGER_TOL_BTK (
+        YAML_INPUT.out.reference_hap1,
+        samplesheet_input,
+        GENERATE_SAMPLESHEET.out.csv,
+        YAML_INPUT.out.btk_un_diamond_database,
+        YAML_INPUT.out.btk_nt_diamond_database,
+        YAML_INPUT.out.btk_un_diamond_database,
+        [],
+        YAML_INPUT.out.btk_ncbi_taxonomy_path,
+        YAML_INPUT.out.btk_yaml,
+        YAML_INPUT.out.busco_lineages,
+        YAML_INPUT.out.btk_taxid,
+        'GCA_0001'
+    )
+    ch_versions              = ch_versions.mix(SANGER_TOL_BTK.out.versions)
 
     //
     // Collate and save software versions
