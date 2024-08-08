@@ -134,6 +134,8 @@ workflow EAR {
         )
         ch_versions = ch_versions.mix(SE_MAPPING.out.versions)
 
+        SE_MAPPING.out.mapped_bam.view()
+
         ch_align_bam
             .mix( SE_MAPPING.out.mapped_bam )
             .set { merged_bam }
@@ -153,6 +155,8 @@ workflow EAR {
             .mix( PE_MAPPING.out.mapped_bam )
             .set { merged_bam }
     }
+
+    merged_bam.view()
 
     //
     // MODULE: SORT MAPPED BAM
