@@ -86,14 +86,14 @@ workflow YAML_INPUT {
     //
     // LOGIC: Building BlobToolKit specific channels
     //
-    btk_nt_database         = Channel.of([inputs.assembly_id], inputs.btk.nt_database)
+    btk_nt_database         = Channel.of(inputs.btk.nt_database)
     btk_nt_database_prefix  = Channel.of(inputs.btk.nt_database_prefix)
-    btk_nt_diamond_database = Channel.of(inputs.btk.diamond_nt_database_path)
+    btk_nt_diamond_database = Channel.of(inputs.btk.diamond_nr_database_path)
     btk_un_diamond_database = Channel.of(inputs.btk.diamond_uniprot_database_path)
     btk_ncbi_taxonomy_path  = Channel.of(inputs.btk.ncbi_taxonomy_path)
     btk_ncbi_lineage_path   = Channel.of(inputs.btk.ncbi_rankedlineage_path)
     btk_yaml                = Channel.of(inputs.btk.btk_yaml)
-    btk_taxid               = Channel.of([inputs.assembly_id], inputs.btk.taxid)
+    btk_taxid               = Channel.of(inputs.btk.taxid)
     btk_gca_accession       = Channel.of(inputs.btk.gca_accession)
     busco_lineages          = Channel.of(inputs.btk.lineages)
 

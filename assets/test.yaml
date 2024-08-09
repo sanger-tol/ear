@@ -1,6 +1,6 @@
 assembly_id: Oscheius_DF5033
-reference_hap1: /nfs/users/nfs_d/dp24/sanger-tol-ear/test.fa
-reference_hap2: /nfs/users/nfs_d/dp24/sanger-tol-ear/test.fa
+reference_hap1: /nfs/treeoflife-01/teams/tola/users/dp24/ascc/asccTinyTest_V2/assembly/pyoelii_tiny_testfile_with_adapters.fa
+reference_hap2: /nfs/treeoflife-01/teams/tola/users/dp24/ascc/asccTinyTest_V2/assembly/pyoelii_tiny_testfile_with_adapters.fa
 longread:
   type: hifi
   dir: /lustre/scratch123/tol/resources/treeval/treeval-testdata/TreeValSmallData/Oscheius_DF5033/genomic_data/nxOscSpes1/pacbio/fasta/

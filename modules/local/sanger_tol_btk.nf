@@ -17,34 +17,32 @@ process SANGER_TOL_BTK {
     val gca_accession
 
     output:
-    tuple val(meta), path("${meta.id}_btk_out/blobtoolkit/draft"),  emit: dataset
-    path("${meta.id}_btk_out/blobtoolkit/plots"),                   emit: plots
-    path("${meta.id}_btk_out/blobtoolkit/draft/summary.json.gz"),   emit: summary_json
-    path("${meta.id}_btk_out/busco"),                               emit: busco_data
-    path("${meta.id}_btk_out/multiqc"),                             emit: multiqc_report
-    path("blobtoolkit_pipeline_info"),                              emit: pipeline_info
-    path "versions.yml",                                            emit: versions
+    tuple val(meta), path("${meta.id}_btk_out/blobtoolkit/REFERENCE"),      emit: dataset
+    path("${meta.id}_btk_out/blobtoolkit/plots"),                           emit: plots
+    path("${meta.id}_btk_out/blobtoolkit/REFERENCE/summary.json.gz"),     emit: summary_json
+    path("${meta.id}_btk_out/busco"),                                       emit: busco_data
+    path("${meta.id}_btk_out/multiqc"),                                     emit: multiqc_report
+    path("blobtoolkit_pipeline_info"),                                      emit: pipeline_info
+    path "versions.yml",                                                    emit: versions
 
     script:
-    def prefix              =   task.ext.prefix         ?:  "${meta.id}"
     def args                =   task.ext.args           ?:  ""
     def executor            =   task.ext.executor       ?:  ""
     def profiles            =   task.ext.profiles       ?:  ""
     def get_version         =   task.ext.version_data   ?:  "UNKNOWN - SETTING NOT SET"
     def btk_config          =   btk_config_file         ? "-c $btk_config_file"         : ""
-    def pipeline_version    =   task.ext.version        ?: "main"
+    def pipeline_version    =   task.ext.version        ?: "draft_assemblies"
     // YAML used to avoid the use of GCA accession number
     //    https://github.com/sanger-tol/blobtoolkit/issues/77
 
     // Seems to be an issue where a nested pipeline can't see the files in the same directory
     // Running realpath gets around this but the files copied into the folder are
-    // now just wasted space.
+    // now just wasted space. Should be fixed with using Mahesh's method of nesting but
+    // this is proving a bit complicated with BTK
 
     // outdir should be an arg
 
-    //        --accession draft \\
-
-    // blastx and blastp use the same database hence the StageAs
+    // blastx and blastp can use the same database hence the StageAs
 
 
     """
@@ -52,9 +50,8 @@ process SANGER_TOL_BTK {
         -r $pipeline_version \\
         -profile  $profiles \\
         --input "\$(realpath $samplesheet_csv)" \\
-        --outdir ${prefix}_btk_out \\
-        --fasta "\$(realpath REFERENCE.fa)" \\
-        --yaml "\$(realpath BTK.yaml)" \\
+        --outdir ${meta.id}_btk_out \\
+        --fasta ./REFERENCE.fa \\
         --busco_lineages $busco_lineages \\
         --taxon $taxon \\
         --taxdump "\$(realpath $tax_dump)" \\
@@ -64,7 +61,7 @@ process SANGER_TOL_BTK {
         $btk_config \\
         $args'
 
-    mv ${prefix}_btk_out/pipeline_info blobtoolkit_pipeline_info
+    mv ${meta.id}_btk_out/pipeline_info blobtoolkit_pipeline_info
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -75,27 +72,26 @@ process SANGER_TOL_BTK {
     """
 
     stub:
-    def prefix              =   task.ext.prefix         ?:  "${meta.id}"
-    def pipeline_version    =   task.ext.version        ?: "main"
+    def pipeline_version    =   task.ext.version        ?: "draft_assemblies"
 
     """
-    mkdir -p ${prefix}_btk_out/blobtoolkit/$gca_accession
-    touch ${prefix}_btk_out/blobtoolkit/$gca_accession/test.json.gz
+    mkdir -p ${meta.id}_btk_out/blobtoolkit/${meta.id}_out
+    touch ${meta.id}_btk_out/blobtoolkit/${meta.id}_out/test.json.gz
 
-    mkdir ${prefix}_btk_out/blobtoolkit/plots
-    touch ${prefix}_btk_out/blobtoolkit/plots/test.png
+    mkdir ${meta.id}_btk_out/blobtoolkit/plots
+    touch ${meta.id}_btk_out/blobtoolkit/plots/test.png
 
-    mkdir ${prefix}_btk_out/busco
-    touch ${prefix}_btk_out/busco/test.batch_summary.txt
-    touch ${prefix}_btk_out/busco/test.fasta.txt
-    touch ${prefix}_btk_out/busco/test.json
+    mkdir ${meta.id}_btk_out/busco
+    touch ${meta.id}_btk_out/busco/test.batch_summary.txt
+    touch ${meta.id}_btk_out/busco/test.fasta.txt
+    touch ${meta.id}_btk_out/busco/test.json
 
-    mkdir ${prefix}_btk_out/multiqc
-    mkdir ${prefix}_btk_out/multiqc/multiqc_data
-    mkdir ${prefix}_btk_out/multiqc/multiqc_plots
-    touch ${prefix}_btk_out/multiqc/multiqc_report.html
+    mkdir ${meta.id}_btk_out/multiqc
+    mkdir ${meta.id}_btk_out/multiqc/multiqc_data
+    mkdir ${meta.id}_btk_out/multiqc/multiqc_plots
+    touch ${meta.id}_btk_out/multiqc/multiqc_report.html
 
-    mv ${prefix}_btk_out/pipeline_info blobtoolkit_pipeline_info
+    mv ${meta.id}_btk_out/pipeline_info blobtoolkit_pipeline_info
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

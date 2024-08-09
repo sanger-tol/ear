@@ -134,8 +134,6 @@ workflow EAR {
         )
         ch_versions = ch_versions.mix(SE_MAPPING.out.versions)
 
-        SE_MAPPING.out.mapped_bam.view()
-
         ch_align_bam
             .mix( SE_MAPPING.out.mapped_bam )
             .set { merged_bam }
@@ -156,8 +154,6 @@ workflow EAR {
             .set { merged_bam }
     }
 
-    merged_bam.view()
-
     //
     // MODULE: SORT MAPPED BAM
     //
@@ -172,56 +168,38 @@ workflow EAR {
     //
     YAML_INPUT.out.sample_id
         .combine(merged_bam)
-        .map{ sample_id, pacbio_path ->
+        .map{ sample_id, pacbio_meta, pacbio_path ->
             tuple(  [id: sample_id],
                     pacbio_path
             )
         }
-        .set { samplesheet_input }
+        .set { mapped_bam }
 
 
     GENERATE_SAMPLESHEET(
-        samplesheet_input
+        mapped_bam
     )
+    ch_versions = ch_versions.mix( GENERATE_SAMPLESHEET.out.versions )
 
     //
     // MODULE: Run Sanger-ToL/BlobToolKit
-    //         - This was built using: https://github.com/mahesh-panchal/nf-cascade
     //
-
-    // BLOBTOOLKIT(
-    //     "sanger-tol/blobtoolkit",
-    //     [
-    //         "-r 0.5.0",
-    //         "--input",
-    //         GENERATE_SAMPLESHEET.out.csv,
-    //         "--fasta",
-    //         reference,
-    //         "--yaml",
-    //         btk_yaml,
-    //         "-taxon",
-    //         btk_taxon,
-    //         "--taxdump",
-    //         btk_taxdump,
-    //         "--blastp",
-    //         btk_blastp,
-    //         "--blastn",
-    //         btk_blastn,
-    //         "--blastx",
-    //         btk_uniprot,
-    //         "-profile singularity,sanger"
-    //     ].join(" ").trim(),                                                                 // workflow opts
-    //     Channel.value([]),//readWithDefault( params.demo.params_file, Channel.value([]) ),  // params file
-    //     Channel.value([]),//readWithDefault( params.demo.input, Channel.value([]) ),        // samplesheet
-    //     Channel.value([])//readWithDefault( params.demo.add_config, Channel.value([]) ),    // custom config
-    // )
+    YAML_INPUT.out.reference_hap1.view{ it -> "Reference: $it"}
+    mapped_bam.view{ it -> "samplesheet: $it"}
+    GENERATE_SAMPLESHEET.out.csv.view{ it -> "samplesheetcsv: $it"}
+    YAML_INPUT.out.btk_un_diamond_database.view{ it -> "un diamond: $it"}
+    YAML_INPUT.out.btk_nt_database.view{ it -> "nt diamond: $it"}
+    YAML_INPUT.out.btk_ncbi_taxonomy_path.view{ it -> "Taxdump: $it"}
+    YAML_INPUT.out.btk_yaml.view{ it -> "btk_yaml: $it"}
+    YAML_INPUT.out.busco_lineages.view{ it -> "lineages: $it"}
+    YAML_INPUT.out.btk_taxid.view{ it -> "TAXID: $it"}
 
     SANGER_TOL_BTK (
         YAML_INPUT.out.reference_hap1,
-        samplesheet_input,
+        mapped_bam,
         GENERATE_SAMPLESHEET.out.csv,
         YAML_INPUT.out.btk_un_diamond_database,
-        YAML_INPUT.out.btk_nt_diamond_database,
+        YAML_INPUT.out.btk_nt_database,
         YAML_INPUT.out.btk_un_diamond_database,
         [],
         YAML_INPUT.out.btk_ncbi_taxonomy_path,
