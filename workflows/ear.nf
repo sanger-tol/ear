@@ -4,16 +4,16 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { NEXTFLOW_RUN as CURATIONPRETEXT   } from '../modules/local/nextflow/run'
-include { NEXTFLOW_RUN as BLOBTOOLKIT       } from '../modules/local/nextflow/run'
+// include { NEXTFLOW_RUN as CURATIONPRETEXT   } from '../modules/local/nextflow/run'
+// include { NEXTFLOW_RUN as BLOBTOOLKIT       } from '../modules/local/nextflow/run'
 include { SANGER_TOL_BTK                    } from '../modules/local/sanger_tol_btk'
+include { SANGER_TOL_CPRETEXT               } from '../modules/local/sanger_tol_cpretext'
 
 include { YAML_INPUT                        } from '../subworkflows/local/yaml_input'
 include { GENERATE_SAMPLESHEET              } from '../modules/local/generate_samplesheet'
 include { GFASTATS                          } from '../modules/nf-core/gfastats/main'
-include { PE_MAPPING                        } from '../subworkflows/local/pe_mapping'
-include { SE_MAPPING                        } from '../subworkflows/local/se_mapping'
-include { SAMTOOLS_SORT                     } from '../modules/nf-core/samtools/sort/main'
+include { MAIN_MAPPING                      } from '../subworkflows/local/main_mapping'
+include { MERQURYFK_MERQURYFK               } from '../modules/nf-core/merquryfk/merquryfk/main'
 
 include { paramsSummaryMap                  } from 'plugin/nf-validation'
 include { paramsSummaryMultiqc              } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -32,7 +32,7 @@ workflow EAR {
     ch_input
 
     main:
-
+    params.mapped   = false
     ch_versions     = Channel.empty()
     ch_align_bam    = Channel.empty()
 
@@ -45,32 +45,39 @@ workflow EAR {
     // MODULE: Run Sanger-ToL/CurationPretext
     //         - This was built using: https://github.com/mahesh-panchal/nf-cascade
     //
-    reference = YAML_INPUT.out.reference_path.get()
-    hic_dir = YAML_INPUT.out.cpretext_hic_dir_raw.get()
-    longread_dir = YAML_INPUT.out.longread_dir.get()
+    reference       = YAML_INPUT.out.reference_path.get()
+    hic_dir         = YAML_INPUT.out.cpretext_hic_dir_raw.get()
+    longread_dir    = YAML_INPUT.out.longread_dir.get()
 
-    CURATIONPRETEXT(
-        "sanger-tol/curationpretext",
-        [
-            "-r 1.0.0",
-            "--input",
-            reference,
-            "--longread",
-            longread_dir,
-            "--cram",
-            hic_dir,
-            "-profile singularity,sanger"
-        ].join(" ").trim(), // workflow opts
-        Channel.value([]),  //readWithDefault( params.demo.params_file, Channel.value([]) ), // params file
-        Channel.value([]),  // samplesheet - not used by this pipeline
-        Channel.value([])   //readWithDefault( params.demo.add_config, Channel.value([]) ),  // custom config
-        //"$params.outdir/curationpretext",
+    // CURATIONPRETEXT(
+    //     "sanger-tol/curationpretext",
+    //     [
+    //         "-r 1.0.0",
+    //         "--input",
+    //         reference,
+    //         "--longread",
+    //         longread_dir,
+    //         "--cram",
+    //         hic_dir,
+    //         "-profile singularity,sanger"
+    //     ].join(" ").trim(), // workflow opts
+    //     Channel.value([]),  //readWithDefault( params.demo.params_file, Channel.value([]) ), // params file
+    //     Channel.value([]),  // samplesheet - not used by this pipeline
+    //     Channel.value([])   //readWithDefault( params.demo.add_config, Channel.value([]) ),  // custom config
+    // )
+
+    SANGER_TOL_CPRETEXT(
+        reference,
+        longread_dir,
+        hic_dir,
+        []
     )
+    ch_versions = ch_versions.mix( SANGER_TOL_CPRETEXT.out.versions )
+
 
     //
     // MODULE: ASSEMBLY STATISTICS FOR THE FASTA
     //
-
     GFASTATS(
         YAML_INPUT.out.reference_hap1,
         "fasta",
@@ -81,127 +88,70 @@ workflow EAR {
         [],
         []
     )
+    ch_versions = ch_versions.mix( GFASTATS.out.versions )
+
 
     //
     // LOGIC:  REFORMAT A BUNCH OF CHANNELS FOR MERQUERYFK
     //
-
-    if (params.reference_hap2) {
-        YAML_INPUT.out.reference_hap1
-            .combine(YAML_INPUT.out.reference_hap2)
-            .combine(YAML_INPUT.out.fastk_hist)
-            .combine(YAML_INPUT.out.fastk_ktab)
-            .map{ meta, primary, haplotigs, fastk_hist, fastk_ktab ->
-                tuple(  meta,
-                        fastk_hist,
-                        fastk_ktab,
-                        primary,
-                        haplotigs
-                )
-            }
-            .set { merquryfk_input }
-
-        //
-        // MODULE: MERQURYFK PLOTS OF GENOME
-        //
-
-        MERQURYFK(
-            merquryfk_input
-        )
-    }
-
-    //
-    // LOGIC: SANGER-TOL/BLOBTOOLKIT expects the pacbio data to be already mapped -> this has been changed but seeing as BTK and genomenote need it then we may as well keep it.
-    //          This is also a requirement for genomenote
-    //
-    platform = YAML_INPUT.out.longread_type
-
-    YAML_INPUT.out.sample_id
-        .combine(YAML_INPUT.out.longread_dir)
-        .map{ sample, dir ->
-            tuple([id: sample], dir )
+    YAML_INPUT.out.reference_hap1
+        .combine(YAML_INPUT.out.reference_hap2)
+        .combine(YAML_INPUT.out.fastk_hist)
+        .combine(YAML_INPUT.out.fastk_ktab)
+        .map{ meta, primary, haplotigs, fastk_hist, fastk_ktab ->
+            tuple(  meta,
+                    fastk_hist,
+                    fastk_ktab,
+                    primary,
+                    haplotigs
+            )
         }
-        .set {pacbio_tuple}
-
-    if ( platform.filter { it == "hifi" } || platform.filter { it == "clr" } || platform.filter { it == "ont" } ) {
-        //
-        // SUBWORKFLOW: SINGLE END MAPPING FOR ALIGNING LONGREAD DATA
-        //
-        SE_MAPPING (
-            YAML_INPUT.out.reference_hap1,
-            YAML_INPUT.out.pacbio_tuple,
-            platform
-        )
-        ch_versions = ch_versions.mix(SE_MAPPING.out.versions)
-
-        ch_align_bam
-            .mix( SE_MAPPING.out.mapped_bam )
-            .set { merged_bam }
-    }
-    else if ( platform.filter { it == "illumina" } ) {
-        //
-        // SUBWORKFLOW: PAIRED END MAPPING FOR ALIGNING LONGREAD DATA
-        //
-        PE_MAPPING  (
-            YAML_INPUT.out.reference_hap1,
-            YAML_INPUT.out.pacbio_tuple,
-            platform
-        )
-        ch_versions = ch_versions.mix(PE_MAPPING.out.versions)
-
-        ch_align_bam
-            .mix( PE_MAPPING.out.mapped_bam )
-            .set { merged_bam }
-    }
-
+        .set { merquryfk_input }
     //
-    // MODULE: SORT MAPPED BAM
+    // MODULE: MERQURYFK PLOTS OF GENOME
     //
-    SAMTOOLS_SORT (
-        merged_bam,
-        YAML_INPUT.out.reference_hap1
+    MERQURYFK_MERQURYFK(
+        merquryfk_input
     )
-    ch_versions = ch_versions.mix( SAMTOOLS_SORT.out.versions )
+    ch_versions = ch_versions.mix( MERQURYFK_MERQURYFK.out.versions )
+
+
+    ch_mapped_bam = YAML_INPUT.out.mapped_bam
+    if (!params.mapped) {
+        //
+        // SUBWORKFLOW: MAIN_MAPPING CONTAINS ALL THE MAPPING LOGIC
+        //              This allows us to more esily bypass the mapping if we already have a sorted and mapped bam
+        //
+        MAIN_MAPPING (
+            YAML_INPUT.out.sample_id,
+            YAML_INPUT.out.longread_type,
+            YAML_INPUT.out.reference_hap1,
+            YAML_INPUT.out.pacbio_tuple,
+        )
+        ch_versions = ch_versions.mix( MAIN_MAPPING.out.versions )
+        ch_mapped_bam = MAIN_MAPPING.out.mapped_bam
+    }
 
     //
     // MODULE: GENERATE_SAMPLESHEET creates a csv for the blobtoolkit pipeline
     //
-    YAML_INPUT.out.sample_id
-        .combine(merged_bam)
-        .map{ sample_id, pacbio_meta, pacbio_path ->
-            tuple(  [id: sample_id],
-                    pacbio_path
-            )
-        }
-        .set { mapped_bam }
-
 
     GENERATE_SAMPLESHEET(
-        mapped_bam
+        ch_mapped_bam
     )
     ch_versions = ch_versions.mix( GENERATE_SAMPLESHEET.out.versions )
 
     //
     // MODULE: Run Sanger-ToL/BlobToolKit
     //
-    YAML_INPUT.out.reference_hap1.view{ it -> "Reference: $it"}
-    mapped_bam.view{ it -> "samplesheet: $it"}
-    GENERATE_SAMPLESHEET.out.csv.view{ it -> "samplesheetcsv: $it"}
-    YAML_INPUT.out.btk_un_diamond_database.view{ it -> "un diamond: $it"}
-    YAML_INPUT.out.btk_nt_database.view{ it -> "nt diamond: $it"}
-    YAML_INPUT.out.btk_ncbi_taxonomy_path.view{ it -> "Taxdump: $it"}
-    YAML_INPUT.out.btk_yaml.view{ it -> "btk_yaml: $it"}
-    YAML_INPUT.out.busco_lineages.view{ it -> "lineages: $it"}
-    YAML_INPUT.out.btk_taxid.view{ it -> "TAXID: $it"}
-
     SANGER_TOL_BTK (
         YAML_INPUT.out.reference_hap1,
-        mapped_bam,
+        ch_mapped_bam,
         GENERATE_SAMPLESHEET.out.csv,
         YAML_INPUT.out.btk_un_diamond_database,
         YAML_INPUT.out.btk_nt_database,
         YAML_INPUT.out.btk_un_diamond_database,
-        [],
+        YAML_INPUT.out.btk_config,
         YAML_INPUT.out.btk_ncbi_taxonomy_path,
         YAML_INPUT.out.btk_yaml,
         YAML_INPUT.out.busco_lineages,
@@ -225,13 +175,15 @@ workflow EAR {
         workflow, parameters_schema: "nextflow_schema.json")
     ch_workflow_summary = Channel.value(paramsSummaryMultiqc(summary_params))
 
-
-
     emit:
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
 }
 
 
+//
+// MODULE: THERE ARE TWO DATABASES WHICH ARE FREQUENTLY THE SAME DATABASE
+//          THIS STOPS NAME CONFLICTS BEFORE THEY ARE COPIED TO THE SAME PLACE
+//
 process RenameDatabase {
     tag "Rename DMND Database"
     executor 'local'

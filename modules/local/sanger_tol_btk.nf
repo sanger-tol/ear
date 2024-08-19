@@ -9,7 +9,7 @@ process SANGER_TOL_BTK {
     path blastp, stageAs: "blastp.dmnd"
     path blastn
     path blastx
-    path btk_config_file
+    path config_file
     path tax_dump
     path btk_yaml, stageAs: "BTK.yaml"
     val busco_lineages
@@ -19,7 +19,7 @@ process SANGER_TOL_BTK {
     output:
     tuple val(meta), path("${meta.id}_btk_out/blobtoolkit/REFERENCE"),      emit: dataset
     path("${meta.id}_btk_out/blobtoolkit/plots"),                           emit: plots
-    path("${meta.id}_btk_out/blobtoolkit/REFERENCE/summary.json.gz"),     emit: summary_json
+    path("${meta.id}_btk_out/blobtoolkit/REFERENCE/summary.json.gz"),       emit: summary_json
     path("${meta.id}_btk_out/busco"),                                       emit: busco_data
     path("${meta.id}_btk_out/multiqc"),                                     emit: multiqc_report
     path("blobtoolkit_pipeline_info"),                                      emit: pipeline_info
@@ -30,7 +30,7 @@ process SANGER_TOL_BTK {
     def executor            =   task.ext.executor       ?:  ""
     def profiles            =   task.ext.profiles       ?:  ""
     def get_version         =   task.ext.version_data   ?:  "UNKNOWN - SETTING NOT SET"
-    def btk_config          =   btk_config_file         ? "-c $btk_config_file"         : ""
+    def config              =   config_file             ? "-c $config_file"         : ""
     def pipeline_version    =   task.ext.version        ?: "draft_assemblies"
     // YAML used to avoid the use of GCA accession number
     //    https://github.com/sanger-tol/blobtoolkit/issues/77
@@ -58,8 +58,9 @@ process SANGER_TOL_BTK {
         --blastp "\$(realpath blastp.dmnd)" \\
         --blastn "\$(realpath $blastn)" \\
         --blastx "\$(realpath $blastx)" \\
-        $btk_config \\
-        $args'
+        $config \\
+        $args \\
+        -resume'
 
     mv ${meta.id}_btk_out/pipeline_info blobtoolkit_pipeline_info
 

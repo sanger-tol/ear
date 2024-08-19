@@ -4,6 +4,7 @@ reference_hap2: /nfs/treeoflife-01/teams/tola/users/dp24/ascc/asccTinyTest_V2/as
 longread:
   type: hifi
   dir: /lustre/scratch123/tol/resources/treeval/treeval-testdata/TreeValSmallData/Oscheius_DF5033/genomic_data/nxOscSpes1/pacbio/fasta/
+mapped_bam: idCulLati1/mapped_bam.bam
 curationpretext:
   aligner: minimap2
   telomere_motif: TTAGG
