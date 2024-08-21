@@ -109,7 +109,6 @@ workflow YAML_INPUT {
     btk_un_diamond_database     = Channel.of(inputs.btk.diamond_uniprot_database_path)
     btk_ncbi_taxonomy_path      = Channel.of(inputs.btk.ncbi_taxonomy_path)
     btk_ncbi_lineage_path       = Channel.of(inputs.btk.ncbi_rankedlineage_path)
-    btk_yaml                    = Channel.of(inputs.btk.btk_yaml)
     btk_taxid                   = Channel.of(inputs.btk.taxid)
     btk_gca_accession           = Channel.of(inputs.btk.gca_accession)
     busco_lineages              = Channel.of(inputs.btk.lineages)
