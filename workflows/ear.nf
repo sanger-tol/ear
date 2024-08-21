@@ -4,17 +4,20 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-// include { NEXTFLOW_RUN as CURATIONPRETEXT   } from '../modules/local/nextflow/run'
-// include { NEXTFLOW_RUN as BLOBTOOLKIT       } from '../modules/local/nextflow/run'
+// Subpipeline imports
 include { SANGER_TOL_BTK                    } from '../modules/local/sanger_tol_btk'
 include { SANGER_TOL_CPRETEXT               } from '../modules/local/sanger_tol_cpretext'
 
+// Subworkflow imports
 include { YAML_INPUT                        } from '../subworkflows/local/yaml_input'
+include { MAIN_MAPPING                      } from '../subworkflows/local/main_mapping'
+
+// Module imports
 include { GENERATE_SAMPLESHEET              } from '../modules/local/generate_samplesheet'
 include { GFASTATS                          } from '../modules/nf-core/gfastats/main'
-include { MAIN_MAPPING                      } from '../subworkflows/local/main_mapping'
 include { MERQURYFK_MERQURYFK               } from '../modules/nf-core/merquryfk/merquryfk/main'
 
+// Plugin imports
 include { paramsSummaryMap                  } from 'plugin/nf-validation'
 include { paramsSummaryMultiqc              } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML            } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -36,43 +39,12 @@ workflow EAR {
     ch_versions     = Channel.empty()
     ch_align_bam    = Channel.empty()
 
+
     //
     // MODULE: YAML_INPUT
+    //          - YAML_INPUT SHOULD BE REWORKED TO BE SMARTER
     //
     YAML_INPUT(ch_input)
-
-    //
-    // MODULE: Run Sanger-ToL/CurationPretext
-    //         - This was built using: https://github.com/mahesh-panchal/nf-cascade
-    //
-    reference       = YAML_INPUT.out.reference_path.get()
-    hic_dir         = YAML_INPUT.out.cpretext_hic_dir_raw.get()
-    longread_dir    = YAML_INPUT.out.longread_dir.get()
-
-    // CURATIONPRETEXT(
-    //     "sanger-tol/curationpretext",
-    //     [
-    //         "-r 1.0.0",
-    //         "--input",
-    //         reference,
-    //         "--longread",
-    //         longread_dir,
-    //         "--cram",
-    //         hic_dir,
-    //         "-profile singularity,sanger"
-    //     ].join(" ").trim(), // workflow opts
-    //     Channel.value([]),  //readWithDefault( params.demo.params_file, Channel.value([]) ), // params file
-    //     Channel.value([]),  // samplesheet - not used by this pipeline
-    //     Channel.value([])   //readWithDefault( params.demo.add_config, Channel.value([]) ),  // custom config
-    // )
-
-    SANGER_TOL_CPRETEXT(
-        reference,
-        longread_dir,
-        hic_dir,
-        []
-    )
-    ch_versions = ch_versions.mix( SANGER_TOL_CPRETEXT.out.versions )
 
 
     //
@@ -107,6 +79,8 @@ workflow EAR {
             )
         }
         .set { merquryfk_input }
+
+
     //
     // MODULE: MERQURYFK PLOTS OF GENOME
     //
@@ -116,7 +90,10 @@ workflow EAR {
     ch_versions = ch_versions.mix( MERQURYFK_MERQURYFK.out.versions )
 
 
-    ch_mapped_bam = YAML_INPUT.out.mapped_bam
+    //
+    // LOGIC: IF A MAPPED BAM FILE EXISTS AND THE FLAG `mapped` IS TRUE
+    //          SKIP THE MAPPING SUBWORKFLOW
+    //
     if (!params.mapped) {
         //
         // SUBWORKFLOW: MAIN_MAPPING CONTAINS ALL THE MAPPING LOGIC
@@ -130,16 +107,19 @@ workflow EAR {
         )
         ch_versions = ch_versions.mix( MAIN_MAPPING.out.versions )
         ch_mapped_bam = MAIN_MAPPING.out.mapped_bam
+    } else {
+        ch_mapped_bam = YAML_INPUT.out.mapped_bam
     }
+
 
     //
     // MODULE: GENERATE_SAMPLESHEET creates a csv for the blobtoolkit pipeline
     //
-
     GENERATE_SAMPLESHEET(
         ch_mapped_bam
     )
     ch_versions = ch_versions.mix( GENERATE_SAMPLESHEET.out.versions )
+
 
     //
     // MODULE: Run Sanger-ToL/BlobToolKit
@@ -153,12 +133,28 @@ workflow EAR {
         YAML_INPUT.out.btk_un_diamond_database,
         YAML_INPUT.out.btk_config,
         YAML_INPUT.out.btk_ncbi_taxonomy_path,
-        YAML_INPUT.out.btk_yaml,
         YAML_INPUT.out.busco_lineages,
         YAML_INPUT.out.btk_taxid,
         'GCA_0001'
     )
     ch_versions              = ch_versions.mix(SANGER_TOL_BTK.out.versions)
+
+
+    //
+    // MODULE: Run Sanger-ToL/CurationPretext
+    //
+    reference       = YAML_INPUT.out.reference_path.get()
+    hic_dir         = YAML_INPUT.out.cpretext_hic_dir_raw.get()
+    longread_dir    = YAML_INPUT.out.longread_dir.get()
+
+    SANGER_TOL_CPRETEXT(
+        reference,
+        longread_dir,
+        hic_dir,
+        []
+    )
+    ch_versions = ch_versions.mix( SANGER_TOL_CPRETEXT.out.versions )
+
 
     //
     // Collate and save software versions
@@ -177,24 +173,6 @@ workflow EAR {
 
     emit:
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
-}
-
-
-//
-// MODULE: THERE ARE TWO DATABASES WHICH ARE FREQUENTLY THE SAME DATABASE
-//          THIS STOPS NAME CONFLICTS BEFORE THEY ARE COPIED TO THE SAME PLACE
-//
-process RenameDatabase {
-    tag "Rename DMND Database"
-    executor 'local'
-
-    input:
-    db_path
-
-    output:
-    path "UN.dmnd"
-
-    "true"
 }
 
 /*
