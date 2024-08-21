@@ -13,6 +13,7 @@ include { YAML_INPUT                        } from '../subworkflows/local/yaml_i
 include { MAIN_MAPPING                      } from '../subworkflows/local/main_mapping'
 
 // Module imports
+include { CAT_CAT                           } from '../modules/nf-core/cat/cat/main' 
 include { GENERATE_SAMPLESHEET              } from '../modules/local/generate_samplesheet'
 include { GFASTATS                          } from '../modules/nf-core/gfastats/main'
 include { MERQURYFK_MERQURYFK               } from '../modules/nf-core/merquryfk/merquryfk/main'
@@ -48,6 +49,32 @@ workflow EAR {
 
 
     //
+    // LOGIC: IF HAPLOTIGS IS EMPTY THEN PASS ON HALPLOTYPE ASSEMBLY
+    //          IF HAPLOTIGS EXISTS THEN MERGE WITH HAPLOTYPE ASSEMBLY
+    // 
+    if (YAML_INPUT.out.reference_haplotigs.ifEmpty(true)) {
+        YAML_INPUT.out.sample_id
+            .combine(YAML_INPUT.out.reference_hap2)
+            .combine(YAML_INPUT.out.reference_haplotigs)
+            .map{ sample_id, file1, file2 ->
+                tuple(
+                    [   id: sample_id   ],
+                    [file1, file2]
+                )
+            }
+            .set {
+                cat_cat_input
+            }
+
+        CAT_CAT(cat_cat_input)
+        ch_versions = ch_versions.mix( CAT_CAT.out.versions )
+
+        ch_haplotype_fasta  = CAT_CAT.out.file_out
+    } else {
+        ch_haplotype_fasta = YAML_INPUT.out.reference_hap2
+    }
+
+    //
     // MODULE: ASSEMBLY STATISTICS FOR THE FASTA
     //
     GFASTATS(
@@ -67,11 +94,11 @@ workflow EAR {
     // LOGIC:  REFORMAT A BUNCH OF CHANNELS FOR MERQUERYFK
     //
     YAML_INPUT.out.reference_hap1
-        .combine(YAML_INPUT.out.reference_hap2)
+        .combine(ch_haplotype_fasta)
         .combine(YAML_INPUT.out.fastk_hist)
         .combine(YAML_INPUT.out.fastk_ktab)
-        .map{ meta, primary, haplotigs, fastk_hist, fastk_ktab ->
-            tuple(  meta,
+        .map{ meta1, primary, meta2, haplotigs, fastk_hist, fastk_ktab ->
+            tuple(  meta1,
                     fastk_hist,
                     fastk_ktab,
                     primary,
