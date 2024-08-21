@@ -10,6 +10,8 @@ on:
 
 env:
   NXF_ANSI_LOG: false
+  NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
+  NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
@@ -27,6 +29,29 @@ jobs:
           - "23.04.0"
           - "latest-everything"
     steps:
+      - name: Get branch names
+        # Pulls the names of current branches in repo
+        # steps.branch-names.outputs.current_branch is used later and returns the name of the branch the PR is made FROM not to
+        id: branch-names
+        uses: tj-actions/branch-names@v8
+
+      - name: Setup apptainer
+        uses: eWaterCycle/setup-apptainer@main
+
+      - name: Set up Singularity
+        run: |
+          mkdir -p $NXF_SINGULARITY_CACHEDIR
+          mkdir -p $NXF_SINGULARITY_LIBRARYDIR
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+  
+      - name: Install nf-core
+        run: |
+          pip install nf-core
+
       - name: Check out pipeline code
         uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
 
@@ -35,8 +60,44 @@ jobs:
         with:
           version: "${{ matrix.NXF_VER }}"
 
-      - name: Disk space cleanup
-        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+      - name: NF-Core Download - download singularity containers
+        run: |
+          nf-core download sanger-tol/ear --revision ${{ steps.branch-names.outputs.current_branch }} --compress none -d --force --outdir sanger-ear --container-cache-utilisation amend --container-system singularity
+
+      # - name: NF-Core Download - download singularity containers
+      #   run: |
+      #     nf-core download sanger-tol/blobtoolkit --revision draft_assembly --compress none -d --force --outdir sanger-ear --container-cache-utilisation amend --container-system singularity
+
+      # - name: NF-Core Download - download singularity containers
+      #   run: |
+      #     nf-core download sanger-tol/curationpretext --revision draft_assembly --compress none -d --force --outdir sanger-ear --container-cache-utilisation amend --container-system singularity
+      - name: Download Tiny test data
+        # Download A fungal test data set that is full enough to show some real output.
+        run: |
+          curl https://tolit.cog.sanger.ac.uk/test-data/resources/treeval/TreeValTinyData.tar.gz | tar xzf -
+
+      - name: Download the NCBI taxdump database
+        run: |
+          mkdir ncbi_taxdump
+          curl -L https://ftp.ncbi.nih.gov/pub/taxonomy/new_taxdump/new_taxdump.tar.gz | tar -C ncbi_taxdump -xzf -
+
+      - name: Download the BUSCO lineage database
+        run: |
+          mkdir busco_database
+          curl -L https://tolit.cog.sanger.ac.uk/test-data/resources/busco/blobtoolkit.GCA_922984935.2.2023-08-03.lineages.tar.gz | tar -C busco_database -xzf -
+
+      - name: Download the subset of NT database
+        run: |
+          mkdir NT_database
+          curl -L https://ftp.ncbi.nlm.nih.gov/blast/db/18S_fungal_sequences.tar.gz | tar -C NT_database -xzf -
+
+      - name: Download the subset of Diamond database
+        run: |
+          mkdir diamond
+          wget -c https://tolit.cog.sanger.ac.uk/test-data/resources/diamond/UP000000212_1234679_tax.dmnd -O diamond/UP000000212_1234679_tax.dmnd
+
+      # - name: Disk space cleanup
+      #   uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
 
       - name: Run pipeline with test data
         # TODO nf-core: You can customise CI pipeline run tests as required
@@ -44,3 +105,4 @@ jobs:
         # Remember that you can parallelise this by using strategy.matrix
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results
+          ls ./results/*/*

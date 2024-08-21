@@ -1,25 +1,24 @@
-assembly_id: Oscheius_DF5033
-reference_hap1: /nfs/treeoflife-01/teams/tola/users/dp24/ascc/asccTinyTest_V2/assembly/pyoelii_tiny_testfile_with_adapters.fa
-reference_hap2: /nfs/treeoflife-01/teams/tola/users/dp24/ascc/asccTinyTest_V2/assembly/pyoelii_tiny_testfile_with_adapters.fa
+assembly_id: grTriPseu1
+reference_hap1: /home/runner/work/treeval/treeval/TreeValTinyData/assembly/draft/grTriPseu1.fa
+reference_hap2: /home/runner/work/treeval/treeval/TreeValTinyData/assembly/draft/grTriPseu1.fa
 longread:
   type: hifi
-  dir: /lustre/scratch123/tol/resources/treeval/treeval-testdata/TreeValSmallData/Oscheius_DF5033/genomic_data/nxOscSpes1/pacbio/fasta/
+  dir: /home/runner/work/treeval/treeval/TreeValTinyData/genomic_data/pacbio/
 mapped_bam: idCulLati1/mapped_bam.bam
 curationpretext:
   aligner: minimap2
-  telomere_motif: TTAGG
-  hic_dir: /lustre/scratch123/tol/resources/treeval/treeval-testdata/TreeValSmallData/Oscheius_DF5033/genomic_data/nxOscSpes1/hic-arima2/full/
+  telomere_motif: TTAGGG
+  hic_dir: /home/runner/work/treeval/treeval/TreeValTinyData/genomic_data/hic-arima/
 merquryfk:
   fastk_hist: "./"
   fastk_ktab: "./"
 btk:
-  nt_database: /lustre/scratch123/tol/teams/tola/users/ea10/pipeline_testing/20240704_blast_tiny_testdb/blastdb/
-  nt_database_prefix: tiny_plasmodium_blastdb.fa
-  diamond_uniprot_database_path: /lustre/scratch123/tol/teams/tola/users/ea10/pipeline_testing/20240704_diamond_tiny_testdb/ascc_tinytest_diamond_db.dmnd
-  diamond_nr_database_path: /lustre/scratch123/tol/resources/nr/latest/nr.dmnd
-  ncbi_taxonomy_path: /lustre/scratch123/tol/resources/taxonomy/latest/new_taxdump
-  ncbi_rankedlineage_path: /lustre/scratch123/tol/teams/tola/users/ea10/databases/taxdump/rankedlineage.dmp
-  btk_yaml: /nfs/users/nfs_d/dp24/sanger-tol-ear/assets/btk_draft.yaml
+  nt_database: /home/runner/work/ascc/ascc/NT_database/
+  nt_database_prefix: 18S_fungal_sequences
+  diamond_uniprot_database_path: /home/runner/work/ascc/ascc/diamond/UP000000212_1234679_tax.dmnd
+  diamond_nr_database_path: /home/runner/work/ascc/ascc/diamond/UP000000212_1234679_tax.dmnd
+  ncbi_taxonomy_path: /home/runner/work/ascc/ascc/ncbi_taxdump/
+  ncbi_rankedlineage_path: /home/runner/work/ascc/ascc/ncbi_taxdump/rankedlineage.dmp
   taxid: 352914
   gca_accession: GCA_0001
-  lineages: "diptera_odb10,insecta_odb10"
+  lineages: "fungi_odb10"
