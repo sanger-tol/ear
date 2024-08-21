@@ -67,11 +67,11 @@ jobs:
 
       - name: NF-Core Download - download singularity containers
         run: |
-          nf-core download sanger-tol/blobtoolkit --revision draft_assembly --compress none -d --force --outdir sanger-ear --container-cache-utilisation amend --container-system singularity
+          nf-core download sanger-tol/blobtoolkit --revision draft_assemblies --compress none -d --force --outdir sanger-ear --container-cache-utilisation amend --container-system singularity
 
       - name: NF-Core Download - download singularity containers
         run: |
-          nf-core download sanger-tol/curationpretext --revision draft_assembly --compress none -d --force --outdir sanger-ear --container-cache-utilisation amend --container-system singularity
+          nf-core download sanger-tol/curationpretext --revision 1.0.0 --compress none -d --force --outdir sanger-ear --container-cache-utilisation amend --container-system singularity
 
       - name: Download Tiny test data
         # Download A fungal test data set that is full enough to show some real output.
