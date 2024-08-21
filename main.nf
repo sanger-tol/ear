@@ -29,7 +29,7 @@ include { EAR  } from './workflows/ear'
 workflow SANGERTOL_EAR {
 
     take:
-    samplesheet // channel: samplesheet read in from --input
+    input_yaml // channel: input_yaml read in from --input
 
     main:
 
@@ -37,7 +37,7 @@ workflow SANGERTOL_EAR {
     // WORKFLOW: Run pipeline
     //
     EAR (
-        samplesheet
+        input_yaml
     )
 
 

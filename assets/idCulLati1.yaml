@@ -1,7 +1,17 @@
+# General Vales for all subpiplines and modules
 assembly_id: idCulLati1_ear
 reference_hap1: /nfs/treeoflife-01/teams/tola/users/dp24/ear/idCulLati1/primary.fa
 reference_hap2: /nfs/treeoflife-01/teams/tola/users/dp24/ear/idCulLati1/hap2.fa
+reference_haplotigs: /
+
+# If a mapped bam already exists use the below + --mapped TRUE on the nextflow command else ignore.
 mapped_bam: /nfs/treeoflife-01/teams/tola/users/dp24/ear/idCulLati1/mapped_bam.bam
+
+merquryfk:
+  fastk_hist: /lustre/scratch122/tol/data/a/5/e/1/6/d/Culex_laticinctus/genomic_data/idCulLati1/pacbio/kmer/k31/idCulLati1.k31.hist
+  fastk_ktab: /lustre/scratch122/tol/data/a/5/e/1/6/d/Culex_laticinctus/genomic_data/idCulLati1/pacbio/kmer/k31/
+
+# Used by both subpipelines
 longread:
   type: hifi
   dir: /lustre/scratch122/tol/data/a/5/e/1/6/d/Culex_laticinctus/genomic_data/idCulLati1/pacbio/fasta/
@@ -9,10 +19,10 @@ curationpretext:
   aligner: minimap2
   telomere_motif: TTAGG
   hic_dir: /lustre/scratch122/tol/data/a/5/e/1/6/d/Culex_laticinctus/genomic_data/idCulLati2/hic-arima2/
-merquryfk:
-  fastk_hist: /lustre/scratch122/tol/data/a/5/e/1/6/d/Culex_laticinctus/genomic_data/idCulLati1/pacbio/kmer/k31/idCulLati1.k31.hist
-  fastk_ktab: /lustre/scratch122/tol/data/a/5/e/1/6/d/Culex_laticinctus/genomic_data/idCulLati1/pacbio/kmer/k31/
 btk:
+  taxid: 1464561
+  lineages: "insecta_odb10"
+  gca_accession: GCA_0001
   nt_database: /data/blastdb/Supported/NT/current
   nt_database_prefix: nt
   diamond_uniprot_database_path: /lustre/scratch123/tol/resources/uniprot_reference_proteomes/latest/reference_proteomes.dmnd
@@ -20,7 +30,4 @@ btk:
   ncbi_taxonomy_path: /lustre/scratch123/tol/resources/taxonomy/latest/new_taxdump/
   ncbi_rankedlineage_path: /lustre/scratch123/tol/resources/taxonomy/latest/new_taxdump/rankedlineage.dmp
   btk_yaml: /nfs/users/nfs_d/dp24/sanger-tol-ear/assets/btk_draft.yaml
-  taxid: 1464561
-  gca_accession: GCA_0001
-  lineages: "insecta_odb10"
   config: /nfs/treeoflife-01/teams/tola/users/dp24/ear/conf/sanger-tol-btk.config
