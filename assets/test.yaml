@@ -1,6 +1,7 @@
 assembly_id: grTriPseu1
 reference_hap1: /home/runner/work/treeval/treeval/TreeValTinyData/assembly/draft/grTriPseu1.fa
 reference_hap2: /home/runner/work/treeval/treeval/TreeValTinyData/assembly/draft/grTriPseu1.fa
+reference_haplotigs: /home/runner/work/treeval/treeval/TreeValTinyData/assembly/draft/grTriPseu1.fa
 longread:
   type: hifi
   dir: /home/runner/work/treeval/treeval/TreeValTinyData/genomic_data/pacbio/

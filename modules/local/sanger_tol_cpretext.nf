@@ -52,9 +52,15 @@ process SANGER_TOL_CPRETEXT {
         Nextflow: \$(nextflow -v | cut -d " " -f3)
         executor system: $get_version
     END_VERSIONS
-
-    printf "%s/t" <${output_dir}/pipeline_info/software_version.yml >> versions.yml
     """
+
+    // INFILE=${output_dir}/pipeline_info/software_versions.yml
+    // IFS=\$'\n'
+    // echo "$pipeline_name:" >> versions.yml
+    // for LINE in \$(cat "\$INFILE")
+    // do
+    //     echo "  \$LINE" >> versions.yml
+    // done
 
     stub:
     def pipeline_version                    =   task.ext.version        ?: "main"
