@@ -111,60 +111,60 @@ workflow EAR {
     //
     // MODULE: MERQURYFK PLOTS OF GENOME
     //
-    // MERQURYFK_MERQURYFK(
-    //     merquryfk_input
-    // )
-    // ch_versions = ch_versions.mix( MERQURYFK_MERQURYFK.out.versions )
+    MERQURYFK_MERQURYFK(
+        merquryfk_input
+    )
+    ch_versions = ch_versions.mix( MERQURYFK_MERQURYFK.out.versions )
 
 
     //
     // LOGIC: IF A MAPPED BAM FILE EXISTS AND THE FLAG `mapped` IS TRUE
     //          SKIP THE MAPPING SUBWORKFLOW
     //
-    // if (!params.mapped) {
-    //     //
-    //     // SUBWORKFLOW: MAIN_MAPPING CONTAINS ALL THE MAPPING LOGIC
-    //     //              This allows us to more esily bypass the mapping if we already have a sorted and mapped bam
-    //     //
-    //     MAIN_MAPPING (
-    //         YAML_INPUT.out.sample_id,
-    //         YAML_INPUT.out.longread_type,
-    //         YAML_INPUT.out.reference_hap1,
-    //         YAML_INPUT.out.pacbio_tuple,
-    //     )
-    //     ch_versions = ch_versions.mix( MAIN_MAPPING.out.versions )
-    //     ch_mapped_bam = MAIN_MAPPING.out.mapped_bam
-    // } else {
-    //     ch_mapped_bam = YAML_INPUT.out.mapped_bam
-    // }
+    if (!params.mapped) {
+        //
+        // SUBWORKFLOW: MAIN_MAPPING CONTAINS ALL THE MAPPING LOGIC
+        //              This allows us to more esily bypass the mapping if we already have a sorted and mapped bam
+        //
+        MAIN_MAPPING (
+            YAML_INPUT.out.sample_id,
+            YAML_INPUT.out.longread_type,
+            YAML_INPUT.out.reference_hap1,
+            YAML_INPUT.out.pacbio_tuple,
+        )
+        ch_versions = ch_versions.mix( MAIN_MAPPING.out.versions )
+        ch_mapped_bam = MAIN_MAPPING.out.mapped_bam
+    } else {
+        ch_mapped_bam = YAML_INPUT.out.mapped_bam
+    }
 
 
     //
     // MODULE: GENERATE_SAMPLESHEET creates a csv for the blobtoolkit pipeline
     //
-    // GENERATE_SAMPLESHEET(
-    //     ch_mapped_bam
-    // )
-    // ch_versions = ch_versions.mix( GENERATE_SAMPLESHEET.out.versions )
+    GENERATE_SAMPLESHEET(
+        ch_mapped_bam
+    )
+    ch_versions = ch_versions.mix( GENERATE_SAMPLESHEET.out.versions )
 
 
-    // //
-    // // MODULE: Run Sanger-ToL/BlobToolKit
-    // //
-    // SANGER_TOL_BTK (
-    //     YAML_INPUT.out.reference_hap1,
-    //     ch_mapped_bam,
-    //     GENERATE_SAMPLESHEET.out.csv,
-    //     YAML_INPUT.out.btk_un_diamond_database,
-    //     YAML_INPUT.out.btk_nt_database,
-    //     YAML_INPUT.out.btk_un_diamond_database,
-    //     YAML_INPUT.out.btk_config,
-    //     YAML_INPUT.out.btk_ncbi_taxonomy_path,
-    //     YAML_INPUT.out.busco_lineages,
-    //     YAML_INPUT.out.btk_taxid,
-    //     'GCA_0001'
-    // )
-    // ch_versions              = ch_versions.mix(SANGER_TOL_BTK.out.versions)
+    //
+    // MODULE: Run Sanger-ToL/BlobToolKit
+    //
+    SANGER_TOL_BTK (
+        YAML_INPUT.out.reference_hap1,
+        ch_mapped_bam,
+        GENERATE_SAMPLESHEET.out.csv,
+        YAML_INPUT.out.btk_un_diamond_database,
+        YAML_INPUT.out.btk_nt_database,
+        YAML_INPUT.out.btk_un_diamond_database,
+        YAML_INPUT.out.btk_config,
+        YAML_INPUT.out.btk_ncbi_taxonomy_path,
+        YAML_INPUT.out.busco_lineages,
+        YAML_INPUT.out.btk_taxid,
+        'GCA_0001'
+    )
+    ch_versions              = ch_versions.mix(SANGER_TOL_BTK.out.versions)
 
 
     //
@@ -174,13 +174,13 @@ workflow EAR {
     hic_dir         = YAML_INPUT.out.cpretext_hic_dir_raw.get()
     longread_dir    = YAML_INPUT.out.longread_dir.get()
 
-    // SANGER_TOL_CPRETEXT(
-    //     reference,
-    //     longread_dir,
-    //     hic_dir,
-    //     []
-    // )
-    // ch_versions = ch_versions.mix( SANGER_TOL_CPRETEXT.out.versions )
+    SANGER_TOL_CPRETEXT(
+        reference,
+        longread_dir,
+        hic_dir,
+        []
+    )
+    ch_versions = ch_versions.mix( SANGER_TOL_CPRETEXT.out.versions )
 
 
     //
