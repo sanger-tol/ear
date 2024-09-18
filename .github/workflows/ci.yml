@@ -67,6 +67,7 @@ jobs:
 
       - name: Download Tiny test data
         # Download A fungal test data set that is full enough to show some real output.
+        # Needs a kmer db for merqury
         run: |
           curl https://tolit.cog.sanger.ac.uk/test-data/resources/treeval/TreeValTinyData.tar.gz | tar xzf -
           cp TreeValTinyData/assembly/draft/grTriPseu1.fa TreeValTinyData/assembly/draft/grTriPseu1-hap.fa
