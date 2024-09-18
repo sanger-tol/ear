@@ -14,7 +14,7 @@ merquryfk:
 # Used by both subpipelines
 longread:
   type: hifi
-  dir: /nfs/treeoflife-01/teams/tola/users/dp24/ear/TreeValTinyData/genomic_data/pacbio/
+  dir: /home/runner/work/ear/ear/TreeValTinyData/genomic_data/pacbio/
 
 curationpretext:
   aligner: minimap2
