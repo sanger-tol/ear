@@ -111,5 +111,3 @@ process SANGER_TOL_BTK {
     END_VERSIONS
     """
 }
-
-}
