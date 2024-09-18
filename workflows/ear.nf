@@ -42,7 +42,7 @@ workflow EAR {
 
     exclude_steps   = params.steps ? params.steps.split(",") : ""
 
-    full_list       = ["btk", "cpretext"]
+    full_list       = ["btk", "cpretext", ""]
 
     if (!full_list.containsAll(exclude_steps)) {
         exit 1, "There is an extra argument given on Command Line: \n Check contents of: $exclude_steps\nMaster list is: $full_list"

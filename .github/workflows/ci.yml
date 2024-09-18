@@ -79,5 +79,6 @@ jobs:
         # TODO nf-core: You can customise CI pipeline run tests as required
         # For example: adding multiple test runs with different parameters
         # Remember that you can parallelise this by using strategy.matrix
+        # Skip BTK and CPRETEXT as they are already tested on their repos.
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results
+          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results --steps btk,cpretext
