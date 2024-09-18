@@ -65,38 +65,11 @@ jobs:
         run: |
           nf-core download sanger-tol/ear --revision ${{ steps.branch-names.outputs.current_branch }} --compress none -d --force --outdir sanger-ear --container-cache-utilisation amend --container-system singularity
 
-      - name: NF-Core Download - download singularity containers
-        run: |
-          nf-core download sanger-tol/blobtoolkit --revision draft_assemblies --compress none -d --force --outdir sanger-ear --container-cache-utilisation amend --container-system singularity
-
-      - name: NF-Core Download - download singularity containers
-        run: |
-          nf-core download sanger-tol/curationpretext --revision 1.0.0 --compress none -d --force --outdir sanger-ear --container-cache-utilisation amend --container-system singularity
-
       - name: Download Tiny test data
         # Download A fungal test data set that is full enough to show some real output.
         run: |
           curl https://tolit.cog.sanger.ac.uk/test-data/resources/treeval/TreeValTinyData.tar.gz | tar xzf -
-
-      - name: Download the NCBI taxdump database
-        run: |
-          mkdir ncbi_taxdump
-          curl -L https://ftp.ncbi.nih.gov/pub/taxonomy/new_taxdump/new_taxdump.tar.gz | tar -C ncbi_taxdump -xzf -
-
-      - name: Download the BUSCO lineage database
-        run: |
-          mkdir busco_database
-          curl -L https://tolit.cog.sanger.ac.uk/test-data/resources/busco/blobtoolkit.GCA_922984935.2.2023-08-03.lineages.tar.gz | tar -C busco_database -xzf -
-
-      - name: Download the subset of NT database
-        run: |
-          mkdir NT_database
-          curl -L https://ftp.ncbi.nlm.nih.gov/blast/db/18S_fungal_sequences.tar.gz | tar -C NT_database -xzf -
-
-      - name: Download the subset of Diamond database
-        run: |
-          mkdir diamond
-          wget -c https://tolit.cog.sanger.ac.uk/test-data/resources/diamond/UP000000212_1234679_tax.dmnd -O diamond/UP000000212_1234679_tax.dmnd
+          cp TreeValTinyData/assembly/draft/grTriPseu1.fa TreeValTinyData/assembly/draft/grTriPseu1-hap.fa
 
       # - name: Disk space cleanup
       #   uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
@@ -107,4 +80,3 @@ jobs:
         # Remember that you can parallelise this by using strategy.matrix
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results
-          ls ./results/*/*

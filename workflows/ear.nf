@@ -40,6 +40,13 @@ workflow EAR {
     ch_versions     = Channel.empty()
     ch_align_bam    = Channel.empty()
 
+    exclude_steps   = params.steps ? params.steps.split(",") : ""
+
+    full_list       = ["btk", "cpretext"]
+
+    if (!full_list.containsAll(exclude_steps)) {
+        exit 1, "There is an extra argument given on Command Line: \n Check contents of: $exclude_steps\nMaster list is: $full_list"
+    }
 
     //
     // MODULE: YAML_INPUT
@@ -140,48 +147,57 @@ workflow EAR {
 
 
     //
-    // MODULE: GENERATE_SAMPLESHEET creates a csv for the blobtoolkit pipeline
+    // LOGIC: STEP TO STOP BTK RUNNING IF SPECIFIED BY USER
     //
-    GENERATE_SAMPLESHEET(
-        ch_mapped_bam
-    )
-    ch_versions = ch_versions.mix( GENERATE_SAMPLESHEET.out.versions )
+    if (!exclude_steps.contains('btk')) {
 
+        //
+        // MODULE: GENERATE_SAMPLESHEET creates a csv for the blobtoolkit pipeline
+        //
+        GENERATE_SAMPLESHEET(
+            ch_mapped_bam
+        )
+        ch_versions = ch_versions.mix( GENERATE_SAMPLESHEET.out.versions )
+
+
+        //
+        // MODULE: Run Sanger-ToL/BlobToolKit
+        //
+        SANGER_TOL_BTK (
+            YAML_INPUT.out.reference_hap1,
+            ch_mapped_bam,
+            GENERATE_SAMPLESHEET.out.csv,
+            YAML_INPUT.out.btk_un_diamond_database,
+            YAML_INPUT.out.btk_nt_database,
+            YAML_INPUT.out.btk_un_diamond_database,
+            YAML_INPUT.out.btk_config,
+            YAML_INPUT.out.btk_ncbi_taxonomy_path,
+            YAML_INPUT.out.busco_lineages,
+            YAML_INPUT.out.btk_taxid,
+            'GCA_0001'
+        )
+        ch_versions              = ch_versions.mix(SANGER_TOL_BTK.out.versions)
+    }
 
     //
-    // MODULE: Run Sanger-ToL/BlobToolKit
+    // LOGIC: STEP TO STOP CURATION_PRETEXT RUNNING IF SPECIFIED BY USER
     //
-    SANGER_TOL_BTK (
-        YAML_INPUT.out.reference_hap1,
-        ch_mapped_bam,
-        GENERATE_SAMPLESHEET.out.csv,
-        YAML_INPUT.out.btk_un_diamond_database,
-        YAML_INPUT.out.btk_nt_database,
-        YAML_INPUT.out.btk_un_diamond_database,
-        YAML_INPUT.out.btk_config,
-        YAML_INPUT.out.btk_ncbi_taxonomy_path,
-        YAML_INPUT.out.busco_lineages,
-        YAML_INPUT.out.btk_taxid,
-        'GCA_0001'
-    )
-    ch_versions              = ch_versions.mix(SANGER_TOL_BTK.out.versions)
+    if (!exclude_steps.contains('cpretext')) {
+        //
+        // MODULE: Run Sanger-ToL/CurationPretext
+        //
+        reference       = YAML_INPUT.out.reference_path.get()
+        hic_dir         = YAML_INPUT.out.cpretext_hic_dir_raw.get()
+        longread_dir    = YAML_INPUT.out.longread_dir.get()
 
-
-    //
-    // MODULE: Run Sanger-ToL/CurationPretext
-    //
-    reference       = YAML_INPUT.out.reference_path.get()
-    hic_dir         = YAML_INPUT.out.cpretext_hic_dir_raw.get()
-    longread_dir    = YAML_INPUT.out.longread_dir.get()
-
-    SANGER_TOL_CPRETEXT(
-        reference,
-        longread_dir,
-        hic_dir,
-        []
-    )
-    ch_versions = ch_versions.mix( SANGER_TOL_CPRETEXT.out.versions )
-
+        SANGER_TOL_CPRETEXT(
+            reference,
+            longread_dir,
+            hic_dir,
+            []
+        )
+        ch_versions = ch_versions.mix( SANGER_TOL_CPRETEXT.out.versions )
+    }
 
     //
     // Collate and save software versions

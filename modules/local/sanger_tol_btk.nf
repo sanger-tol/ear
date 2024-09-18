@@ -17,11 +17,11 @@ process SANGER_TOL_BTK {
 
     output:
     tuple val(meta), path("*_out/blobtoolkit/REFERENCE"),      emit: dataset
-    path("*_out/blobtoolkit/plots"),                           emit: plots
-    path("*_out/blobtoolkit/REFERENCE/summary.json.gz"),       emit: summary_json
-    path("*_out/busco"),                                       emit: busco_data
-    path("*_out/multiqc"),                                     emit: multiqc_report
-    path("*_out/pipeline_info/blobtoolkit"),                   emit: pipeline_info
+    path "*_out/blobtoolkit/plots" ,                           emit: plots
+    path "*_out/blobtoolkit/REFERENCE/summary.json.gz",       emit: summary_json
+    path "*_out/busco",                                       emit: busco_data
+    path "*_out/multiqc",                                     emit: multiqc_report
+    path "*_out/pipeline_info/blobtoolkit",                   emit: pipeline_info
     path "versions.yml",                                       emit: versions
 
     script:
@@ -110,4 +110,6 @@ process SANGER_TOL_BTK {
         executor system: $get_version
     END_VERSIONS
     """
+}
+
 }
