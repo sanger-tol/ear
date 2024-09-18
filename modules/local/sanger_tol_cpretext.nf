@@ -45,7 +45,7 @@ process SANGER_TOL_CPRETEXT {
         $args \\
         $config \\
         -resume'
-    
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         $pipeline_suffix: $pipeline_version

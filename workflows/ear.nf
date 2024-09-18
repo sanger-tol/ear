@@ -13,7 +13,7 @@ include { YAML_INPUT                        } from '../subworkflows/local/yaml_i
 include { MAIN_MAPPING                      } from '../subworkflows/local/main_mapping'
 
 // Module imports
-include { CAT_CAT                           } from '../modules/nf-core/cat/cat/main' 
+include { CAT_CAT                           } from '../modules/nf-core/cat/cat/main'
 include { GENERATE_SAMPLESHEET              } from '../modules/local/generate_samplesheet'
 include { GFASTATS                          } from '../modules/nf-core/gfastats/main'
 include { MERQURYFK_MERQURYFK               } from '../modules/nf-core/merquryfk/merquryfk/main'
@@ -42,10 +42,10 @@ workflow EAR {
 
     exclude_steps   = params.steps ? params.steps.split(",") : ""
 
-    full_list       = ["btk", "cpretext", ""]
+    full_list       = ["btk", "cpretext", "merquryfk", ""]
 
     if (!full_list.containsAll(exclude_steps)) {
-        exit 1, "There is an extra argument given on Command Line: \n Check contents of: $exclude_steps\nMaster list is: $full_list"
+        exit 1, "There is an extra argument given on Command Line: \nCheck contents of: $exclude_steps\nMaster list is: $full_list"
     }
 
     //
@@ -58,7 +58,7 @@ workflow EAR {
     //
     // LOGIC: IF HAPLOTIGS IS EMPTY THEN PASS ON HALPLOTYPE ASSEMBLY
     //          IF HAPLOTIGS EXISTS THEN MERGE WITH HAPLOTYPE ASSEMBLY
-    // 
+    //
     if (YAML_INPUT.out.reference_haplotigs.ifEmpty(true)) {
         YAML_INPUT.out.sample_id
             .combine(YAML_INPUT.out.reference_hap2)
@@ -116,13 +116,19 @@ workflow EAR {
 
 
     //
-    // MODULE: MERQURYFK PLOTS OF GENOME
+    // LOGIC: STEP TO STOP MERQURY_FK RUNNING IF SPECIFIED BY USER
     //
-    MERQURYFK_MERQURYFK(
-        merquryfk_input
-    )
-    ch_versions = ch_versions.mix( MERQURYFK_MERQURYFK.out.versions )
+    if (!exclude_steps.contains('merquryfk')) {
 
+        //
+        // MODULE: MERQURYFK PLOTS OF GENOME
+        //
+        merquryfk_input.view()
+        MERQURYFK_MERQURYFK(
+            merquryfk_input
+        )
+        ch_versions = ch_versions.mix( MERQURYFK_MERQURYFK.out.versions )
+    }
 
     //
     // LOGIC: IF A MAPPED BAM FILE EXISTS AND THE FLAG `mapped` IS TRUE
