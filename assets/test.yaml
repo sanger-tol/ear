@@ -2,7 +2,7 @@
 assembly_id: grTriPseu1
 reference_hap1: /home/runner/work/ear/ear/TreeValTinyData/assembly/draft/grTriPseu1.fa
 reference_hap2: /home/runner/work/ear/ear/TreeValTinyData/assembly/draft/grTriPseu1-hap.fa
-reference_haplotigs: /home/runner/work/ear/ear/TreeValTinyData/assembly/draft/grTriPseu1.fa
+reference_haplotigs: /home/runner/work/ear/ear/TreeValTinyData/assembly/draft/grTriPseu1-all_hap.fa
 
 # If a mapped bam already exists use the below + --mapped TRUE on the nextflow command else ignore.
 mapped_bam: []
