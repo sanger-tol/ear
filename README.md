@@ -15,7 +15,7 @@
 1. Read the input yaml file (YAML_INPUT)
 2. Run GFASTATS (GFASTARS)
 3. Run MERQURYFK_MERQURYFK (MERQURYFK)
-4. Run MAIN_MAPPING, longread single-end/paired-end mapping 
+4. Run MAIN_MAPPING, longread single-end/paired-end mapping
 5. Run GENERATE_SAMPLESHEET, generate a csv file required for SANGER_TOL_BTK.
 6. Run SANGER_TOL_BTK, also known as SANGER-TOL/BLOBTOOLKIT a subpipline for SANGER-TOL/EAR
 7. Run SANGER_TOL_CPRETEXT, also known as SANGER-TOL/CURATIONPRETEXT a subpipeline for SANGER-TOL/EAR.
@@ -27,11 +27,12 @@
 
 The sanger-tol/ear pipeline requires a number of databases in place in order to run the blobtoolkit pipeline.
 These include:
-   - A blast nt database
-   - A Diamond blast uniprot database
-   - A Diamond blast nr database
-   - An NCBI taxdump
-   - An NCBI rankedlineage.dmp
+
+- A blast nt database
+- A Diamond blast uniprot database
+- A Diamond blast nr database
+- An NCBI taxdump
+- An NCBI rankedlineage.dmp
 
 Next, a yaml file containing the following should then be completed:
 
@@ -69,7 +70,6 @@ btk:
   ncbi_rankedlineage_path: <FOLDER CONTAINING THE rankedlineage.dmp FILE>
   config: <PATH TO ear/conf/sanger-tol-btk.config TO OVERWRITE PROCESS LIMITS>
 ```
-
 
 Now, you can run the pipeline using:
 

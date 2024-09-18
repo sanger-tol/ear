@@ -10,6 +10,7 @@ Initial release of sanger-tol/ear, created with the [nf-core](https://nf-co.re/)
 The current pipeline means the MVP for ear.
 
 ### Added
+
 GFASTATS to generate statistics on the input primary genome.
 MERQURY_FK to generate kmer graphs and analyses of the primary, haplotype and merged assembly.
 BLOBTOOLKIT to generate busco files and blobtoolkit dataset/plots.
@@ -17,24 +18,26 @@ CURATIONPRETEXT to generate pretext plots and pngs.
 
 ### Parameters
 
-| Old parameter   | New parameter |
-| --------------- | ------------- |
-|                 | --mapped      |
+| Old parameter | New parameter |
+| ------------- | ------------- |
+|               | --mapped      |
 
 ### Software dependencies
 
-| Dependency  | Old version   | New version   |
-| ----------- | ------------- | ------------- |
-| sanger-tol/blobtoolkit* |               | draft_assemblies        |
-| sanger-tol/curationpretext* |   |  1.0.0 (UNSC Cradle) |
-| GFASTATS |  | 1.3.6--hdcf5f25_3   |
-| MERQUERY_FK  | | 1.2   |
-| MINIMAP2_ALIGN |  | 2.28  |
-| SAMTOOLS_MERGE |  | 1.20--h50ea8bc_0 |
-| SAMTOOLS_SORT  |  | 1.20--h50ea8bc_0 |
-| 
+| Dependency                   | Old version | New version         |
+| ---------------------------- | ----------- | ------------------- |
+| sanger-tol/blobtoolkit\*     |             | draft_assemblies    |
+| sanger-tol/curationpretext\* |             | 1.0.0 (UNSC Cradle) |
+| GFASTATS                     |             | 1.3.6--hdcf5f25_3   |
+| MERQUERY_FK                  |             | 1.2                 |
+| MINIMAP2_ALIGN               |             | 2.28                |
+| SAMTOOLS_MERGE               |             | 1.20--h50ea8bc_0    |
+| SAMTOOLS_SORT                |             | 1.20--h50ea8bc_0    |
+
+|
 
 - Note: for pipelines, please check their own CHANGELOG file for a full list of software dependencies.
 
 ### Dependencies
-The pipeline depends on a number of databases which are noted in  [README](README.md) and [USAGE](docs/usage.md).
+
+The pipeline depends on a number of databases which are noted in [README](README.md) and [USAGE](docs/usage.md).

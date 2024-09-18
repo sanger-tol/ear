@@ -20,14 +20,14 @@ PROFILING:
 # ASSEMBLY DATA
 ASSEMBLIES:
   Pre-curation:
-    pipeline: [hifiasm_v0.19.8-r603|--primary, purge_dups_v1.2.5|-e,  yahs_v1.2a.2|]
+    pipeline: [hifiasm_v0.19.8-r603|--primary, purge_dups_v1.2.5|-e, yahs_v1.2a.2|]
     pri:
       gfastats--nstar-report_txt: /lustre/scratch123/tol/tolqc/data/erga-bge/insects/Culex_laticinctus/working/idCulLati1.hifiasm.20240430/scaffolding/yahs/out.break.yahs/out_scaffolds_final.fa.gz.gfastats
       busco_short_summary_txt: /lustre/scratch123/tol/tolqc/data/erga-bge/insects/Culex_laticinctus/working/idCulLati1.hifiasm.20240430/scaffolding/yahs/out.break.yahs/out_scaffolds_final.insecta_odb10.busco/short_summary.specific.insecta_odb10.out_scaffolds_final.insecta_odb10.busco.txt
       merqury_folder: /lustre/scratch123/tol/tolqc/data/erga-bge/insects/Culex_laticinctus/working/idCulLati1.hifiasm.20240430/scaffolding/yahs/out.break.yahs/out_scaffolds_final.ccs.merquryk/
 
   Curated:
-    pipeline: [hifiasm_v0.19.8-r603|--primary, purge_dups_v1.2.5|-e,  yahs_v1.2a.2|, TreeVal_v1.1]
+    pipeline: [hifiasm_v0.19.8-r603|--primary, purge_dups_v1.2.5|-e, yahs_v1.2a.2|, TreeVal_v1.1]
     pri:
       gfastats--nstar-report_txt: /lustre/scratch123/tol/tolqc/data/erga-bge/insects/Culex_laticinctus/assembly/curated/idCulLati1.1/ear/idCulLati1.1.primary.curated.fa.gfastats
       busco_short_summary_txt: /lustre/scratch123/tol/tolqc/data/erga-bge/insects/Culex_laticinctus/assembly/curated/idCulLati1.1/ear/idCulLati1.1.primary.curated.insecta_odb10.busco/short_summary.specific.insecta_odb10.idCulLati1.1.primary.curated.insecta_odb10.busco.txt
