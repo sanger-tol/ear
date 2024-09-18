@@ -1,8 +1,7 @@
 [![GitHub Actions CI Status](https://github.com/sanger-tol/ear/actions/workflows/ci.yml/badge.svg)](https://github.com/sanger-tol/ear/actions/workflows/ci.yml)
 [![GitHub Actions Linting Status](https://github.com/sanger-tol/ear/actions/workflows/linting.yml/badge.svg)](https://github.com/sanger-tol/ear/actions/workflows/linting.yml)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
-
-[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A523.04.0-23aa62.svg)](https://www.nextflow.io/)
+[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A524.04.0-23aa62.svg)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
@@ -15,7 +14,7 @@
 1. Read the input yaml file (YAML_INPUT)
 2. Run GFASTATS (GFASTARS)
 3. Run MERQURYFK_MERQURYFK (MERQURYFK)
-4. Run MAIN_MAPPING, longread single-end/paired-end mapping 
+4. Run MAIN_MAPPING, longread single-end/paired-end mapping
 5. Run GENERATE_SAMPLESHEET, generate a csv file required for SANGER_TOL_BTK.
 6. Run SANGER_TOL_BTK, also known as SANGER-TOL/BLOBTOOLKIT a subpipline for SANGER-TOL/EAR
 7. Run SANGER_TOL_CPRETEXT, also known as SANGER-TOL/CURATIONPRETEXT a subpipeline for SANGER-TOL/EAR.
@@ -27,11 +26,12 @@
 
 The sanger-tol/ear pipeline requires a number of databases in place in order to run the blobtoolkit pipeline.
 These include:
-   - A blast nt database
-   - A Diamond blast uniprot database
-   - A Diamond blast nr database
-   - An NCBI taxdump
-   - An NCBI rankedlineage.dmp
+
+- A blast nt database
+- A Diamond blast uniprot database
+- A Diamond blast nr database
+- An NCBI taxdump
+- An NCBI rankedlineage.dmp
 
 Next, a yaml file containing the following should then be completed:
 
@@ -69,7 +69,6 @@ btk:
   ncbi_rankedlineage_path: <FOLDER CONTAINING THE rankedlineage.dmp FILE>
   config: <PATH TO ear/conf/sanger-tol-btk.config TO OVERWRITE PROCESS LIMITS>
 ```
-
 
 Now, you can run the pipeline using:
 

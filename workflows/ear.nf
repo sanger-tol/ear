@@ -13,6 +13,7 @@ include { YAML_INPUT                        } from '../subworkflows/local/yaml_i
 include { MAIN_MAPPING                      } from '../subworkflows/local/main_mapping'
 
 // Module imports
+include { CAT_CAT                           } from '../modules/nf-core/cat/cat/main'
 include { GENERATE_SAMPLESHEET              } from '../modules/local/generate_samplesheet'
 include { GFASTATS                          } from '../modules/nf-core/gfastats/main'
 include { MERQURYFK_MERQURYFK               } from '../modules/nf-core/merquryfk/merquryfk/main'
@@ -39,6 +40,13 @@ workflow EAR {
     ch_versions     = Channel.empty()
     ch_align_bam    = Channel.empty()
 
+    exclude_steps   = params.steps ? params.steps.split(",") : ""
+
+    full_list       = ["btk", "cpretext", "merquryfk", ""]
+
+    if (!full_list.containsAll(exclude_steps)) {
+        exit 1, "There is an extra argument given on Command Line: \nCheck contents of: $exclude_steps\nMaster list is: $full_list"
+    }
 
     //
     // MODULE: YAML_INPUT
@@ -46,6 +54,32 @@ workflow EAR {
     //
     YAML_INPUT(ch_input)
 
+
+    //
+    // LOGIC: IF HAPLOTIGS IS EMPTY THEN PASS ON HALPLOTYPE ASSEMBLY
+    //          IF HAPLOTIGS EXISTS THEN MERGE WITH HAPLOTYPE ASSEMBLY
+    //
+    if (YAML_INPUT.out.reference_haplotigs.ifEmpty(true)) {
+        YAML_INPUT.out.sample_id
+            .combine(YAML_INPUT.out.reference_hap2)
+            .combine(YAML_INPUT.out.reference_haplotigs)
+            .map{ sample_id, file1, file2 ->
+                tuple(
+                    [   id: sample_id   ],
+                    [file1, file2]
+                )
+            }
+            .set {
+                cat_cat_input
+            }
+
+        CAT_CAT(cat_cat_input)
+        ch_versions = ch_versions.mix( CAT_CAT.out.versions )
+
+        ch_haplotype_fasta  = CAT_CAT.out.file_out
+    } else {
+        ch_haplotype_fasta = YAML_INPUT.out.reference_hap2
+    }
 
     //
     // MODULE: ASSEMBLY STATISTICS FOR THE FASTA
@@ -67,11 +101,11 @@ workflow EAR {
     // LOGIC:  REFORMAT A BUNCH OF CHANNELS FOR MERQUERYFK
     //
     YAML_INPUT.out.reference_hap1
-        .combine(YAML_INPUT.out.reference_hap2)
+        .combine(ch_haplotype_fasta)
         .combine(YAML_INPUT.out.fastk_hist)
         .combine(YAML_INPUT.out.fastk_ktab)
-        .map{ meta, primary, haplotigs, fastk_hist, fastk_ktab ->
-            tuple(  meta,
+        .map{ meta1, primary, meta2, haplotigs, fastk_hist, fastk_ktab ->
+            tuple(  meta1,
                     fastk_hist,
                     fastk_ktab,
                     primary,
@@ -82,13 +116,19 @@ workflow EAR {
 
 
     //
-    // MODULE: MERQURYFK PLOTS OF GENOME
+    // LOGIC: STEP TO STOP MERQURY_FK RUNNING IF SPECIFIED BY USER
     //
-    MERQURYFK_MERQURYFK(
-        merquryfk_input
-    )
-    ch_versions = ch_versions.mix( MERQURYFK_MERQURYFK.out.versions )
+    if (!exclude_steps.contains('merquryfk')) {
 
+        //
+        // MODULE: MERQURYFK PLOTS OF GENOME
+        //
+        merquryfk_input.view()
+        MERQURYFK_MERQURYFK(
+            merquryfk_input
+        )
+        ch_versions = ch_versions.mix( MERQURYFK_MERQURYFK.out.versions )
+    }
 
     //
     // LOGIC: IF A MAPPED BAM FILE EXISTS AND THE FLAG `mapped` IS TRUE
@@ -113,48 +153,57 @@ workflow EAR {
 
 
     //
-    // MODULE: GENERATE_SAMPLESHEET creates a csv for the blobtoolkit pipeline
+    // LOGIC: STEP TO STOP BTK RUNNING IF SPECIFIED BY USER
     //
-    GENERATE_SAMPLESHEET(
-        ch_mapped_bam
-    )
-    ch_versions = ch_versions.mix( GENERATE_SAMPLESHEET.out.versions )
+    if (!exclude_steps.contains('btk')) {
 
+        //
+        // MODULE: GENERATE_SAMPLESHEET creates a csv for the blobtoolkit pipeline
+        //
+        GENERATE_SAMPLESHEET(
+            ch_mapped_bam
+        )
+        ch_versions = ch_versions.mix( GENERATE_SAMPLESHEET.out.versions )
+
+
+        //
+        // MODULE: Run Sanger-ToL/BlobToolKit
+        //
+        SANGER_TOL_BTK (
+            YAML_INPUT.out.reference_hap1,
+            ch_mapped_bam,
+            GENERATE_SAMPLESHEET.out.csv,
+            YAML_INPUT.out.btk_un_diamond_database,
+            YAML_INPUT.out.btk_nt_database,
+            YAML_INPUT.out.btk_un_diamond_database,
+            YAML_INPUT.out.btk_config,
+            YAML_INPUT.out.btk_ncbi_taxonomy_path,
+            YAML_INPUT.out.busco_lineages,
+            YAML_INPUT.out.btk_taxid,
+            'GCA_0001'
+        )
+        ch_versions              = ch_versions.mix(SANGER_TOL_BTK.out.versions)
+    }
 
     //
-    // MODULE: Run Sanger-ToL/BlobToolKit
+    // LOGIC: STEP TO STOP CURATION_PRETEXT RUNNING IF SPECIFIED BY USER
     //
-    SANGER_TOL_BTK (
-        YAML_INPUT.out.reference_hap1,
-        ch_mapped_bam,
-        GENERATE_SAMPLESHEET.out.csv,
-        YAML_INPUT.out.btk_un_diamond_database,
-        YAML_INPUT.out.btk_nt_database,
-        YAML_INPUT.out.btk_un_diamond_database,
-        YAML_INPUT.out.btk_config,
-        YAML_INPUT.out.btk_ncbi_taxonomy_path,
-        YAML_INPUT.out.busco_lineages,
-        YAML_INPUT.out.btk_taxid,
-        'GCA_0001'
-    )
-    ch_versions              = ch_versions.mix(SANGER_TOL_BTK.out.versions)
+    if (!exclude_steps.contains('cpretext')) {
+        //
+        // MODULE: Run Sanger-ToL/CurationPretext
+        //
+        reference       = YAML_INPUT.out.reference_path.get()
+        hic_dir         = YAML_INPUT.out.cpretext_hic_dir_raw.get()
+        longread_dir    = YAML_INPUT.out.longread_dir.get()
 
-
-    //
-    // MODULE: Run Sanger-ToL/CurationPretext
-    //
-    reference       = YAML_INPUT.out.reference_path.get()
-    hic_dir         = YAML_INPUT.out.cpretext_hic_dir_raw.get()
-    longread_dir    = YAML_INPUT.out.longread_dir.get()
-
-    SANGER_TOL_CPRETEXT(
-        reference,
-        longread_dir,
-        hic_dir,
-        []
-    )
-    ch_versions = ch_versions.mix( SANGER_TOL_CPRETEXT.out.versions )
-
+        SANGER_TOL_CPRETEXT(
+            reference,
+            longread_dir,
+            hic_dir,
+            []
+        )
+        ch_versions = ch_versions.mix( SANGER_TOL_CPRETEXT.out.versions )
+    }
 
     //
     // Collate and save software versions
