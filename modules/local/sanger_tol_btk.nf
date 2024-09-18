@@ -7,7 +7,7 @@ process SANGER_TOL_BTK {
     tuple val(meta1), path(bam) // Name needs to remain the same as previous process as they are referenced in the samplesheet
     tuple val(meta2), path(samplesheet_csv, stageAs: "SAMPLESHEET.csv")
     path blastp, stageAs: "blastp.dmnd"
-    path blastn, stageAs: ""
+    path blastn,
     path blastx
     path config_file
     path tax_dump

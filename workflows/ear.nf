@@ -81,6 +81,7 @@ workflow EAR {
         ch_haplotype_fasta = YAML_INPUT.out.reference_hap2
     }
 
+
     //
     // MODULE: ASSEMBLY STATISTICS FOR THE FASTA
     //
@@ -123,7 +124,6 @@ workflow EAR {
         //
         // MODULE: MERQURYFK PLOTS OF GENOME
         //
-        merquryfk_input.view()
         MERQURYFK_MERQURYFK(
             merquryfk_input
         )
