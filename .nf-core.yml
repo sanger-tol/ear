@@ -10,6 +10,7 @@ lint:
     - .github/workflows/awsfulltest.yml
     - conf/igenomes.config
   files_unchanged:
+    - LICENSE
     - CODE_OF_CONDUCT.md
     - assets/nf-core-ear_logo_light.png
     - docs/images/nf-core-ear_logo_light.png
