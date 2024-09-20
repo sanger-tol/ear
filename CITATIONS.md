@@ -10,13 +10,29 @@
 
 ## Pipeline tools
 
-- [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+- [GFastar/GFastats](https://www.biorxiv.org/content/10.1101/2022.03.24.485682v1)
 
-  > Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online].
+  > Formenti, G., Abueg, L., Brajuka, N., Gallardo, C., Giani, A., Fedrigo, O., Jarvis, ED. (2022). Gfastats: conversion, evaluation and manipulation of genome sequences using assembly graphs. bioRxiv. doi: https://doi.org/10.1101/2022.03.24.485682
 
-- [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
+- [Merqury_FK](https://github.com/thegenemyers/MERQURY.FK)
 
-  > Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
+  > Myers, G., Rhie, A. (2024). MerquryFK & KatFK. [online]. https://github.com/thegenemyers/MERQURY.FK. (Accessed on 20 September 2024).
+
+- [Minimap2](https://pubmed.ncbi.nlm.nih.gov/34623391/)
+
+  > Li, H. 2021. ‘New strategies to improve MINIMAP2 alignment accuracy’, Bioinformatics, 37(23), pp. 4572–4574. doi:10.1093/bioinformatics/btab705.
+
+- [Samtools](https://pubmed.ncbi.nlm.nih.gov/33590861/)
+
+  > Danecek P, Bonfield JK, Liddle J, Marshall J, Ohan V, Pollard MO, Whitwham A, Keane T, McCarthy SA, Davies RM, Li H. Twelve years of SAMtools and BCFtools. Gigascience. 2021 Feb 16;10(2):giab008. doi: 10.1093/gigascience/giab008. PMID: 33590861; PMCID: PMC7931819.
+
+- [sanger-tol/blobtoolkit](https://zenodo.org/records/13758882)
+
+  > Muffato, M., Butt, Z., Challis, R., Kumar, S., Qi, G., Ramos Díaz, A., Surana, P., & Yates, B. (2024). sanger-tol/blobtoolkit: v0.6.0 – Bellsprout (0.6.0). Zenodo. https://doi.org/10.5281/zenodo.13758882
+
+- [sanger-tol/curationpretext](https://zenodo.org/records/13758882)
+
+  > Pointon, DLB. (2024). sanger-tol/curationpretext: v1.0.0 (UNSC Cradle). [online]. https://github.com/sanger-tol/curationpretext/releases/tag/1.0.0. (Accessed on 20 September 2024).
 
 ## Software packaging/containerisation tools
 

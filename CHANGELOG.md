@@ -13,6 +13,7 @@ The current pipeline means the MVP for ear.
 
 GFASTATS to generate statistics on the input primary genome.
 MERQURY_FK to generate kmer graphs and analyses of the primary, haplotype and merged assembly.
+MAIN_MAPPING which is a small mapping subworkflow, that can work with single and paired reads.
 BLOBTOOLKIT to generate busco files and blobtoolkit dataset/plots.
 CURATIONPRETEXT to generate pretext plots and pngs.
 
@@ -21,12 +22,13 @@ CURATIONPRETEXT to generate pretext plots and pngs.
 | Old parameter | New parameter |
 | ------------- | ------------- |
 |               | --mapped      |
+|               | --steps       |
 
 ### Software dependencies
 
 | Dependency                   | Old version | New version         |
 | ---------------------------- | ----------- | ------------------- |
-| sanger-tol/blobtoolkit\*     |             | draft_assemblies    |
+| sanger-tol/blobtoolkit\*     |             | 0.6.0 (Bellsprout)  |
 | sanger-tol/curationpretext\* |             | 1.0.0 (UNSC Cradle) |
 | GFASTATS                     |             | 1.3.6--hdcf5f25_3   |
 | MERQUERY_FK                  |             | 1.2                 |
@@ -36,7 +38,7 @@ CURATIONPRETEXT to generate pretext plots and pngs.
 
 |
 
-- Note: for pipelines, please check their own CHANGELOG file for a full list of software dependencies.
+\* for pipelines, please check their own CHANGELOG file for a full list of software dependencies.
 
 ### Dependencies
 

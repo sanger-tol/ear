@@ -59,8 +59,9 @@ curationpretext:
   hic_dir: <DIRECTORY OF HIC READ FILES .CRAM AND .CRAI>
 btk:
   taxid: 1464561
-  lineages: <CSV LIST OF DATABASES TO USE: "insecta_odb10,diptera_odb10">
-  gca_accession: GCA_0001 <DEFAULT, DO NOT CHANGE UNLESS YOU HAVE A GCA_ACCESSION FOR YOUR SPECIES>
+  lineages: < CSV LIST OF DATABASES TO USE: "insecta_odb10,diptera_odb10">
+  gca_accession: GCA_0001 <DEFAULT, DO NOT CHANGE UNLESS YOU HAVE A GCA_ACCESSION FOR YOUR SPECIES >
+
   nt_database: <DIRECTORY CONTAINING BLAST DB>
   nt_database_prefix: <BLASTDB PREFIX>
   diamond_uniprot_database_path: <PATH TO reference_proteomes.dmnd FROM UNIPROT>
@@ -76,7 +77,8 @@ Now, you can run the pipeline using:
 nextflow run sanger-tol/ear -profile <singularity,docker> \\
    --input assets/idCulLati1.yaml \\
    --mapped TRUE \\ # OPTIONAL
-   --outdir test-truth
+   --steps ["", "btk", "cpretext", "merquryfk"] # OPTIONAL CSV LIST OF STEPS TO EXCLUDE FROM EXECUTION
+   --outdir test
 ```
 
 > [!WARNING]
