@@ -4,7 +4,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Naming based on: [Mythical creatures](https://en.wikipedia.org/wiki/List_of_legendary_creatures_by_type).
 
-## v1.0.0 - Aquatic Bahamut [21/08/2024]
+## v1.0.0 - Robert Beiny [20/09/2024]
 
 Initial release of sanger-tol/ear, created with the [nf-core](https://nf-co.re/) template.
 The current pipeline means the MVP for ear.
