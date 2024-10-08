@@ -5,6 +5,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Naming based on: [Mythical creatures](https://en.wikipedia.org/wiki/List_of_legendary_creatures_by_type).
 
 ## v0.6.1 - Robert Beiny H1 [08/10/2024]
+
 - Blobtookit version was specified in the wrong location, so defaulted to a development branch "draft_assemblies", this has now been updated to v0.6.0.
 - Zenodo DOI has now been added to the repo.
 
