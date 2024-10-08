@@ -4,7 +4,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Naming based on: [Mythical creatures](https://en.wikipedia.org/wiki/List_of_legendary_creatures_by_type).
 
-## v1.0.0 - Aquatic Bahamut [21/08/2024]
+## v0.6.1 - Robert Beiny H1 [08/10/2024]
+- Blobtookit version was specified in the wrong location, so defaulted to a development branch "draft_assemblies", this has now been updated to v0.6.0.
+- Zenodo DOI has now been added to the repo.
+
+## v0.6.0 - Robert Beiny [20/09/2024]
 
 Initial release of sanger-tol/ear, created with the [nf-core](https://nf-co.re/) template.
 The current pipeline means the MVP for ear.
@@ -35,8 +39,6 @@ CURATIONPRETEXT to generate pretext plots and pngs.
 | MINIMAP2_ALIGN               |             | 2.28                |
 | SAMTOOLS_MERGE               |             | 1.20--h50ea8bc_0    |
 | SAMTOOLS_SORT                |             | 1.20--h50ea8bc_0    |
-
-|
 
 \* for pipelines, please check their own CHANGELOG file for a full list of software dependencies.
 
