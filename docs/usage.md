@@ -6,59 +6,177 @@
 
 <!-- TODO nf-core: Add documentation about anything specific to running your pipeline. For general topics, please point to (and add to) the main nf-core website. -->
 
-## Samplesheet input
+## Yaml input
 
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
+You will need to create a yaml with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location.
 
 ```bash
 --input '[path to samplesheet file]'
 ```
 
-### Multiple runs of the same sample
+The structure of this file should be as follows:
 
-The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes:
+```yaml
+# General Vales for all subpiplines and modules
+assembly_id: <NAME OF ASSEMBLY>
+reference_hap1: <LOCATION OF PRIMARY ASSEMBLY FILE .FA>
+reference_hap2: <LOCATION OF HAPLOTYPE ASSEBMLY FILE .FA>
+reference_haplotigs: <LOCATION OF THE HAPLOTIGS FILE, REMOVED DURING CURATION .FA>
 
-```csv title="samplesheet.csv"
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
+# If a mapped bam already exists use the below + --mapped TRUE on the nextflow command else ignore it and the pipeline will create it.
+mapped_bam: <MAPPED BAM .BAM>
+
+merquryfk:
+  fastk_hist: <THE PATH TO THE .HIST FILE>
+  fastk_ktab: <PATH TO THE DIRECTORY CONTAINING THE KTAB FILES, ENSURE THE HIDDEN FILES ARE HERE TOO>
+
+# Used by both subpipelines
+longread:
+  type: <hifi|clr|ont|illumina>
+  dir: <DIRECTORY OF LONGREAD FILES .FASTA.GZ>
+curationpretext:
+  aligner: <minimap2|BWAMEM>
+  telomere_motif: <TELOMERE MOTIF OF SAMPLE>
+  hic_dir: <DIRECTORY OF HIC READ FILES .CRAM AND .CRAI>
+btk:
+  taxid: 1464561
+  lineages: <CSV LIST OF DATABASES TO USE: "insecta_odb10,diptera_odb10">
+  gca_accession: GCA_0001 <DEFAULT, DO NOT CHANGE UNLESS YOU HAVE A GCA_ACCESSION FOR YOUR SPECIES>
+  nt_database: <DIRECTORY CONTAINING BLAST DB>
+  nt_database_prefix: <BLASTDB PREFIX>
+  diamond_uniprot_database_path: <PATH TO reference_proteomes.dmnd FROM UNIPROT>
+  diamond_nr_database_path: <PATH TO nr.dmnd>
+  ncbi_taxonomy_path: <DIRECTORY CONTAINING THE TAXDUMP>
+  ncbi_rankedlineage_path: <FOLDER CONTAINING THE rankedlineage.dmp FILE>
+  config: <PATH TO ear/conf/sanger-tol-btk.config TO OVERWRITE PROCESS LIMITS>
 ```
 
-### Full samplesheet
+## Database download and setup (Taken from sanger-tol/blobtoolkit)
 
-The pipeline will auto-detect whether a sample is single- or paired-end using the information provided in the samplesheet. The samplesheet can have as many columns as you desire, however, there is a strict requirement for the first 3 columns to match those defined in the table below.
+The BlobToolKit pipeline can be run in many different ways. The default way requires access to several databases:
 
-A final samplesheet file consisting of both single- and paired-end data may look something like the one below. This is for 6 samples, where `TREATMENT_REP3` has been sequenced twice.
+1. [NCBI taxdump database](https://www.ncbi.nlm.nih.gov/taxonomy)
+2. [NCBI nucleotide BLAST database](https://blast.ncbi.nlm.nih.gov/doc/blast-help/downloadblastdata.html#databases)
+3. [UniProt reference proteomes database](https://www.uniprot.org)
+4. [BUSCO database](https://busco.ezlab.org)
 
-```csv title="samplesheet.csv"
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
+It is a good idea to put a date suffix for each database location so you know at a glance whether you are using the latest version. We are using the `YYYY_MM` format as we do not expect the databases to be updated more frequently than once a month. However, feel free to use `DATE=YYYY_MM_DD` or a different format if you prefer.
+
+### 1. NCBI taxdump database
+
+Create the database directory and move into the directory:
+
+```bash
+DATE=2023_03
+TAXDUMP=/path/to/databases/taxdump_${DATE}
+mkdir -p $TAXDUMP
+cd $TAXDUMP
 ```
 
-| Column    | Description                                                                                                                                                                            |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sample`  | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
+Retrieve and decompress the NCBI taxdump:
 
-An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
+```bash
+curl -L ftp://ftp.ncbi.nih.gov/pub/taxonomy/new_taxdump/new_taxdump.tar.gz | tar xzf -
+```
+
+### 2. NCBI nucleotide BLAST database
+
+Create the database directory and move into the directory:
+
+```bash
+DATE=2023_03
+NT=/path/to/databases/nt_${DATE}
+mkdir -p $NT
+cd $NT
+```
+
+Retrieve the NCBI blast nt database (version 5) files and tar gunzip them. We are using the `&&` syntax to ensure that each command completes without error before the next one is run:
+
+```bash
+wget "ftp://ftp.ncbi.nlm.nih.gov/blast/db/v5/nt.???.tar.gz" -P $NT/ &&
+for file in $NT/*.tar.gz; do
+    tar xf $file -C $NT && rm $file;
+done
+```
+
+### 3. UniProt reference proteomes database
+
+You need [diamond blast](https://github.com/bbuchfink/diamond) installed for this step. The easiest way is probably using [conda](https://anaconda.org/bioconda/diamond). Make sure you have the latest version of Diamond (>2.x.x) otherwise the `--taxonnames` argument may not work.
+
+Create the database directory and move into the directory:
+
+```bash
+DATE=2023_03
+UNIPROT=/path/to/databases/uniprot_${DATE}
+mkdir -p $UNIPROT
+cd $UNIPROT
+```
+
+The UniProt `Refseq_Proteomes_YYYY_MM.tar.gz` file is very large (>160 GB) and will take a long time to download. The command below looks complex because it needs to get around the problem of using wildcards with wget and curl.
+
+```bash
+wget -q -O $UNIPROT/reference_proteomes.tar.gz \
+  ftp.ebi.ac.uk/pub/databases/uniprot/current_release/knowledgebase/reference_proteomes/$(curl \
+    -vs ftp.ebi.ac.uk/pub/databases/uniprot/current_release/knowledgebase/reference_proteomes/ 2>&1 | \
+    awk '/tar.gz/ {print $9}')
+tar xf reference_proteomes.tar.gz
+
+# Create a single fasta file with all the fasta files from each subdirectory:
+touch reference_proteomes.fasta.gz
+find . -mindepth 2 | grep "fasta.gz" | grep -v 'DNA' | grep -v 'additional' | xargs cat >> reference_proteomes.fasta.gz
+
+# create the accession-to-taxid map for all reference proteome sequences:
+printf "accession\taccession.version\ttaxid\tgi\n" > reference_proteomes.taxid_map
+zcat */*/*.idmapping.gz | grep "NCBI_TaxID" | awk '{print $1 "\t" $1 "\t" $3 "\t" 0}' >> reference_proteomes.taxid_map
+
+# create the taxon aware diamond blast database
+diamond makedb -p 16 --in reference_proteomes.fasta.gz --taxonmap reference_proteomes.taxid_map --taxonnodes $TAXDUMP/nodes.dmp --taxonnames $TAXDUMP/names.dmp -d reference_proteomes.dmnd
+```
+
+### 4. BUSCO databases
+
+Create the database directory and move into the directory:
+
+```bash
+DATE=2023_03
+BUSCO=/path/to/databases/busco_${DATE}
+mkdir -p $BUSCO
+cd $BUSCO
+```
+
+Download BUSCO data and lineages to allow BUSCO to run in offline mode:
+
+```bash
+wget -r -nH https://busco-data.ezlab.org/v5/data/
+# the trailing slash after data is important. Otherwise wget doesn't get the subdirectories
+
+# tar gunzip all folders that have been stored as tar.gz, in the same parent directories as where they were stored:
+find v5/data -name "*.tar.gz" | while read -r TAR; do tar -C `dirname $TAR` -xzf $TAR; done
+```
+
+If you have [GNU parallel](https://www.gnu.org/software/parallel/) installed, you can also use the command below which will run faster as it will run the decompression commands in parallel:
+
+```bash
+find v5/data -name "*.tar.gz" | parallel "cd {//}; tar -xzf {/}"
+```
+
+## Blobtoolkit - YAML File and Nextflow configuration
+
+As in the Snakemake version [a YAML configuration file](https://github.com/blobtoolkit/blobtoolkit/tree/main/src/blobtoolkit-pipeline/src#configuration) is needed to generate metadata summary. This YAML config file can be generated with a genome accession value for released assemblies (for example, GCA_XXXXXXXXX.X) or can be passed for draft assemblies (for example, [GCA_922984935.2.yaml](assets/test/GCA_922984935.2.yaml) using the `--yaml` parameter. Even for draft assemblies, a placeholder value should be passed with the `--accession` parameter.
+
+The data in the YAML is currently ignored in the Nextflow pipeline version. The YAML file is retained only to allow compatibility with the BlobDir dataset generated by the [Snakemake version](https://github.com/blobtoolkit/blobtoolkit/tree/main/src/blobtoolkit-pipeline/src). The taxonomic information in the YAML file can be obtained from [NCBI Taxonomy](https://www.ncbi.nlm.nih.gov/data-hub/taxonomy/).
 
 ## Running the pipeline
 
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run sanger-tol/ear --input ./samplesheet.csv --outdir ./results --genome GRCh37 -profile docker
+nextflow run sanger-tol/ear --input assets/test.yaml --outdir ./results  -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.
+
+> Please note that conda is not supported for all tools in use for this pipeline, this limits use to docker or singularity
 
 Note that the pipeline will create the following files in your working directory:
 
@@ -76,23 +194,6 @@ Pipeline settings can be provided in a `yaml` or `json` file via `-params-file <
 :::warning
 Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources), other infrastructural tweaks (such as output directories), or module arguments (args).
 :::
-
-The above pipeline run specified with a params file in yaml format:
-
-```bash
-nextflow run sanger-tol/ear -profile docker -params-file params.yaml
-```
-
-with `params.yaml` containing:
-
-```yaml
-input: './samplesheet.csv'
-outdir: './results/'
-genome: 'GRCh37'
-<...>
-```
-
-You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-co.re/launch).
 
 ### Updating the pipeline
 

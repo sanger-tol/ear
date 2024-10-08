@@ -13,21 +13,137 @@
                 "errorMessage": "Sample name must be provided and cannot contain spaces",
                 "meta": ["id"]
             },
-            "fastq_1": {
+            "reference_hap1": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 1 must be provided, cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "pattern": "^\\S+\\.f[ast]a$",
+                "errorMessage": "Primary assembly input file, decompressed"
             },
-            "fastq_2": {
+            "reference_hap2": {
                 "type": "string",
                 "format": "file-path",
                 "exists": true,
-                "pattern": "^\\S+\\.f(ast)?q\\.gz$",
-                "errorMessage": "FastQ file for reads 2 cannot contain spaces and must have extension '.fq.gz' or '.fastq.gz'"
+                "pattern": "^\\S+\\.f[ast]a$",
+                "errorMessage": "Haplotype assembly input file, decompressed"
+            },
+            "reference_haplotigs": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "pattern": "^\\S+\\.f[ast]a$",
+                "errorMessage": "Haplotigs removed from Primary Assembly input file during curation, decompressed"
+            },
+            "mapped_bam": {
+                "type": "string",
+                "format": "file-path",
+                "exists": true,
+                "pattern": "^\\S+\\.bam$",
+                "errorMessage": "Optional mapped bam file used to skip mapping of pacbio files"
+            },
+            "merquryfk": {
+                "type": "object",
+                "properties": {
+                    "fastk_hist": {
+                        "type": "string",
+                        "format": "file-path",
+                        "exists": true,
+                        "pattern": "^\\S+\\.hist$",
+                        "errorMessage": "Path to hist file"
+                    },
+                    "fastk_ktab": {
+                        "type": "string",
+                        "errorMessage": "Directory containing ktab files"
+                    }
+                }
+            },
+            "longread": {
+                "type": "object",
+                "properties": {
+                    "dir": {
+                        "type": "string",
+                        "errorMessage": "Path to folder containing fasta.gz files"
+                    },
+                    "type": {
+                        "type": "string",
+                        "errorMessage": "type of longread data"
+                    }
+                }
+            },
+            "curationpretext": {
+                "type": "object",
+                "properties": {
+                    "aligner": {
+                        "type": "string",
+                        "errorMessage": "Aligner"
+                    },
+                    "telomere_motif": {
+                        "type": "string",
+                        "errorMessage": "Telomere motif for telomere search"
+                    },
+                    "hic_dir": {
+                        "type": "string",
+                        "errorMessage": "Directory of the cram data"
+                    }
+                }
+            },
+            "btk": {
+                "type": "object",
+                "properties": {
+                    "taxid": {
+                        "type": "string",
+                        "errorMessage": "NCBI Taxid of organism"
+                    },
+                    "lineages": {
+                        "type": "string",
+                        "errorMessage": "CSV list of BUSCO lineages to run against"
+                    },
+                    "gca_accession": {
+                        "type": "string",
+                        "errorMessage": "gca_accession if applicable"
+                    },
+                    "nt_database": {
+                        "type": "string",
+                        "errorMessage": "nt database directory"
+                    },
+                    "nt_database_prefix": {
+                        "type": "string",
+                        "errorMessage": "Prefix for nt database"
+                    },
+                    "diamond_uniprot_database_path": {
+                        "type": "string",
+                        "format": "file-path",
+                        "exists": true,
+                        "pattern": "^\\S+\\.dmnd$",
+                        "errorMessage": "Diamond protein database"
+                    },
+                    "diamond_nr_database_path": {
+                        "type": "string",
+                        "format": "file-path",
+                        "exists": true,
+                        "pattern": "^\\S+\\.dmnd$",
+                        "errorMessage": "Nuclear diamond database"
+                    },
+                    "ncbi_taxonomy_path": {
+                        "type": "string",
+                        "errorMessage": "Directory for tax2taxid"
+                    },
+                    "ncbi_rankedlineage_path": {
+                        "type": "string",
+                        "format": "file-path",
+                        "exists": true,
+                        "pattern": "^\\S+\\.dmp$",
+                        "errorMessage": "Taxonomy dump"
+                    },
+                    "config": {
+                        "type": "string",
+                        "format": "file-path",
+                        "pattern": "^\\S+\\.config$",
+                        "errorMessage": "Extra configuration file for Blobtoolkit pipeline"
+                    }
+                }
             }
         },
-        "required": ["sample", "fastq_1"]
+        "required": ["sample", "reference_hap1", "reference_hap2"]
     }
 }

@@ -1,0 +1,23 @@
+Changes in module 'nf-core/merquryfk/merquryfk'
+--- modules/nf-core/merquryfk/merquryfk/main.nf
++++ modules/nf-core/merquryfk/merquryfk/main.nf
+@@ -39,11 +39,16 @@
+     prefix = task.ext.prefix ?: "${meta.id}"
+     def FASTK_VERSION = 'f18a4e6d2207539f7b84461daebc54530a9559b0' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
+     def MERQURY_VERSION = '8ae344092df5dcaf83cfb7f90f662597a9b1fc61' // WARN: Version information not provided by tool on CLI. Please update this string when bumping container versions.
++
++    // Passing in the link through FASTK works, however passing in through YAML_INPUT results in being unable to find file
++    // seems as though it is because it is in a folder rather directly in the folder merqury is running in.
+     """
++    cp ${fastk_ktab}/*ktab . && cp ${fastk_ktab}/.*ktab.* .
++
+     MerquryFK \\
+         $args \\
+         -T$task.cpus \\
+-        ${fastk_ktab.find{ it.toString().endsWith(".ktab") }} \\
++        *.ktab \\
+         $assembly \\
+         $haplotigs \\
+         $prefix
+
+************************************************************

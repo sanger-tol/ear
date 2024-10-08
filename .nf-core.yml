@@ -4,11 +4,13 @@ lint:
     - assets/nf-core-ear_logo_light.png
     - docs/images/nf-core-ear_logo_light.png
     - docs/images/nf-core-ear_logo_dark.png
+    - lib/nfcore_external_java_deps.jar
     - .github/ISSUE_TEMPLATE/config.yml
     - .github/workflows/awstest.yml
     - .github/workflows/awsfulltest.yml
     - conf/igenomes.config
   files_unchanged:
+    - LICENSE
     - CODE_OF_CONDUCT.md
     - assets/nf-core-ear_logo_light.png
     - docs/images/nf-core-ear_logo_light.png
