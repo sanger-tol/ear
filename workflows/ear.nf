@@ -59,27 +59,26 @@ workflow EAR {
     // LOGIC: IF HAPLOTIGS IS EMPTY THEN PASS ON HALPLOTYPE ASSEMBLY
     //          IF HAPLOTIGS EXISTS THEN MERGE WITH HAPLOTYPE ASSEMBLY
     //
-    if (YAML_INPUT.out.reference_haplotigs.ifEmpty(true)) {
-        YAML_INPUT.out.sample_id
-            .combine(YAML_INPUT.out.reference_hap2)
-            .combine(YAML_INPUT.out.reference_haplotigs)
-            .map{ sample_id, file1, file2 ->
-                tuple(
-                    [   id: sample_id   ],
-                    [file1, file2]
-                )
-            }
-            .set {
-                cat_cat_input
-            }
+    //          YAML_INPUT is always expecting there to be 1, 2 and 2b files
+    //          removing the if statement
 
-        CAT_CAT(cat_cat_input)
-        ch_versions = ch_versions.mix( CAT_CAT.out.versions )
+    YAML_INPUT.out.sample_id
+        .combine(YAML_INPUT.out.reference_hap2)
+        .combine(YAML_INPUT.out.reference_haplotigs)
+        .map{ sample_id, file1, file2 ->
+            tuple(
+                [   id: sample_id   ],
+                [file1, file2]
+            )
+        }
+        .set {
+            cat_cat_input
+        }
 
-        ch_haplotype_fasta  = CAT_CAT.out.file_out
-    } else {
-        ch_haplotype_fasta = YAML_INPUT.out.reference_hap2
-    }
+    CAT_CAT(cat_cat_input)
+    ch_versions = ch_versions.mix( CAT_CAT.out.versions )
+
+    ch_haplotype_fasta  = CAT_CAT.out.file_out
 
 
     //
