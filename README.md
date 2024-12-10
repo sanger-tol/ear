@@ -1,8 +1,7 @@
 [![GitHub Actions CI Status](https://github.com/sanger-tol/ear/actions/workflows/ci.yml/badge.svg)](https://github.com/sanger-tol/ear/actions/workflows/ci.yml)
-[![GitHub Actions Linting Status](https://github.com/sanger-tol/ear/actions/workflows/linting.yml/badge.svg)](https://github.com/sanger-tol/ear/actions/workflows/linting.yml)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![GitHub Actions Linting Status](https://github.com/sanger-tol/ear/actions/workflows/linting.yml/badge.svg)](https://github.com/sanger-tol/ear/actions/workflows/linting.yml)[![DOI](https://zenodo.org/badge/833605808.svg)](https://doi.org/10.5281/zenodo.13819520)
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
-
-[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A523.04.0-23aa62.svg)](https://www.nextflow.io/)
+[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A524.04.0-23aa62.svg)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
@@ -10,51 +9,76 @@
 
 ## Introduction
 
-**sanger-tol/ear** is a bioinformatics pipeline that ...
+**sanger-tol/ear** is a bioinformatics pipeline that generates the data files required for the the generation of ERGA Assembly Reports. Sanger-tol/ear nests two other sanger-tol pipelines (blobtoolkit and curationpretext).
 
-<!-- TODO nf-core:
-   Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
-   major pipeline sections and the types of output it produces. You're giving an overview to someone new
-   to nf-core here, in 15-20 seconds. For an example, see https://github.com/nf-core/rnaseq/blob/master/README.md#introduction
--->
-
-<!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
-     workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
-<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
-
-1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
+1. Read the input yaml file (YAML_INPUT)
+2. Run GFASTATS (GFASTARS)
+3. Run MERQURYFK_MERQURYFK (MERQURYFK)
+4. Run MAIN_MAPPING, longread single-end/paired-end mapping
+5. Run GENERATE_SAMPLESHEET, generate a csv file required for SANGER_TOL_BTK.
+6. Run SANGER_TOL_BTK, also known as SANGER-TOL/BLOBTOOLKIT a subpipline for SANGER-TOL/EAR
+7. Run SANGER_TOL_CPRETEXT, also known as SANGER-TOL/CURATIONPRETEXT a subpipeline for SANGER-TOL/EAR.
 
 ## Usage
 
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
-<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
-     Explain what rows and columns represent. For instance (please edit as appropriate):
+The sanger-tol/ear pipeline requires a number of databases in place in order to run the blobtoolkit pipeline.
+These include:
 
-First, prepare a samplesheet with your input data that looks as follows:
+- A blast nt database
+- A Diamond blast uniprot database
+- A Diamond blast nr database
+- An NCBI taxdump
+- An NCBI rankedlineage.dmp
 
-`samplesheet.csv`:
+Next, a yaml file containing the following should then be completed:
 
-```csv
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+```yaml
+# General Vales for all subpiplines and modules
+assembly_id: <NAME OF ASSEMBLY>
+reference_hap1: <LOCATION OF PRIMARY ASSEMBLY FILE .FA>
+reference_hap2: <LOCATION OF HAPLOTYPE ASSEBMLY FILE .FA>
+reference_haplotigs: <LOCATION OF THE HAPLOTIGS FILE, REMOVED DURING CURATION .FA>
+
+# If a mapped bam already exists use the below + --mapped TRUE on the nextflow command else ignore it and the pipeline will create it.
+mapped_bam: <MAPPED BAM .BAM>
+
+merquryfk:
+  fastk_hist: <THE PATH TO THE .HIST FILE>
+  fastk_ktab: <PATH TO THE DIRECTORY CONTAINING THE KTAB FILES, ENSURE THE HIDDEN FILES ARE HERE TOO>
+
+# Used by both subpipelines
+longread:
+  type: <hifi|clr|ont|illumina>
+  dir: <DIRECTORY OF LONGREAD FILES .FASTA.GZ>
+curationpretext:
+  aligner: <minimap2|BWAMEM>
+  telomere_motif: <TELOMERE MOTIF OF SAMPLE>
+  hic_dir: <DIRECTORY OF HIC READ FILES .CRAM AND .CRAI>
+btk:
+  taxid: 1464561
+  lineages: < CSV LIST OF DATABASES TO USE: "insecta_odb10,diptera_odb10">
+  gca_accession: GCA_0001 <DEFAULT, DO NOT CHANGE UNLESS YOU HAVE A GCA_ACCESSION FOR YOUR SPECIES >
+
+  nt_database: <DIRECTORY CONTAINING BLAST DB>
+  nt_database_prefix: <BLASTDB PREFIX>
+  diamond_uniprot_database_path: <PATH TO reference_proteomes.dmnd FROM UNIPROT>
+  diamond_nr_database_path: <PATH TO nr.dmnd>
+  ncbi_taxonomy_path: <DIRECTORY CONTAINING THE TAXDUMP>
+  ncbi_rankedlineage_path: <FOLDER CONTAINING THE rankedlineage.dmp FILE>
+  config: <PATH TO ear/conf/sanger-tol-btk.config TO OVERWRITE PROCESS LIMITS>
 ```
-
-Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
-
--->
 
 Now, you can run the pipeline using:
 
-<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
-
 ```bash
-nextflow run sanger-tol/ear \
-   -profile <docker/singularity/.../institute> \
-   --input samplesheet.csv \
-   --outdir <OUTDIR>
+nextflow run sanger-tol/ear -profile <singularity,docker> \\
+   --input assets/idCulLati1.yaml \\
+   --mapped TRUE \\ # OPTIONAL
+   --steps ["", "btk", "cpretext", "merquryfk"] # OPTIONAL CSV LIST OF STEPS TO EXCLUDE FROM EXECUTION
+   --outdir test
 ```
 
 > [!WARNING]
@@ -64,10 +88,6 @@ nextflow run sanger-tol/ear \
 ## Credits
 
 sanger-tol/ear was originally written by DLBPointon.
-
-We thank the following people for their extensive assistance in the development of this pipeline:
-
-<!-- TODO nf-core: If applicable, make list of people who have also contributed -->
 
 ## Contributions and Support
 

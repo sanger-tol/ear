@@ -1,0 +1,45 @@
+# SAMPLE INFORMATION
+ToLID: idCulLati1
+Species: Culex laticinctus
+Sex: XX
+Submitter: Michael Paulini
+Affiliation: WSI
+Tags: ERGA-BGE
+
+# SEQUENCING DATA
+DATA:
+  - PacBio HiFi: 51x
+  - Arima v2: 152x
+
+# GENOME PROFILING DATA
+PROFILING:
+  GenomeScope:
+    version: 2.0
+    results_folder: /lustre/scratch123/tol/tolqc/data/erga-bge/insects/Culex_laticinctus/genomic_data/idCulLati1/pacbio/kmer/k31/
+
+# ASSEMBLY DATA
+ASSEMBLIES:
+  Pre-curation:
+    pipeline: [hifiasm_v0.19.8-r603|--primary, purge_dups_v1.2.5|-e, yahs_v1.2a.2|]
+    pri:
+      gfastats--nstar-report_txt: /lustre/scratch123/tol/tolqc/data/erga-bge/insects/Culex_laticinctus/working/idCulLati1.hifiasm.20240430/scaffolding/yahs/out.break.yahs/out_scaffolds_final.fa.gz.gfastats
+      busco_short_summary_txt: /lustre/scratch123/tol/tolqc/data/erga-bge/insects/Culex_laticinctus/working/idCulLati1.hifiasm.20240430/scaffolding/yahs/out.break.yahs/out_scaffolds_final.insecta_odb10.busco/short_summary.specific.insecta_odb10.out_scaffolds_final.insecta_odb10.busco.txt
+      merqury_folder: /lustre/scratch123/tol/tolqc/data/erga-bge/insects/Culex_laticinctus/working/idCulLati1.hifiasm.20240430/scaffolding/yahs/out.break.yahs/out_scaffolds_final.ccs.merquryk/
+
+  Curated:
+    pipeline: [hifiasm_v0.19.8-r603|--primary, purge_dups_v1.2.5|-e, yahs_v1.2a.2|, TreeVal_v1.1]
+    pri:
+      gfastats--nstar-report_txt: /lustre/scratch123/tol/tolqc/data/erga-bge/insects/Culex_laticinctus/assembly/curated/idCulLati1.1/ear/idCulLati1.1.primary.curated.fa.gfastats
+      busco_short_summary_txt: /lustre/scratch123/tol/tolqc/data/erga-bge/insects/Culex_laticinctus/assembly/curated/idCulLati1.1/ear/idCulLati1.1.primary.curated.insecta_odb10.busco/short_summary.specific.insecta_odb10.idCulLati1.1.primary.curated.insecta_odb10.busco.txt
+      merqury_folder: /lustre/scratch123/tol/tolqc/data/erga-bge/insects/Culex_laticinctus/assembly/curated/idCulLati1.1/ear/idCulLati1.1.primary.curated.ccs.merquryk/
+      hic_FullMap_png: /lustre/scratch123/tol/tolqc/data/erga-bge/insects/Culex_laticinctus/assembly/curated/idCulLati1.1/ear/idCulLati1.1_normal_snapshots/idCulLati1.1_normal_FullMap.png
+      hic_FullMap_link: https://tolqc.cog.sanger.ac.uk/erga-bge/insects/Culex_laticinctus/assembly/curated/idCulLati1.1/ear/idCulLati1.1_normal.pretext
+      blobplot_cont_png: /lustre/scratch123/tol/tolqc/data/erga-bge/insects/Culex_laticinctus/assembly/curated/idCulLati1.1/ear/idCulLati1.1_primary_curated_btk_busco.blob.circle.png
+
+# CURATION NOTES
+NOTES:
+  Obs_Haploid_num: 3
+  Obs_Sex: XX
+  Interventions_per_Gb: 430
+  Contamination_notes: "Total length of scaffolds removed: 989,717 (0.1 %)\nScaffolds removed: 1 (0.2 %)\nLargest scaffold removed: (989,717)\nFCS-GX contaminant species (number of scaffolds; total length of scaffolds):\nWolbachia endosymbiont (group B) of Melanostoma mellinum, a-proteobacteria (1; 989,717)"
+  Other_notes: "Chromosomes named by size"
