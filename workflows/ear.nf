@@ -125,7 +125,9 @@ workflow EAR {
         // MODULE: MERQURYFK PLOTS OF GENOME
         //
         MERQURYFK_MERQURYFK(
-            merquryfk_input
+            merquryfk_input,
+            [],
+            []
         )
         ch_versions = ch_versions.mix( MERQURYFK_MERQURYFK.out.versions )
     }
