@@ -2,7 +2,11 @@
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-Naming based on: [Mythical creatures](https://en.wikipedia.org/wiki/List_of_legendary_creatures_by_type).
+Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologists).
+
+## v0.7.0 - Chris Campbell [13/12/2024]
+
+- TODO
 
 ## v0.6.1 - Robert Beiny H1 [08/10/2024]
 
