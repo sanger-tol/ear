@@ -1,10 +1,16 @@
 lint:
+  schema_params:
+    - validationSchemaIgnoreParams
   files_exist:
     - CODE_OF_CONDUCT.md
     - assets/nf-core-ear_logo_light.png
     - docs/images/nf-core-ear_logo_light.png
     - docs/images/nf-core-ear_logo_dark.png
     - lib/nfcore_external_java_deps.jar
+    - lib/NfcoreSchema.groovy
+    - lib/NfcoreTemplate.groovy
+    - lib/Utils.groovy
+    - lib/WorkflowMain.groovy
     - .github/ISSUE_TEMPLATE/config.yml
     - .github/workflows/awstest.yml
     - .github/workflows/awsfulltest.yml
@@ -16,6 +22,12 @@ lint:
     - docs/images/nf-core-ear_logo_light.png
     - docs/images/nf-core-ear_logo_dark.png
     - .github/ISSUE_TEMPLATE/bug_report.yml
+    - .github/CONTRIBUTING.md
+    - .github/PULL_REQUEST_TEMPLATE.md
+    - .github/workflows/branch.yml
+    - .github/workflows/linting_comment.yml
+    - .github/workflows/linting.yml
+    - assets/email_template.htmlp
   multiqc_config:
     - report_comment
   nextflow_config:

@@ -10,16 +10,15 @@ Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologi
 
 ### Software dependencies
 
-| Dependency                   | Old version | New version            |
-| ---------------------------- | ----------- | -------------------    |
-| sanger-tol/blobtoolkit\*     |             | 0.6.0 (Bellsprout)     |
-| sanger-tol/curationpretext\* |             | 1.1.0 (UNSC Delphi)    |
-| GFASTATS                     |             | 1.3.6--hdcf5f25_3      |
-| MERQUERY_FK                  |             | 1.2                    |
-| MINIMAP2_ALIGN               |             | 2.28                   |
-| SAMTOOLS_MERGE               |             | 1.21--h50ea8bc_0       |
-| SAMTOOLS_SORT                |             | 1.21--h50ea8bc_0       |
-
+| Dependency                   | Old version | New version         |
+| ---------------------------- | ----------- | ------------------- |
+| sanger-tol/blobtoolkit\*     |             | 0.6.0 (Bellsprout)  |
+| sanger-tol/curationpretext\* |             | 1.1.0 (UNSC Delphi) |
+| GFASTATS                     |             | 1.3.6--hdcf5f25_3   |
+| MERQUERY_FK                  |             | 1.2                 |
+| MINIMAP2_ALIGN               |             | 2.28                |
+| SAMTOOLS_MERGE               |             | 1.21--h50ea8bc_0    |
+| SAMTOOLS_SORT                |             | 1.21--h50ea8bc_0    |
 
 ## v0.6.1 - Robert Beiny H1 [08/10/2024]
 
