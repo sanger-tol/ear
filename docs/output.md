@@ -27,7 +27,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 </details>
 
-[GFASTATS](https://github.com/vgl-hub/gfastats) is a single fast and exhaustive tool for summary statistics and simultaneous *fa* (fasta, fastq, gfa [.gz]) genome assembly file manipulation.
+[GFASTATS](https://github.com/vgl-hub/gfastats) is a single fast and exhaustive tool for summary statistics and simultaneous _fa_ (fasta, fastq, gfa [.gz]) genome assembly file manipulation.
 
 ### MERQURYFK
 
@@ -35,7 +35,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 <summary>Output files</summary>
 
 - `merquryfk/`
-  - `*.completeness.stats`: 
+  - `*.completeness.stats`:
   - `*{"primary","haplotype",""}_only.bed`:
   - `*{"primary","haplotype",""}.qv`:
   - `*.spectra-asm.{fl,ln,st}.png`:
@@ -47,14 +47,13 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 Merqury is a novel tool for reference-free assembly evaluation based on efficient k-mer set operations. By comparing k-mers in a de novo assembly to those found in unassembled high-accuracy reads, Merqury estimates base-level accuracy and completeness.
 
-
 ## SANGER_TOL_BTK
 
 <details markdown="1">
 <summary>Output files</summary>
 
 - `sanger/*_blobtoolkit_out/`
-  - `blobtoolkit/plots/*png`: Blobtoolkit plots 
+  - `blobtoolkit/plots/*png`: Blobtoolkit plots
   - `blobtoolkit/{ASSEMBLY_NAME}/*.json.gz`: Blobtoolkit dataset for use in BTK_viewer.
   - `busco/*_odb10/*.{tsv,tar.gz,json,txt}`: Busco output
   - `muliqc/`: MultiQC plots/data and report.html.
@@ -64,14 +63,13 @@ Merqury is a novel tool for reference-free assembly evaluation based on efficien
 
 [SANGER_TOL_BTK](https://pipelines.tol.sanger.ac.uk/blobtoolkit) is a bioinformatics pipeline that can be used to identify and analyse non-target DNA for eukaryotic genomes.
 
-
 ## SANGER_TOL_CPRETEXT
 
 <details markdown="1">
 <summary>Output files</summary>
 
 - `sanger/*_curationpretext_out/`
-  - `accessory_files/*.{bigWig,bed,bedgraph}`: Track files describing Telomere, gap, coverage data across the genome. 
+  - `accessory_files/*.{bigWig,bed,bedgraph}`: Track files describing Telomere, gap, coverage data across the genome.
   - `pretext_maps_raw`: Pre-accessory file ingestion pretext files.
   - `pretext_maps_processed`: Post-accessory file ingestion pretext files, e.g. the final output.
   - [`pipeline_info`](#pipeline-information)
@@ -79,7 +77,6 @@ Merqury is a novel tool for reference-free assembly evaluation based on efficien
 </details>
 
 [SANGER_TOL_CPRETEXT](https://pipelines.tol.sanger.ac.uk/curationpretext) is a bioinformatics pipeline typically used in conjunction with [TreeVal](https://pipelines.tol.sanger.ac.uk/treeval) to generate pretext maps (and optionally telomeric, gap, coverage, and repeat density plots which can be ingested into pretext) for the manual curation of high quality genomes.
-
 
 ### Pipeline information
 

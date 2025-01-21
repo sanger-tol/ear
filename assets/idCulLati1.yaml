@@ -2,7 +2,7 @@
 assembly_id: idCulLati1_ear
 reference_hap1: /nfs/treeoflife-01/teams/tola/users/dp24/ear/idCulLati1/primary.fa
 reference_hap2: /nfs/treeoflife-01/teams/tola/users/dp24/ear/idCulLati1/hap2.fa
-reference_haplotigs: /
+reference_haplotigs: /nfs/treeoflife-01/teams/tola/users/dp24/ear/haplotigs.fa
 
 # If a mapped bam already exists use the below + --mapped TRUE on the nextflow command else ignore.
 mapped_bam: /nfs/treeoflife-01/teams/tola/users/dp24/ear/idCulLati1/mapped_bam.bam

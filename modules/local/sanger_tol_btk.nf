@@ -7,7 +7,7 @@ process SANGER_TOL_BTK {
     tuple val(meta1), path(bam) // Name needs to remain the same as previous process as they are referenced in the samplesheet
     tuple val(meta2), path(samplesheet_csv, stageAs: "SAMPLESHEET.csv")
     path blastp, stageAs: "blastp.dmnd"
-    path blastn, stageAs: ""
+    path blastn
     path blastx
     path config_file
     path tax_dump
@@ -16,13 +16,13 @@ process SANGER_TOL_BTK {
     val gca_accession
 
     output:
-    tuple val(meta), path("*_out/blobtoolkit/REFERENCE"),      emit: dataset
-    path("*_out/blobtoolkit/plots"),                           emit: plots
-    path("*_out/blobtoolkit/REFERENCE/summary.json.gz"),       emit: summary_json
-    path("*_out/busco"),                                       emit: busco_data
-    path("*_out/multiqc"),                                     emit: multiqc_report
-    path("*_out/blobtoolkit_pipeline_info"),                   emit: pipeline_info
-    path "versions.yml",                                       emit: versions
+    tuple val(meta), path("*_out/blobtoolkit/REFERENCE"),   emit: dataset
+    path "*_out/blobtoolkit/plots" ,                        emit: plots
+    path "*_out/blobtoolkit/REFERENCE/summary.json.gz",     emit: summary_json
+    path "*_out/busco",                                     emit: busco_data
+    path "*_out/multiqc",                                   emit: multiqc_report
+    path "*_out/pipeline_info/blobtoolkit",                 emit: pipeline_info
+    path "versions.yml",                                    emit: versions
 
     script:
     def pipeline_name                       =   task.ext.pipeline_name
@@ -71,9 +71,15 @@ process SANGER_TOL_BTK {
         Nextflow: \$(nextflow -v | cut -d " " -f3)
         executor system: $get_version
     END_VERSIONS
-
-    printf "%s/t" <${output_dir}/pipeline_info/software_version.yml >> versions.yml
     """
+
+    // INFILE=${output_dir}/pipeline_info/software_versions.yml
+    // IFS=\$'\n'
+    // echo "$pipeline_name:" >> versions.yml
+    // for \${LINE} in \$(cat "\$INFILE")
+    // do
+    //     echo "  \${LINE}" >> versions.yml
+    // done
 
     stub:
     def pipeline_version    =   task.ext.version        ?: "main"

@@ -26,6 +26,7 @@ workflow YAML_INPUT {
 
     reference_1                 = Channel.fromPath(inputs.reference_hap1, checkIfExists: true)
     reference_2                 = Channel.fromPath(inputs.reference_hap2, checkIfExists: true)
+    reference_3                 = Channel.fromPath(inputs.reference_haplotigs, checkIfExists: true)
 
     reference_1
         .combine(sample_id)
@@ -84,6 +85,7 @@ workflow YAML_INPUT {
     pacbio_tuple                                                    // tuple (meta), path(file)
     reference_hap1                                                  // tuple (meta), path(file)
     reference_hap2              = reference_2                       // DataVariable
+    reference_haplotigs         = reference_3
     reference_path              = inputs.reference_hap1             // DataVariable
     mapped_bam
 

@@ -19,7 +19,6 @@ process GFASTATS {
 
     output:
     tuple val(meta), path("*.assembly_summary"), emit: assembly_summary
-    tuple val(meta), path("*.${out_fmt}.gz")   , emit: assembly
     path "versions.yml"                        , emit: versions
 
     when:
@@ -32,18 +31,16 @@ process GFASTATS {
     def ibed = include_bed ? "--include-bed $include_bed" : ""
     def ebed = exclude_bed ? "--exclude-bed $exclude_bed" : ""
     def sak  = instructions ? "--swiss-army-knife $instructions" : ""
+
+    // Arguments have been removed due to causing errors with output values being 0
+    // out-format seemed to be the main cause of this, in testing
+    // Even using the main branch of the github repo yielded the same error.
+
     """
     gfastats \\
-        $args \\
+        --nstar-report \\
         --threads $task.cpus \\
-        $agp \\
-        $ibed \\
-        $ebed \\
-        $sak \\
-        --out-format ${prefix}.${out_fmt}.gz \\
         $assembly \\
-        $genome_size \\
-        $target \\
         > ${prefix}.assembly_summary
 
     cat <<-END_VERSIONS > versions.yml
