@@ -40,9 +40,9 @@ workflow EAR {
     ch_versions     = Channel.empty()
     ch_align_bam    = Channel.empty()
 
-    exclude_steps   = params.steps ? params.steps.split(",") : ""
+    exclude_steps   = params.steps ? params.steps.split(",") : "NONE"
 
-    full_list       = ["btk", "cpretext", "merquryfk", ""]
+    full_list       = ["btk", "cpretext", "merquryfk", "NONE"]
 
     if (!full_list.containsAll(exclude_steps)) {
         exit 1, "There is an extra argument given on Command Line: \nCheck contents of: $exclude_steps\nMaster list is: $full_list"
@@ -125,7 +125,9 @@ workflow EAR {
         // MODULE: MERQURYFK PLOTS OF GENOME
         //
         MERQURYFK_MERQURYFK(
-            merquryfk_input
+            merquryfk_input,
+            [],
+            []
         )
         ch_versions = ch_versions.mix( MERQURYFK_MERQURYFK.out.versions )
     }

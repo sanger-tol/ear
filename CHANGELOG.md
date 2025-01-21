@@ -2,7 +2,23 @@
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-Naming based on: [Mythical creatures](https://en.wikipedia.org/wiki/List_of_legendary_creatures_by_type).
+Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologists).
+
+## v0.6.2 - Robert Beiny H2 [09/01/2025]
+
+- Modules have been updated to remove conda defaults.
+
+### Software dependencies
+
+| Dependency                   | Old version         | New version         |
+| ---------------------------- | ------------------- | ------------------- |
+| sanger-tol/blobtoolkit\*     |                     | 0.6.0 (Bellsprout)  |
+| sanger-tol/curationpretext\* | 1.0.0 (UNSC Cradle) | 1.1.0 (UNSC Delphi) |
+| GFASTATS                     |                     | 1.3.6--hdcf5f25_3   |
+| MERQUERY_FK                  |                     | 1.2                 |
+| MINIMAP2_ALIGN               |                     | 2.28                |
+| SAMTOOLS_MERGE               | 1.20--h50ea8bc_0    | 1.21--h50ea8bc_0    |
+| SAMTOOLS_SORT                | 1.21--h50ea8bc_0    | 1.21--h50ea8bc_0    |
 
 ## v0.6.1 - Robert Beiny H1 [08/10/2024]
 
