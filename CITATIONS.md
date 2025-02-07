@@ -12,7 +12,7 @@
 
 - [GFastar/GFastats](https://www.biorxiv.org/content/10.1101/2022.03.24.485682v1)
 
-  > Formenti, G., Abueg, L., Brajuka, N., Gallardo, C., Giani, A., Fedrigo, O., Jarvis, ED. (2022). Gfastats: conversion, evaluation and manipulation of genome sequences using assembly graphs. bioRxiv. doi: https://doi.org/10.1101/2022.03.24.485682
+> Andrews, S. (2010). FastQC: A Quality Control Tool for High Throughput Sequence Data [Online].
 
 - [Merqury_FK](https://github.com/thegenemyers/MERQURY.FK)
 

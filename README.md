@@ -1,3 +1,5 @@
+# sanger-tol/ear
+
 [![GitHub Actions CI Status](https://github.com/sanger-tol/ear/actions/workflows/ci.yml/badge.svg)](https://github.com/sanger-tol/ear/actions/workflows/ci.yml)
 [![GitHub Actions Linting Status](https://github.com/sanger-tol/ear/actions/workflows/linting.yml/badge.svg)](https://github.com/sanger-tol/ear/actions/workflows/linting.yml)[![DOI](https://zenodo.org/badge/833605808.svg)](https://doi.org/10.5281/zenodo.13819520)
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
@@ -81,8 +83,7 @@ nextflow run sanger-tol/ear -profile <singularity,docker> \\
 ```
 
 > [!WARNING]
-> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;
-> see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
+> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).
 
 ## Credits
 
@@ -101,7 +102,7 @@ If you would like to contribute to this pipeline, please see the [contributing g
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 
-This pipeline uses code and infrastructure developed and maintained by the [nf-core](https://nf-co.re) community, reused here under the [MIT license](https://github.com/nf-core/tools/blob/master/LICENSE).
+This pipeline uses code and infrastructure developed and maintained by the [nf-core](https://nf-co.re) community, reused here under the [MIT license](https://github.com/nf-core/tools/blob/main/LICENSE).
 
 > **The nf-core framework for community-curated bioinformatics pipelines.**
 >
