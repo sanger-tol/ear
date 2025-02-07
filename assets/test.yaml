@@ -8,8 +8,8 @@ reference_haplotigs: /home/runner/work/ear/ear/TreeValTinyData/assembly/draft/gr
 mapped_bam: []
 
 merquryfk:
-  fastk_hist: "./"
-  fastk_ktab: "./"
+  fastk_hist: "./EMPTY.hist"
+  fastk_ktab: "./EMPTY.ktab"
 
 # Used by both subpipelines
 longread:

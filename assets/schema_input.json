@@ -53,6 +53,9 @@
                     },
                     "fastk_ktab": {
                         "type": "string",
+                        "format": "file-path",
+                        "exists": true,
+                        "pattern": "^\\S+\\.ktab$",
                         "errorMessage": "Directory containing ktab files"
                     }
                 }
