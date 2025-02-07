@@ -17,17 +17,17 @@
                 "gfastats",
                 "gfastats/grTriPseu1.assembly_summary",
                 "pipeline_info",
-                "pipeline_info/nf_core_pipeline_software_mqc_versions.yml"
+                "pipeline_info/ear_software_mqc_versions.yml"
             ],
-            0,
+            1,
             [
-                
+                "grTriPseu1.assembly_summary:md5,49d6ad52839bf6597b0ff6fb9ff01151"
             ]
         ],
         "meta": {
-            "nf-test": "0.8.4",
-            "nextflow": "24.04.2"
+            "nf-test": "0.9.2",
+            "nextflow": "24.04.4"
         },
-        "timestamp": "2025-02-07T12:39:47.429262"
+        "timestamp": "2025-02-07T16:10:18.940156"
     }
 }

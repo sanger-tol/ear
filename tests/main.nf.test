@@ -18,7 +18,7 @@ nextflow_pipeline {
 
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ["pipeline_info/*.{html,json,txt}"])
 
-            def gfastats = getAllFilesFromDir(params.outdir, include: ['gfastats/_summary'])
+            def gfastats = getAllFilesFromDir(params.outdir, include: ['gfastats/*_summary'])
 
             //def merquryfk = getAllFilesFromDir(params.outdir, include: ['merquryfk/*'])
 
@@ -28,7 +28,7 @@ nextflow_pipeline {
                     // Test for number of successful processes - should be 29 for a full run
                     workflow.trace.succeeded().size(),
 
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_pipeline_software_mqc_versions.yml"),
+                    removeNextflowVersion("$outputDir/pipeline_info/ear_software_mqc_versions.yml"),
 
                     stable_name,
                     // GFASTATS should be a stable file as it is measuring metrics of the files
