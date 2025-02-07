@@ -53,33 +53,32 @@ workflow {
     //
     // SUBWORKFLOW: Run initialisation tasks
     //
-    PIPELINE_INITIALISATION (
-        params.version,
-        params.validate_params,
-        params.monochrome_logs,
-        args,
-        params.outdir,
-        params.input
-    )
+    // PIPELINE_INITIALISATION (
+    //     params.version,
+    //     params.validate_params,
+    //     params.monochrome_logs,
+    //     args,
+    //     params.outdir,
+    //     params.input
+    // )
 
     //
     // WORKFLOW: Run main workflow
     //
     SANGERTOL_EAR (
-        PIPELINE_INITIALISATION.out.samplesheet
+        params.input
     )
     //
     // SUBWORKFLOW: Run completion tasks
     //
-    PIPELINE_COMPLETION (
-        params.email,
-        params.email_on_fail,
-        params.plaintext_email,
-        params.outdir,
-        params.monochrome_logs,
-        params.hook_url,
-        SANGERTOL_EAR.out.multiqc_report
-    )
+    // PIPELINE_COMPLETION (
+    //     params.email,
+    //     params.email_on_fail,
+    //     params.plaintext_email,
+    //     params.outdir,
+    //     params.monochrome_logs,
+    //     params.hook_url
+    // )
 
 }
 
