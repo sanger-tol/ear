@@ -8,8 +8,8 @@ reference_haplotigs: /home/runner/work/ear/ear/TreeValTinyData/assembly/draft/gr
 mapped_bam: []
 
 merquryfk:
-  fastk_hist: "./"
-  fastk_ktab: "./"
+  fastk_hist: "/home/runner/work/ear/ear/TreeValTinyData/genomic_data/pacbio/kmer.31/gfTriPseu1.50000.k31.hist"
+  fastk_ktab: "/home/runner/work/ear/ear/TreeValTinyData/genomic_data/pacbio/kmer.31/"
 
 # Used by both subpipelines
 longread:
@@ -30,4 +30,3 @@ btk:
   diamond_nr_database_path: /home/runner/work/ascc/ascc/diamond/UP000000212_1234679_tax.dmnd
   ncbi_taxonomy_path: /home/runner/work/ascc/ascc/ncbi_taxdump/
   ncbi_rankedlineage_path: /home/runner/work/ascc/ascc/ncbi_taxdump/rankedlineage.dmp
-  config: /home/runner/work/ear/ear/conf/sanger-tol-btk.config
