@@ -4,25 +4,23 @@ process SANGER_TOL_BTK {
 
     input:
     tuple val(meta), path(reference, stageAs: "REFERENCE.fa")
-    tuple val(meta1), path(bam) // Name needs to remain the same as previous process as they are referenced in the samplesheet
     tuple val(meta2), path(samplesheet_csv, stageAs: "SAMPLESHEET.csv")
     path blastp, stageAs: "blastp.dmnd"
     path blastn
     path blastx
-    path config_file
     path tax_dump
     val busco_lineages
     val taxon
     val gca_accession
 
     output:
-    tuple val(meta), path("*_out/blobtoolkit/REFERENCE"),   emit: dataset
-    path "*_out/blobtoolkit/plots" ,                        emit: plots
-    path "*_out/blobtoolkit/REFERENCE/summary.json.gz",     emit: summary_json
-    path "*_out/busco",                                     emit: busco_data
-    path "*_out/multiqc",                                   emit: multiqc_report
-    path "*_out/pipeline_info/blobtoolkit",                 emit: pipeline_info
-    path "versions.yml",                                    emit: versions
+    tuple val(meta), path("*_out/blobtoolkit/REFERENCE"),           emit: dataset
+    path "*_out/blobtoolkit/plots" ,                                emit: plots
+    path "*_out/blobtoolkit/REFERENCE/summary.json.gz",             emit: summary_json
+    path "*_out/busco",                                             emit: busco_data
+    path "*_out/multiqc",                                           emit: multiqc_report
+    path "*_out/pipeline_info/blobtoolkit",                         emit: pipeline_info
+    path "*out/pipeline_info/blobtoolkit/software_versions.yml",    emit: versions
 
     script:
     def pipeline_name                       =   task.ext.pipeline_name
@@ -32,7 +30,6 @@ process SANGER_TOL_BTK {
     def executor                            =   task.ext.executor       ?:  ""
     def profiles                            =   task.ext.profiles       ?:  ""
     def get_version                         =   task.ext.version_data   ?:  "UNKNOWN - SETTING NOT SET"
-    def config                              =   config_file             ? "-c $config_file"         : ""
     def pipeline_version                    =   task.ext.version        ?: "main"
 
     // Seems to be an issue where a nested pipeline can't see the files in the same directory
@@ -61,9 +58,9 @@ process SANGER_TOL_BTK {
         --blastp "\$(realpath blastp.dmnd)" \\
         --blastn "\$(realpath $blastn)" \\
         --blastx "\$(realpath $blastx)" \\
-        $config \\
-        $args \\
-        -resume'
+        --use_work_dir_as_temp true \\
+        --align
+        $args'
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

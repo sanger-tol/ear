@@ -4,12 +4,9 @@ reference_hap1: /nfs/treeoflife-01/teams/tola/users/dp24/ear/TreeValTinyData/ass
 reference_hap2: /nfs/treeoflife-01/teams/tola/users/dp24/ear/TreeValTinyData/assembly/draft/grTriPseu1-hap.fa
 reference_haplotigs: /nfs/treeoflife-01/teams/tola/users/dp24/ear/TreeValTinyData/assembly/draft/grTriPseu1-all_hap.fa
 
-# If a mapped bam already exists use the below + --mapped TRUE on the nextflow command else ignore.
-mapped_bam: []
-
 merquryfk:
-  fastk_hist: "./EMPTY.hist"
-  fastk_ktab: "./EMPTY.ktab"
+  fastk_hist: "/nfs/treeoflife-01/teams/tola/users/dp24/ear/TreeValTinyData/genomic_data/pacbio/kmer.31/gfTriPseu1.50000.k31.hist"
+  fastk_ktab: "/nfs/treeoflife-01/teams/tola/users/dp24/ear/TreeValTinyData/genomic_data/pacbio/kmer.31/"
 
 # Used by both subpipelines
 longread:
