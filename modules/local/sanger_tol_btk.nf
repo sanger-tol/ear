@@ -14,13 +14,13 @@ process SANGER_TOL_BTK {
     val gca_accession
 
     output:
-    tuple val(meta), path("*_out/blobtoolkit/REFERENCE"),   emit: dataset
-    path "*_out/blobtoolkit/plots" ,                        emit: plots
-    path "*_out/blobtoolkit/REFERENCE/summary.json.gz",     emit: summary_json
-    path "*_out/busco",                                     emit: busco_data
-    path "*_out/multiqc",                                   emit: multiqc_report
-    path "*_out/pipeline_info/blobtoolkit",                 emit: pipeline_info
-    path "versions.yml",                                    emit: versions
+    tuple val(meta), path("*_out/blobtoolkit/REFERENCE"),           emit: dataset
+    path "*_out/blobtoolkit/plots" ,                                emit: plots
+    path "*_out/blobtoolkit/REFERENCE/summary.json.gz",             emit: summary_json
+    path "*_out/busco",                                             emit: busco_data
+    path "*_out/multiqc",                                           emit: multiqc_report
+    path "*_out/pipeline_info/blobtoolkit",                         emit: pipeline_info
+    path "*out/pipeline_info/blobtoolkit/software_versions.yml",    emit: versions
 
     script:
     def pipeline_name                       =   task.ext.pipeline_name
@@ -58,6 +58,7 @@ process SANGER_TOL_BTK {
         --blastp "\$(realpath blastp.dmnd)" \\
         --blastn "\$(realpath $blastn)" \\
         --blastx "\$(realpath $blastx)" \\
+        --use_work_dir_as_temp true \\
         --align
         $args'
 
