@@ -62,6 +62,12 @@ jobs:
           cp TreeValTinyData/assembly/draft/grTriPseu1.fa TreeValTinyData/assembly/draft/grTriPseu1-hap.fa
           cp TreeValTinyData/assembly/draft/grTriPseu1.fa TreeValTinyData/assembly/draft/grTriPseu1-all_hap.fa
 
+      - name: Download EAR MerquryFK data
+        # Generated .hist and .ktab files (+ hidden files) that is required to test merquryfk
+        run: |
+          curl https://tolit.cog.sanger.ac.uk/test-data/resources/ear/EAR_merquryfk_input.tar.gz | tar xzf -
+          mv EAR_merquryfk_input TreeValTinyData/genomic_data/pacbio/
+
       - name: Install nf-test
         uses: nf-core/setup-nf-test@v1
 
