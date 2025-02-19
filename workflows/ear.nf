@@ -10,7 +10,6 @@ include { SANGER_TOL_CPRETEXT               } from '../modules/local/sanger_tol_
 
 // Subworkflow imports
 include { YAML_INPUT                        } from '../subworkflows/local/yaml_input'
-include { MAIN_MAPPING                      } from '../subworkflows/local/main_mapping'
 
 // Module imports
 include { CAT_CAT                           } from '../modules/nf-core/cat/cat/main'
@@ -19,10 +18,10 @@ include { GFASTATS                          } from '../modules/nf-core/gfastats/
 include { MERQURYFK_MERQURYFK               } from '../modules/nf-core/merquryfk/merquryfk/main'
 
 // Plugin imports
-include { paramsSummaryMap                  } from 'plugin/nf-validation'
-include { paramsSummaryMultiqc              } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML            } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText            } from '../subworkflows/local/utils_nfcore_ear_pipeline'
+include { paramsSummaryMap       } from 'plugin/nf-schema'
+include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_ear_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -50,7 +49,7 @@ workflow EAR {
 
     //
     // MODULE: YAML_INPUT
-    //          - YAML_INPUT SHOULD BE REWORKED TO BE SMARTER
+    //          TODO: REPLACE WITH -params-input
     //
     YAML_INPUT(ch_input)
 
@@ -66,7 +65,9 @@ workflow EAR {
             .map{ sample_id, file1, file2 ->
                 tuple(
                     [   id: sample_id   ],
-                    [file1, file2]
+                    [   file1,
+                        file2
+                    ]
                 )
             }
             .set {
@@ -120,7 +121,6 @@ workflow EAR {
     // LOGIC: STEP TO STOP MERQURY_FK RUNNING IF SPECIFIED BY USER
     //
     if (!exclude_steps.contains('merquryfk')) {
-
         //
         // MODULE: MERQURYFK PLOTS OF GENOME
         //
@@ -132,38 +132,39 @@ workflow EAR {
         ch_versions = ch_versions.mix( MERQURYFK_MERQURYFK.out.versions )
     }
 
-    //
-    // LOGIC: IF A MAPPED BAM FILE EXISTS AND THE FLAG `mapped` IS TRUE
-    //          SKIP THE MAPPING SUBWORKFLOW
-    //
-    if (!params.mapped) {
-        //
-        // SUBWORKFLOW: MAIN_MAPPING CONTAINS ALL THE MAPPING LOGIC
-        //              This allows us to more esily bypass the mapping if we already have a sorted and mapped bam
-        //
-        MAIN_MAPPING (
-            YAML_INPUT.out.sample_id,
-            YAML_INPUT.out.longread_type,
-            YAML_INPUT.out.reference_hap1,
-            YAML_INPUT.out.pacbio_tuple,
-        )
-        ch_versions = ch_versions.mix( MAIN_MAPPING.out.versions )
-        ch_mapped_bam = MAIN_MAPPING.out.mapped_bam
-    } else {
-        ch_mapped_bam = YAML_INPUT.out.mapped_bam
-    }
-
 
     //
     // LOGIC: STEP TO STOP BTK RUNNING IF SPECIFIED BY USER
     //
     if (!exclude_steps.contains('btk')) {
+        //
+        // LOGIC: IF A MAPPED BAM FILE EXISTS AND THE FLAG `mapped` IS TRUE
+        //          SKIP THE MAPPING SUBWORKFLOW
+        //
+        if (!params.mapped) {
+            //
+            // SUBWORKFLOW: MAIN_MAPPING CONTAINS ALL THE MAPPING LOGIC
+            //              This allows us to more esily bypass the mapping if we already have a sorted and mapped bam
+            //
+            MAIN_MAPPING (
+                YAML_INPUT.out.sample_id,
+                YAML_INPUT.out.longread_type,
+                YAML_INPUT.out.reference_hap1,
+                YAML_INPUT.out.pacbio_tuple,
+            )
+            ch_versions = ch_versions.mix( MAIN_MAPPING.out.versions )
+            ch_mapped_bam = MAIN_MAPPING.out.mapped_bam
+        } else {
+            ch_mapped_bam = YAML_INPUT.out.mapped_bam
+        }
+
 
         //
         // MODULE: GENERATE_SAMPLESHEET creates a csv for the blobtoolkit pipeline
         //
         GENERATE_SAMPLESHEET(
-            ch_mapped_bam
+            YAML_INPUT.out.reference_hap1,
+            YAML_INPUT.out.longread_dir
         )
         ch_versions = ch_versions.mix( GENERATE_SAMPLESHEET.out.versions )
 
@@ -173,12 +174,10 @@ workflow EAR {
         //
         SANGER_TOL_BTK (
             YAML_INPUT.out.reference_hap1,
-            ch_mapped_bam,
             GENERATE_SAMPLESHEET.out.csv,
             YAML_INPUT.out.btk_un_diamond_database,
             YAML_INPUT.out.btk_nt_database,
             YAML_INPUT.out.btk_un_diamond_database,
-            YAML_INPUT.out.btk_config,
             YAML_INPUT.out.btk_ncbi_taxonomy_path,
             YAML_INPUT.out.busco_lineages,
             YAML_INPUT.out.btk_taxid,
@@ -186,6 +185,7 @@ workflow EAR {
         )
         ch_versions              = ch_versions.mix(SANGER_TOL_BTK.out.versions)
     }
+
 
     //
     // LOGIC: STEP TO STOP CURATION_PRETEXT RUNNING IF SPECIFIED BY USER
@@ -207,16 +207,18 @@ workflow EAR {
         ch_versions = ch_versions.mix( SANGER_TOL_CPRETEXT.out.versions )
     }
 
+
     //
     // Collate and save software versions
     //
     softwareVersionsToYAML(ch_versions)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
-            name: 'nf_core_pipeline_software_mqc_versions.yml',
+            name:  'ear_software_'  + 'mqc_'  + 'versions.yml',
             sort: true,
             newLine: true
         ).set { ch_collated_versions }
+
 
     summary_params      = paramsSummaryMap(
         workflow, parameters_schema: "nextflow_schema.json")
@@ -224,6 +226,7 @@ workflow EAR {
 
     emit:
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
+
 }
 
 /*

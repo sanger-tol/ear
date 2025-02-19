@@ -9,6 +9,11 @@ lint:
     - lib/NfcoreTemplate.groovy
     - lib/Utils.groovy
     - lib/WorkflowMain.groovy
+    - lib/nfcore_external_java_deps.jar
+    - lib/NfcoreSchema.groovy
+    - lib/NfcoreTemplate.groovy
+    - lib/Utils.groovy
+    - lib/WorkflowMain.groovy
     - .github/ISSUE_TEMPLATE/config.yml
     - .github/workflows/awstest.yml
     - .github/workflows/awsfulltest.yml
@@ -34,9 +39,16 @@ lint:
     - params.show_hidden_params
     - params.schema_ignore_params
     - params.validationSchemaIgnoreParams
-nf_core_version: 2.14.1
+nf_core_version: 3.2.0
 repository_type: pipeline
 template:
-  prefix: sanger-tol
-  skip:
+  author: DLBPointon
+  description: ERGA Assembly Report pipeline
+  force: false
+  is_nfcore: false
+  name: ear
+  org: sanger-tol
+  outdir: .
+  skip_features:
     - igenomes
+  version: 0.6.2
