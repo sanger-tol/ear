@@ -18,9 +18,9 @@ nextflow_pipeline {
 
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ["pipeline_info/*.{html,json,txt}"])
 
-            def gfastats = getAllFilesFromDir(params.outdir, include: ['gfastats/_summary'])
+            def gfastats = getAllFilesFromDir(params.outdir, include: ['gfastats/*_summary'])
 
-            //def merquryfk = getAllFilesFromDir(params.outdir, include: ['merquryfk/*'])
+            def merquryfk = getAllFilesFromDir(params.outdir, include: ['merquryfk/*'])
 
             assertAll (
                 {assert workflow.success},
@@ -28,7 +28,7 @@ nextflow_pipeline {
                     // Test for number of successful processes - should be 29 for a full run
                     workflow.trace.succeeded().size(),
 
-                    removeNextflowVersion("$outputDir/pipeline_info/nf_core_pipeline_software_mqc_versions.yml"),
+                    removeNextflowVersion("$outputDir/pipeline_info/ear_software_mqc_versions.yml"),
 
                     stable_name,
                     // GFASTATS should be a stable file as it is measuring metrics of the files
@@ -38,9 +38,13 @@ nextflow_pipeline {
                     gfastats,
 
                     // MERQURY_FK is running statistics on the input files
-                    // input files are also split between the two main input haps
-                    // need to actually test merqury first
-                    //merquryfk,
+                    merquryfk.size(),
+                    merquryfk,
+                    merquryfk.any{it.toString().contains("combined_haplos".toString())},
+                    merquryfk.any{it.toString().contains("spectra".toString())},
+                    merquryfk.any{it.toString().contains(".qv".toString())},
+                    merquryfk.any{it.toString().contains(".bed".toString())},
+                    merquryfk.any{it.toString().contains(".stats".toString())}
 
                 ).match()},
             )

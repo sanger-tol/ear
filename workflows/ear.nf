@@ -10,7 +10,6 @@ include { SANGER_TOL_CPRETEXT               } from '../modules/local/sanger_tol_
 
 // Subworkflow imports
 include { YAML_INPUT                        } from '../subworkflows/local/yaml_input'
-include { MAIN_MAPPING                      } from '../subworkflows/local/main_mapping'
 
 // Module imports
 include { CAT_CAT                           } from '../modules/nf-core/cat/cat/main'
@@ -19,10 +18,10 @@ include { GFASTATS                          } from '../modules/nf-core/gfastats/
 include { MERQURYFK_MERQURYFK               } from '../modules/nf-core/merquryfk/merquryfk/main'
 
 // Plugin imports
-include { paramsSummaryMap                  } from 'plugin/nf-validation'
-include { paramsSummaryMultiqc              } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML            } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText            } from '../subworkflows/local/utils_nfcore_ear_pipeline'
+include { paramsSummaryMap       } from 'plugin/nf-schema'
+include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_ear_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -66,7 +65,9 @@ workflow EAR {
             .map{ sample_id, file1, file2 ->
                 tuple(
                     [   id: sample_id   ],
-                    [file1, file2]
+                    [   file1,
+                        file2
+                    ]
                 )
             }
             .set {
@@ -162,7 +163,8 @@ workflow EAR {
         // MODULE: GENERATE_SAMPLESHEET creates a csv for the blobtoolkit pipeline
         //
         GENERATE_SAMPLESHEET(
-            ch_mapped_bam
+            YAML_INPUT.out.reference_hap1,
+            YAML_INPUT.out.longread_dir
         )
         ch_versions = ch_versions.mix( GENERATE_SAMPLESHEET.out.versions )
 
@@ -172,12 +174,10 @@ workflow EAR {
         //
         SANGER_TOL_BTK (
             YAML_INPUT.out.reference_hap1,
-            ch_mapped_bam,
             GENERATE_SAMPLESHEET.out.csv,
             YAML_INPUT.out.btk_un_diamond_database,
             YAML_INPUT.out.btk_nt_database,
             YAML_INPUT.out.btk_un_diamond_database,
-            YAML_INPUT.out.btk_config,
             YAML_INPUT.out.btk_ncbi_taxonomy_path,
             YAML_INPUT.out.busco_lineages,
             YAML_INPUT.out.btk_taxid,
@@ -214,7 +214,7 @@ workflow EAR {
     softwareVersionsToYAML(ch_versions)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
-            name: 'nf_core_pipeline_software_mqc_versions.yml',
+            name:  'ear_software_'  + 'mqc_'  + 'versions.yml',
             sort: true,
             newLine: true
         ).set { ch_collated_versions }
@@ -226,6 +226,7 @@ workflow EAR {
 
     emit:
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
+
 }
 
 /*

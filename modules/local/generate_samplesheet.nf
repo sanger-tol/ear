@@ -8,7 +8,8 @@ process GENERATE_SAMPLESHEET {
         'biocontainers/python:3.9' }"
 
     input:
-    tuple val(meta),    path(pacbio_path)
+    tuple val(meta), path(reference)
+    val(pacbio_path)
 
     output:
     tuple val(meta),    path("*csv"),   emit: csv
