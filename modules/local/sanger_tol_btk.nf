@@ -62,8 +62,7 @@ process SANGER_TOL_BTK {
         --blastn "\$(realpath $blastn)" \\
         --blastx "\$(realpath $blastx)" \\
         $config \\
-        $args \\
-        -resume'
+        $args'
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

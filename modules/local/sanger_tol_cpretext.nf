@@ -42,9 +42,8 @@ process SANGER_TOL_CPRETEXT {
         --outdir $output_dir \\
         --longread "\$(realpath $longread_dir)" \\
         --cram "\$(realpath $cram_dir)" \\
-        $args \\
         $config \\
-        -resume'
+        $args'
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
