@@ -1,0 +1,53 @@
+nextflow_pipeline {
+
+    name "Test Workflow main.nf"
+    script "main.nf"
+    tag "pipeline"
+    tag "pipeline_sanger_tol"
+    tag "full"
+
+    test("Minimal run | No SANGER-TOL-* nested pipelines") {
+
+        when {
+            params {
+                outdir = "${outputDir}"
+            }
+        }
+
+        then {
+
+            def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignore: ["pipeline_info/*.{html,json,txt}"])
+
+            def gfastats = getAllFilesFromDir(params.outdir, include: ['gfastats/*_summary'])
+
+            def merquryfk = getAllFilesFromDir(params.outdir, include: ['merquryfk/*'])
+
+            assertAll (
+                {assert workflow.success},
+                {assert snapshot(
+                    // Test for number of successful processes - should be 29 for a full run
+                    workflow.trace.succeeded().size(),
+
+                    removeNextflowVersion("$outputDir/pipeline_info/ear_software_mqc_versions.yml"),
+
+                    stable_name,
+                    // GFASTATS should be a stable file as it is measuring metrics of the files
+                    // so nothing special needs to be done
+
+                    gfastats.size(),
+                    gfastats,
+
+                    // MERQURY_FK is running statistics on the input files
+                    merquryfk.size(),
+                    merquryfk,
+                    merquryfk.any{it.toString().contains("combined_haplos".toString())},
+                    merquryfk.any{it.toString().contains("spectra".toString())},
+                    merquryfk.any{it.toString().contains(".qv".toString())},
+                    merquryfk.any{it.toString().contains(".bed".toString())},
+                    merquryfk.any{it.toString().contains(".stats".toString())}
+
+                ).match()},
+            )
+        }
+    }
+}
