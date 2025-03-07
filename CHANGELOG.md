@@ -18,7 +18,7 @@ Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologi
   - Update the curationpretext module so that it takes all give cpretext values.
 - removed `-resume` from nested pipelines as it isn't particularly useful seeing as resuming the main pipeline will re-start those processes rather than resume them.
 - Deleting out of date files (btk_draft.yaml)
-- Adding new config file (./conf/sanger-tol-btk.config) which should overwrite the BLASTN config in the modules.config
+- Adding new config file (./assets/blobtoolkit.config) which should overwrite the BLASTN config in the modules.config
 - Removed the GENERATE_SAMLESHEET script as we can do the same in bash
   - The container has also been updated to ubuntu 20.04 as we don't been python anymore.
 - blobtoolkit's module has been updated to take the config file and reads_dir as the samplesheet no longer contains an absolute path to files.
