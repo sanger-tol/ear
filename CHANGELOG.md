@@ -19,9 +19,9 @@ Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologi
 - removed `-resume` from nested pipelines as it isn't particularly useful seeing as resuming the main pipeline will re-start those processes rather than resume them.
 - Deleting out of date files (btk_draft.yaml)
 - Adding new config file (./assets/blobtoolkit.config) which should overwrite the BLASTN config in the modules.config
+- blobtoolkit's module has been updated to take the config file and reads_dir as the samplesheet no longer contains an absolute path to files.
 - Removed the GENERATE_SAMLESHEET script as we can do the same in bash
   - The container has also been updated to ubuntu 20.04 as we don't been python anymore.
-- blobtoolkit's module has been updated to take the config file and reads_dir as the samplesheet no longer contains an absolute path to files.
 - Update the use of values in yaml_input.
 
 
