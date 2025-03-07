@@ -4,6 +4,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologists).
 
+## v0.7.1 - Raymond Carhart (H1) [12/02/2025]
+
+- curationpretext has been updated to [1.2.0 - UNSC Spirit-of-Fire](https://github.com/sanger-tol/curationpretext/releases/tag/1.2.0)
+- removed `-resume` from nested pipelines as it isn't particularly useful seeing as resuming the main pipeline will re-start those processes rather than resume them.
+
+### Software dependencies
+
+| Dependency                   | Old version         | New version         |
+| ---------------------------- | ------------------- | ------------------- |
+| sanger-tol/curationpretext\* | 1.1.0 (UNSC Delphi) | 1.2.0 (UNSC Spirit-of-Fire) |
+
 ## v0.7.0 - Raymond Carhart [12/02/2025]
 
 - Removing the mapping subworkflow as it is no longer needed.
