@@ -4,8 +4,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologists).
 
-## v0.7.1 - Raymond Carhart (H1) [12/02/2025]
+## v0.7.0 - Raymond Carhart [08/03/2025]
 
+- Removing the mapping subworkflow as it is no longer needed.
+  - This was a requirement before BLOBTOOLKIT implemented it's own mapping subworkflow.
+  - This significantly speeds up the pipeline in two ways.
+    - We no longer have to wait for mapping to complete prior to BTK.
+    - BTK doesn't have to struggle with the much larger mapped bam that was being created.
+- NF-TEST implementation.
+  - We have implemented an output file sanity check rather than rely soley on pipeline completion.
 - curationpretext has been updated to [1.2.0 - UNSC Spirit-of-Fire](https://github.com/sanger-tol/curationpretext/releases/tag/1.2.0)
 - removed `-resume` from nested pipelines as it isn't particularly useful seeing as resuming the main pipeline will re-start those processes rather than resume them.
 - Deleting out of date files (multiqc.yaml, btk_draft.yaml)
@@ -16,20 +23,6 @@ Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologi
 | Dependency                   | Old version         | New version                 |
 | ---------------------------- | ------------------- | --------------------------- |
 | sanger-tol/curationpretext\* | 1.1.0 (UNSC Delphi) | 1.2.0 (UNSC Spirit-of-Fire) |
-
-## v0.7.0 - Raymond Carhart [12/02/2025]
-
-- Removing the mapping subworkflow as it is no longer needed.
-  - This was a requirement before BLOBTOOLKIT implemented it's own mapping subworkflow.
-  - This significantly speeds up the pipeline in two ways.
-    - We no longer have to wait for mapping to complete prior to BTK.
-    - BTK doesn't have to struggle with the much larger mapped bam that was being created.
-- NF-TEST implementation.
-  - We have implemented an output file sanity check rather than rely soley on pipeline completion.
-
-### Software dependencies
-
-No Software updates
 
 ### Parameters
 

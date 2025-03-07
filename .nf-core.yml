@@ -18,7 +18,6 @@ lint:
     - .github/workflows/awstest.yml
     - .github/workflows/awsfulltest.yml
     - conf/igenomes.config
-    - assets/multiqc_config.yml
   files_unchanged:
     - LICENSE
     - CODE_OF_CONDUCT.md
@@ -34,6 +33,7 @@ lint:
     - assets/email_template.html
   multiqc_config:
     - report_comment
+    - assets/multiqc_config.yml
   nextflow_config:
     - manifest.name
     - manifest.homePage
