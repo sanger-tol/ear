@@ -13,8 +13,8 @@ Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologi
 
 ### Software dependencies
 
-| Dependency                   | Old version         | New version         |
-| ---------------------------- | ------------------- | ------------------- |
+| Dependency                   | Old version         | New version                 |
+| ---------------------------- | ------------------- | --------------------------- |
 | sanger-tol/curationpretext\* | 1.1.0 (UNSC Delphi) | 1.2.0 (UNSC Spirit-of-Fire) |
 
 ## v0.7.0 - Raymond Carhart [12/02/2025]
