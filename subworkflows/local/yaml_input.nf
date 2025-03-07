@@ -15,15 +15,6 @@ workflow YAML_INPUT {
     longread_type               = Channel.of(inputs.longread.type)
     longread_dir                = Channel.of(inputs.longread.dir)
 
-    sample_id
-        .combine(longread_dir)
-        .map{sample, dir ->
-                tuple([id: sample],
-                dir
-            )
-        }
-        .set {pacbio_tuple}
-
     reference_1                 = Channel.fromPath(inputs.reference_hap1, checkIfExists: true)
     reference_2                 = Channel.fromPath(inputs.reference_hap2, checkIfExists: true)
     reference_3                 = Channel.fromPath(inputs.reference_haplotigs, checkIfExists: true)
@@ -39,7 +30,7 @@ workflow YAML_INPUT {
 
     cpretext_aligner            = Channel.of(inputs.curationpretext.aligner)
     cpretext_telomere_motif_raw = Channel.of(inputs.curationpretext.telomere_motif)
-    cpretext_hic_dir_raw        = Channel.of(inputs.curationpretext.hic_dir)
+    cpretext_hic_dir_raw        = Channel.of(inputs.curationpretext.hic_dir, checkIfExists: true, type: 'dir')
 
     sample_id
         .combine(cpretext_telomere_motif_raw)
@@ -59,22 +50,6 @@ workflow YAML_INPUT {
         }
         .set {cpretext_hic_dir}
 
-
-    if (params.mapped) {
-        bam_path = Channel.of(inputs.mapped_bam)
-
-        sample_id
-            .combine(bam_path)
-            .map{ sample, dir ->
-                tuple([id: sample],
-                    dir
-                )
-            }
-            .set {mapped_bam}
-    } else {
-        mapped_bam = [[],[]]
-    }
-
     emit:
     //
     // LOGIC: Building generic channels
@@ -82,12 +57,10 @@ workflow YAML_INPUT {
     sample_id
     longread_type                                                   // val(data)
     longread_dir                = inputs.longread.dir               // DataVariable
-    pacbio_tuple                                                    // tuple (meta), path(file)
     reference_hap1                                                  // tuple (meta), path(file)
     reference_hap2              = reference_2                       // DataVariable
     reference_haplotigs         = reference_3
     reference_path              = inputs.reference_hap1             // DataVariable
-    mapped_bam
 
     //
     // LOGIC: Building CurationPretext specific channels
@@ -114,6 +87,7 @@ workflow YAML_INPUT {
     btk_taxid                   = Channel.of(inputs.btk.taxid)
     btk_gca_accession           = Channel.of(inputs.btk.gca_accession)
     busco_lineages              = Channel.of(inputs.btk.lineages)
+    busco_config                = Channel.of(inputs.btk.config)
 
     versions                    = ch_versions.ifEmpty(null)
 }

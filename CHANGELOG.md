@@ -11,12 +11,19 @@ Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologi
   - This significantly speeds up the pipeline in two ways.
     - We no longer have to wait for mapping to complete prior to BTK.
     - BTK doesn't have to struggle with the much larger mapped bam that was being created.
+  - Removed all input parsing for the mapping.
 - NF-TEST implementation.
   - We have implemented an output file sanity check rather than rely soley on pipeline completion.
 - curationpretext has been updated to [1.2.0 - UNSC Spirit-of-Fire](https://github.com/sanger-tol/curationpretext/releases/tag/1.2.0)
+  - Update the curationpretext module so that it takes all give cpretext values.
 - removed `-resume` from nested pipelines as it isn't particularly useful seeing as resuming the main pipeline will re-start those processes rather than resume them.
-- Deleting out of date files (multiqc.yaml, btk_draft.yaml)
-- Adding new config file (./conf/sanger-tol-btk.config) which should overwrite the
+- Deleting out of date files (btk_draft.yaml)
+- Adding new config file (./conf/sanger-tol-btk.config) which should overwrite the BLASTN config in the modules.config
+- Removed the GENERATE_SAMLESHEET script as we can do the same in bash
+  - The container has also been updated to ubuntu 20.04 as we don't been python anymore.
+- blobtoolkit's module has been updated to take the config file and reads_dir as the samplesheet no longer contains an absolute path to files.
+- Update the use of values in yaml_input.
+
 
 ### Software dependencies
 

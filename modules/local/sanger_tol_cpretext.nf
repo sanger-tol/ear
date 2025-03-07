@@ -6,6 +6,8 @@ process SANGER_TOL_CPRETEXT {
     path(reference)
     path(longread_dir)
     path(cram_dir)
+    val telomere_motif
+    val aligner
     path(config_file)
 
     output:
@@ -20,8 +22,10 @@ process SANGER_TOL_CPRETEXT {
     def executor                            =   task.ext.executor           ?:  ""
     def profiles                            =   task.ext.profiles           ?:  ""
     def get_version                         =   task.ext.version_data       ?:  "UNKNOWN - SETTING NOT SET"
-    def config                              =   config_file                 ? "-c $config_file"         : ""
-    def pipeline_version                    =   task.ext.version            ?: "main"
+    def telomere                            =   telomere_motif              ?   "--teloseq $telomere": ""
+    def aligner_tool                        =   aligner                     ?   "--aligner $aligner" : ""
+    def config                              =   config_file                 ?   "-c $config_file"    : ""
+    def pipeline_version                    =   task.ext.version            ?:  "main"
 
     // Seems to be an issue where a nested pipeline can't see the files in the same directory
     // Running realpath gets around this but the files copied into the folder are
@@ -40,8 +44,10 @@ process SANGER_TOL_CPRETEXT {
         -profile  $profiles \\
         --input "\$(realpath $reference)" \\
         --outdir $output_dir \\
-        --longread "\$(realpath $longread_dir)" \\
+        --reads "\$(realpath $longread_dir)" \\
         --cram "\$(realpath $cram_dir)" \\
+        $telomere \\
+        $aligner_tool \\
         $config \\
         $args'
 

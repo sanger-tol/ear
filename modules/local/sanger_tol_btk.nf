@@ -5,6 +5,7 @@ process SANGER_TOL_BTK {
     input:
     tuple val(meta), path(reference, stageAs: "REFERENCE.fa")
     tuple val(meta2), path(samplesheet_csv, stageAs: "SAMPLESHEET.csv")
+    path pacbio_path
     path blastp, stageAs: "blastp.dmnd"
     path blastn
     path blastx
@@ -12,6 +13,7 @@ process SANGER_TOL_BTK {
     val busco_lineages
     val taxon
     val gca_accession
+    path config
 
     output:
     tuple val(meta), path("*_out/blobtoolkit/REFERENCE"),           emit: dataset
@@ -31,6 +33,7 @@ process SANGER_TOL_BTK {
     def profiles                            =   task.ext.profiles       ?:  ""
     def get_version                         =   task.ext.version_data   ?:  "UNKNOWN - SETTING NOT SET"
     def pipeline_version                    =   task.ext.version        ?: "main"
+    def config                              =   config                  ? " -c ${config}"               : ""
 
     // Seems to be an issue where a nested pipeline can't see the files in the same directory
     // Running realpath gets around this but the files copied into the folder are
@@ -59,9 +62,8 @@ process SANGER_TOL_BTK {
         --blastn "\$(realpath $blastn)" \\
         --blastx "\$(realpath $blastx)" \\
         --use_work_dir_as_temp true \\
-        $config \\
-        $args \\
-        -resume'
+        --align \\
+        $args'
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

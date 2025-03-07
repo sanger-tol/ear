@@ -5,23 +5,23 @@
 */
 
 // Subpipeline imports
-include { SANGER_TOL_BTK                    } from '../modules/local/sanger_tol_btk'
-include { SANGER_TOL_CPRETEXT               } from '../modules/local/sanger_tol_cpretext'
+include { SANGER_TOL_BTK            } from '../modules/local/sanger_tol_btk'
+include { SANGER_TOL_CPRETEXT       } from '../modules/local/sanger_tol_cpretext'
 
 // Subworkflow imports
-include { YAML_INPUT                        } from '../subworkflows/local/yaml_input'
+include { YAML_INPUT                } from '../subworkflows/local/yaml_input'
 
 // Module imports
-include { CAT_CAT                           } from '../modules/nf-core/cat/cat/main'
-include { GENERATE_SAMPLESHEET              } from '../modules/local/generate_samplesheet'
-include { GFASTATS                          } from '../modules/nf-core/gfastats/main'
-include { MERQURYFK_MERQURYFK               } from '../modules/nf-core/merquryfk/merquryfk/main'
+include { CAT_CAT                   } from '../modules/nf-core/cat/cat/main'
+include { GENERATE_SAMPLESHEET      } from '../modules/local/generate_samplesheet'
+include { GFASTATS                  } from '../modules/nf-core/gfastats/main'
+include { MERQURYFK_MERQURYFK       } from '../modules/nf-core/merquryfk/merquryfk/main'
 
 // Plugin imports
-include { paramsSummaryMap       } from 'plugin/nf-schema'
-include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_ear_pipeline'
+include { paramsSummaryMap          } from 'plugin/nf-schema'
+include { paramsSummaryMultiqc      } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML    } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText    } from '../subworkflows/local/utils_nfcore_ear_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -96,7 +96,7 @@ workflow EAR {
         [],
         []
     )
-    ch_versions = ch_versions.mix( GFASTATS.out.versions )
+    ch_versions     = ch_versions.mix( GFASTATS.out.versions )
 
 
     //
@@ -129,7 +129,7 @@ workflow EAR {
             [],
             []
         )
-        ch_versions = ch_versions.mix( MERQURYFK_MERQURYFK.out.versions )
+        ch_versions     = ch_versions.mix( MERQURYFK_MERQURYFK.out.versions )
     }
 
 
@@ -137,27 +137,6 @@ workflow EAR {
     // LOGIC: STEP TO STOP BTK RUNNING IF SPECIFIED BY USER
     //
     if (!exclude_steps.contains('btk')) {
-        //
-        // LOGIC: IF A MAPPED BAM FILE EXISTS AND THE FLAG `mapped` IS TRUE
-        //          SKIP THE MAPPING SUBWORKFLOW
-        //
-        if (!params.mapped) {
-            //
-            // SUBWORKFLOW: MAIN_MAPPING CONTAINS ALL THE MAPPING LOGIC
-            //              This allows us to more esily bypass the mapping if we already have a sorted and mapped bam
-            //
-            MAIN_MAPPING (
-                YAML_INPUT.out.sample_id,
-                YAML_INPUT.out.longread_type,
-                YAML_INPUT.out.reference_hap1,
-                YAML_INPUT.out.pacbio_tuple,
-            )
-            ch_versions = ch_versions.mix( MAIN_MAPPING.out.versions )
-            ch_mapped_bam = MAIN_MAPPING.out.mapped_bam
-        } else {
-            ch_mapped_bam = YAML_INPUT.out.mapped_bam
-        }
-
 
         //
         // MODULE: GENERATE_SAMPLESHEET creates a csv for the blobtoolkit pipeline
@@ -166,7 +145,7 @@ workflow EAR {
             YAML_INPUT.out.reference_hap1,
             YAML_INPUT.out.longread_dir
         )
-        ch_versions = ch_versions.mix( GENERATE_SAMPLESHEET.out.versions )
+        ch_versions     = ch_versions.mix( GENERATE_SAMPLESHEET.out.versions )
 
 
         //
@@ -175,15 +154,17 @@ workflow EAR {
         SANGER_TOL_BTK (
             YAML_INPUT.out.reference_hap1,
             GENERATE_SAMPLESHEET.out.csv,
+            YAML_INPUT.out.longread_dir,
             YAML_INPUT.out.btk_un_diamond_database,
             YAML_INPUT.out.btk_nt_database,
             YAML_INPUT.out.btk_un_diamond_database,
             YAML_INPUT.out.btk_ncbi_taxonomy_path,
             YAML_INPUT.out.busco_lineages,
             YAML_INPUT.out.btk_taxid,
-            'GCA_0001'
+            'GCA_0001',
+            YAML_INPUT.out.busco_config
         )
-        ch_versions              = ch_versions.mix(SANGER_TOL_BTK.out.versions)
+        ch_versions     = ch_versions.mix(SANGER_TOL_BTK.out.versions)
     }
 
 
@@ -192,19 +173,23 @@ workflow EAR {
     //
     if (!exclude_steps.contains('cpretext')) {
         //
-        // MODULE: Run Sanger-ToL/CurationPretext
+        // MODULE: Run SANGER-TOL/CurationPretext
         //
         reference       = YAML_INPUT.out.reference_path.get()
         hic_dir         = YAML_INPUT.out.cpretext_hic_dir_raw.get()
         longread_dir    = YAML_INPUT.out.longread_dir.get()
+        telomere        = YAML_INPUT.out.cpretext_telomere_motif.get()
+        aligner         = YAML_INPUT.out.cpretext_aligner.get()
 
         SANGER_TOL_CPRETEXT(
             reference,
             longread_dir,
             hic_dir,
+            telomere,
+            aligner,
             []
         )
-        ch_versions = ch_versions.mix( SANGER_TOL_CPRETEXT.out.versions )
+        ch_versions     = ch_versions.mix( SANGER_TOL_CPRETEXT.out.versions )
     }
 
 
@@ -225,7 +210,7 @@ workflow EAR {
     ch_workflow_summary = Channel.value(paramsSummaryMultiqc(summary_params))
 
     emit:
-    versions       = ch_versions                 // channel: [ path(versions.yml) ]
+    versions            = ch_versions                 // channel: [ path(versions.yml) ]
 
 }
 
