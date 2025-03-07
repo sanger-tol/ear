@@ -8,6 +8,8 @@ Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologi
 
 - curationpretext has been updated to [1.2.0 - UNSC Spirit-of-Fire](https://github.com/sanger-tol/curationpretext/releases/tag/1.2.0)
 - removed `-resume` from nested pipelines as it isn't particularly useful seeing as resuming the main pipeline will re-start those processes rather than resume them.
+- Deleting out of date files (multiqc.yaml, btk_draft.yaml)
+- Adding new config file (./conf/sanger-tol-btk.config) which should overwrite the
 
 ### Software dependencies
 
