@@ -24,12 +24,15 @@ Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologi
   - The container has also been updated to ubuntu 20.04 as we don't been python anymore.
 - Update the use of values in yaml_input.
 
-
 ### Software dependencies
 
 | Dependency                   | Old version         | New version                 |
 | ---------------------------- | ------------------- | --------------------------- |
 | sanger-tol/curationpretext\* | 1.1.0 (UNSC Delphi) | 1.2.0 (UNSC Spirit-of-Fire) |
+| MINIMAP2_ALIGN               | 2.28                | REMOVED                     |
+| SAMTOOLS_MERGE               | 1.20--h50ea8bc_0    | REMOVED                     |
+| SAMTOOLS_SORT                | 1.21--h50ea8bc_0    | REMOVED                     |
+| GENERATE_SAMPLESHEET         | Python 3.9          | coreutils=9.1               |
 
 ### Parameters
 
