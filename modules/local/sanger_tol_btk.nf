@@ -63,7 +63,8 @@ process SANGER_TOL_BTK {
         --blastx "\$(realpath $blastx)" \\
         --use_work_dir_as_temp true \\
         --align \\
-        $args'
+        $args \\
+        $config'
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
