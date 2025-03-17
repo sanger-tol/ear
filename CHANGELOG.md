@@ -7,21 +7,22 @@ Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologi
 ## v0.7.0 - Raymond Carhart [08/03/2025]
 
 - Removing the mapping subworkflow as it is no longer needed.
-  - This was a requirement before BLOBTOOLKIT implemented it's own mapping subworkflow.
+  - This was a requirement before BLOBTOOLKIT implemented its own mapping subworkflow.
   - This significantly speeds up the pipeline in two ways.
-    - We no longer have to wait for mapping to complete prior to BTK.
-    - BTK doesn't have to struggle with the much larger mapped bam that was being created.
+    - We no longer have to wait for mapping to complete before BTK.
+    - BTK doesn't have to struggle with the much larger mapped bam that was being created (cpretext was creating a bam with lots of suplementary data).
   - Removed all input parsing for the mapping.
 - NF-TEST implementation.
-  - We have implemented an output file sanity check rather than rely soley on pipeline completion.
+  - We have implemented an output file sanity check rather than rely solely on pipeline completion.
 - curationpretext has been updated to [1.2.0 - UNSC Spirit-of-Fire](https://github.com/sanger-tol/curationpretext/releases/tag/1.2.0)
-  - Update the curationpretext module so that it takes all give cpretext values.
-- removed `-resume` from nested pipelines as it isn't particularly useful seeing as resuming the main pipeline will re-start those processes rather than resume them.
+  - Update the curationpretext module so that it takes all available cpretext params.
+- Removed `-resume` from nested pipelines as it isn't particularly useful, resuming the main pipeline will re-start those processes rather than resume them.
 - Deleting out of date files (btk_draft.yaml)
-- Adding new config file (./assets/blobtoolkit.config) which should overwrite the BLASTN config in the modules.config
-- blobtoolkit's module has been updated to take the config file and reads_dir as the samplesheet no longer contains an absolute path to files.
-- Removed the GENERATE_SAMLESHEET script as we can do the same in bash
-  - The container has also been updated to ubuntu 20.04 as we don't been python anymore.
+- Adding new config file (./assets/blobtoolkit.config) which should overwrite the BLASTN config in the modules.config of blobtoolkit.
+  - This implements the `-dust no` flag rather than allowing for 'medium' use of dust. There is also a selection of args to use for BLOBTOOLS_CHUNK in the case of high dupe genomes.
+  - blobtoolkit's module has been updated to take the reads_dir as the samplesheet no longer contains an absolute path to files.
+- Removed the GENERATE_SAMLESHEET script as we can do the same in bash, there's no point in using a python if we don't need to.
+  - The container has also been updated to Ubuntu 20.04 as we don't need Python anymore.
 - Update the use of values in yaml_input.
 
 ### Software dependencies
