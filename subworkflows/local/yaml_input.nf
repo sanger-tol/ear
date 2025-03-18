@@ -13,7 +13,7 @@ workflow YAML_INPUT {
 
     sample_id                   = Channel.of(inputs.assembly_id)
     longread_type               = Channel.of(inputs.longread.type)
-    longread_dir                = Channel.of(inputs.longread.dir)
+    longread_dir                = Channel.of(inputs.longread.dir, checkIfExists: true, type: 'dir')
 
     reference_1                 = Channel.fromPath(inputs.reference_hap1, checkIfExists: true)
     reference_2                 = Channel.fromPath(inputs.reference_hap2, checkIfExists: true)

@@ -22,9 +22,9 @@ process SANGER_TOL_CPRETEXT {
     def executor                            =   task.ext.executor           ?:  ""
     def profiles                            =   task.ext.profiles           ?:  ""
     def get_version                         =   task.ext.version_data       ?:  "UNKNOWN - SETTING NOT SET"
-    def telomere                            =   telomere_motif              ?   "--teloseq $telomere": ""
-    def aligner_tool                        =   aligner                     ?   "--aligner $aligner" : ""
-    def config                              =   config_file                 ?   "-c $config_file"    : ""
+    def telomere                            =   telomere_motif              ?   "--teloseq $telomere_motif" : ""
+    def aligner_tool                        =   aligner                     ?   "--aligner $aligner"        : ""
+    def config                              =   config_file                 ?   "-c $config_file"           : ""
     def pipeline_version                    =   task.ext.version            ?:  "main"
 
     // Seems to be an issue where a nested pipeline can't see the files in the same directory

@@ -175,18 +175,12 @@ workflow EAR {
         //
         // MODULE: Run SANGER-TOL/CurationPretext
         //
-        reference       = YAML_INPUT.out.reference_path.get()
-        hic_dir         = YAML_INPUT.out.cpretext_hic_dir_raw.get()
-        longread_dir    = YAML_INPUT.out.longread_dir.get()
-        telomere        = YAML_INPUT.out.cpretext_telomere_motif.get()
-        aligner         = YAML_INPUT.out.cpretext_aligner.get()
-
         SANGER_TOL_CPRETEXT(
-            reference,
-            longread_dir,
-            hic_dir,
-            telomere,
-            aligner,
+            YAML_INPUT.out.reference_path,
+            YAML_INPUT.out.cpretext_hic_dir_raw,
+            YAML_INPUT.out.longread_dir,
+            YAML_INPUT.out.cpretext_telomere_motif.map{it -> it[1]},
+            YAML_INPUT.out.cpretext_aligner,
             []
         )
         ch_versions     = ch_versions.mix( SANGER_TOL_CPRETEXT.out.versions )
