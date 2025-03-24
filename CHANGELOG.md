@@ -24,16 +24,20 @@ Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologi
 - Removed the GENERATE_SAMLESHEET script as we can do the same in bash, there's no point in using a python if we don't need to.
   - The container has also been updated to Ubuntu 20.04 as we don't need Python anymore.
 - Update the use of values in yaml_input.
+- GFASTATS has been updated to version 1.3.10.
+- BLOBTOOLKIT has been updated to version 0.7.0.
 
 ### Software dependencies
 
 | Dependency                   | Old version         | New version                 |
 | ---------------------------- | ------------------- | --------------------------- |
 | sanger-tol/curationpretext\* | 1.1.0 (UNSC Delphi) | 1.2.0 (UNSC Spirit-of-Fire) |
+| sanger-tol/blobtoolkit\*     | 0.6.0 (Bellsprout)  | 0.7.0 (Psyduck)             |
 | MINIMAP2_ALIGN               | 2.28                | REMOVED                     |
 | SAMTOOLS_MERGE               | 1.20--h50ea8bc_0    | REMOVED                     |
 | SAMTOOLS_SORT                | 1.21--h50ea8bc_0    | REMOVED                     |
 | GENERATE_SAMPLESHEET         | Python 3.9          | coreutils=9.1               |
+| GFASTATS                     | 1.3.6               | 1.3.10                      |
 
 ### Parameters
 
