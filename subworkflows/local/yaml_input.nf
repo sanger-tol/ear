@@ -2,6 +2,10 @@
 
 import groovy.yaml.YamlSlurper
 
+include { GUNZIP as GUNZIP_1 } from '../../modules/nf-core/gunzip/main'
+include { GUNZIP as GUNZIP_2 } from '../../modules/nf-core/gunzip/main'
+include { GUNZIP as GUNZIP_3 } from '../../modules/nf-core/gunzip/main'
+
 workflow YAML_INPUT {
     take:
     input_file                  // params.input
@@ -15,17 +19,36 @@ workflow YAML_INPUT {
     longread_type               = Channel.of(inputs.longread.type)
     longread_dir                = Channel.of(inputs.longread.dir, checkIfExists: true, type: 'dir')
 
-    reference_1                 = Channel.fromPath(inputs.reference_hap1, checkIfExists: true)
-    reference_2                 = Channel.fromPath(inputs.reference_hap2, checkIfExists: true)
-    reference_3                 = Channel.fromPath(inputs.reference_haplotigs, checkIfExists: true)
+    //
+    // LOGIC: UN ZIP THE INPUT FILES
+    //
+    if ( inputs.reference_hap1.endsWith('.gz') ) {
+        ch_unzipped_1 = GUNZIP_1 ( [[], inputs.reference_hap1] ).gunzip.map { it -> it[1] }
+        ch_versions = ch_versions.mix ( GUNZIP_1.out.versions.first() )
+    } else {
+        ch_unzipped_1 = Channel.fromPath(inputs.reference_hap1, checkIfExists: true)
+    }
 
-    reference_1
+    if ( inputs.reference_hap2.endsWith('.gz') ) {
+        ch_unzipped_2 = GUNZIP_2 ( [[], inputs.reference_hap2] ).gunzip
+        ch_versions = ch_versions.mix ( GUNZIP_2.out.versions.first() )
+    } else {
+        ch_unzipped_2 = Channel.fromPath(inputs.reference_hap2, checkIfExists: true)
+    }
+
+    if ( inputs.reference_haplotigs.endsWith('.gz') ) {
+        ch_unzipped_3 = GUNZIP_3 ( [[], inputs.reference_haplotigs] ).gunzip
+        ch_versions = ch_versions.mix ( GUNZIP_3.out.versions.first() )
+    } else {
+        ch_unzipped_3 = Channel.fromPath(inputs.reference_haplotigs, checkIfExists: true)
+    }
+
+    ch_unzipped_1
         .combine(sample_id)
         .map{ref, sample_id ->
             tuple([id:sample_id], ref)
         }
         .set{reference_hap1}
-
 
 
     cpretext_aligner            = Channel.of(inputs.curationpretext.aligner)
@@ -57,10 +80,9 @@ workflow YAML_INPUT {
     sample_id
     longread_type                                                   // val(data)
     longread_dir                = inputs.longread.dir               // DataVariable
-    reference_hap1                                                  // tuple (meta), path(file)
-    reference_hap2              = reference_2                       // DataVariable
-    reference_haplotigs         = reference_3
-    reference_path              = inputs.reference_hap1             // DataVariable
+    reference_hap1              = reference_hap1                     // tuple (meta), path(file)
+    reference_hap2              = ch_unzipped_2                     // DataVariable
+    reference_haplotigs         = ch_unzipped_3
 
     //
     // LOGIC: Building CurationPretext specific channels
