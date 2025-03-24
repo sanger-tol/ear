@@ -177,8 +177,8 @@ workflow EAR {
         //
         SANGER_TOL_CPRETEXT(
             YAML_INPUT.out.reference_path,
-            YAML_INPUT.out.cpretext_hic_dir_raw,
             YAML_INPUT.out.longread_dir,
+            YAML_INPUT.out.cpretext_hic_dir_raw,
             YAML_INPUT.out.cpretext_telomere_motif.map{it -> it[1]},
             YAML_INPUT.out.cpretext_aligner,
             []
