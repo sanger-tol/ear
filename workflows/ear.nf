@@ -143,7 +143,8 @@ workflow EAR {
         //
         GENERATE_SAMPLESHEET(
             YAML_INPUT.out.reference_hap1,
-            YAML_INPUT.out.longread_dir
+            YAML_INPUT.out.longread_dir,
+            YAML_INPUT.out.btk_read_layout
         )
         ch_versions     = ch_versions.mix( GENERATE_SAMPLESHEET.out.versions )
 

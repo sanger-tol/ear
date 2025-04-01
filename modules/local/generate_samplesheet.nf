@@ -10,6 +10,7 @@ process GENERATE_SAMPLESHEET {
     input:
     tuple val(meta), path(reference)
     path(pacbio_path)
+    val(reads_layout)
 
     output:
     tuple val(meta),    path("samplesheet.csv"),    emit: csv
@@ -21,14 +22,14 @@ process GENERATE_SAMPLESHEET {
     echo "Debug: Contents of ${pacbio_path}"
     ls -l ${pacbio_path}
 
-    echo "sample,datatype,datafile" > pre_samplesheet.csv
+    echo "sample,datatype,datafile,library_layout" > pre_samplesheet.csv
 
     for file in ${pacbio_path}/*.fasta.gz; do
         echo "Debug: Processing file \$file"
-        echo "${meta.id},pacbio,\$file" >> pre_samplesheet.csv
+        echo "${meta.id},pacbio,\$file,\$reads_layout" >> pre_samplesheet.csv
     done
 
-    echo "Debug: Contents of pre_samplesheet.csv"
+    echo "Debug: MOVE pre_samplesheet.csv to samplesheet.csv"
 
     mv pre_samplesheet.csv samplesheet.csv
 
