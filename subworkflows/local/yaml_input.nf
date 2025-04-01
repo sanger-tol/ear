@@ -100,6 +100,7 @@ workflow YAML_INPUT {
     //
     // LOGIC: Building BlobToolKit specific channels
     //
+    btk_read_layout             = Channel.of(inputs.btk.read_layout)
     btk_nt_database             = Channel.of(inputs.btk.nt_database)
     btk_nt_database_prefix      = Channel.of(inputs.btk.nt_database_prefix)
     btk_nt_diamond_database     = Channel.of(inputs.btk.diamond_nr_database_path)
