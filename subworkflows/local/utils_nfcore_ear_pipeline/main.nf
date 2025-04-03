@@ -16,6 +16,7 @@ include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
 include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
+include { YAML_INPUT                } from '../yaml_input'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -67,29 +68,27 @@ workflow PIPELINE_INITIALISATION {
     // Create channel from input file provided through params.input
     //
 
-    // Channel
-    //     .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
-    //     .map {
-    //         meta, fastq_1, fastq_2 ->
-    //             if (!fastq_2) {
-    //                 return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
-    //             } else {
-    //                 return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
-    //             }
-    //     }
-    //     .groupTuple()
-    //     .map { samplesheet ->
-    //         validateInputSamplesheet(samplesheet)
-    //     }
-    //     .map {
-    //         meta, fastqs ->
-    //             return [ meta, fastqs.flatten() ]
-    //     }
-    //     .set { ch_samplesheet }
+    YAML_INPUT (params.input)
 
     emit:
-    samplesheet = params.input
-    versions    = ch_versions
+    sample_id                   = YAML_INPUT.out.sample_id
+    reference_hap1              = YAML_INPUT.out.reference_hap1
+    reference_hap2              = YAML_INPUT.out.reference_hap2
+    reference_haplotigs         = YAML_INPUT.out.reference_haplotigs
+    fastk_hist                  = YAML_INPUT.out.fastk_hist
+    fastk_ktab                  = YAML_INPUT.out.fastk_ktab
+    longread_dir                = YAML_INPUT.out.longread_dir
+    cpretext_hic_dir_raw        = YAML_INPUT.out.cpretext_hic_dir_raw
+    cpretext_telomere_motif     = YAML_INPUT.out.cpretext_telomere_motif
+    cpretext_aligner            = YAML_INPUT.out.cpretext_aligner
+    btk_read_layout             = YAML_INPUT.out.btk_read_layout
+    btk_un_diamond_database     = YAML_INPUT.out.btk_un_diamond_database
+    btk_nt_database             = YAML_INPUT.out.btk_nt_diamond_database
+    btk_ncbi_taxonomy_path      = YAML_INPUT.out.btk_ncbi_taxonomy_path
+    btk_taxid                   = YAML_INPUT.out.btk_taxid
+    busco_lineages              = YAML_INPUT.out.busco_lineages
+    busco_config                = YAML_INPUT.out.busco_config
+    versions                    = ch_versions
 }
 
 /*
@@ -110,7 +109,7 @@ workflow PIPELINE_COMPLETION {
     multiqc_report  //  string: Path to MultiQC report
 
     main:
-    summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
+    summary_params  = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
     def multiqc_reports = multiqc_report.toList()
 
     //

@@ -53,4 +53,5 @@ template:
   outdir: .
   skip_features:
     - igenomes
+    - multiqc
   version: 0.6.2
