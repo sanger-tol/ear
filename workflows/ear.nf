@@ -8,9 +8,6 @@
 include { SANGER_TOL_BTK            } from '../modules/local/sanger_tol_btk'
 include { SANGER_TOL_CPRETEXT       } from '../modules/local/sanger_tol_cpretext'
 
-// Subworkflow imports
-include { YAML_INPUT                } from '../subworkflows/local/yaml_input'
-
 // Module imports
 include { CAT_CAT                   } from '../modules/nf-core/cat/cat/main'
 include { GENERATE_SAMPLESHEET      } from '../modules/local/generate_samplesheet'
@@ -54,6 +51,10 @@ workflow EAR {
     main:
     ch_versions     = Channel.empty()
     ch_align_bam    = Channel.empty()
+
+    if (!ch_pipeline_exclusion_list.contains("merk")) {
+        println "oooo i shouldn't be running... again"
+    }
 
     //
     // LOGIC: IF HAPLOTIGS IS EMPTY THEN PASS ON HALPLOTYPE ASSEMBLY
@@ -103,7 +104,7 @@ workflow EAR {
     //
     // LOGIC: STEP TO STOP MERQURY_FK RUNNING IF SPECIFIED BY USER
     //
-    if (!ch_pipeline_exclusion_list.contains('merquryfk')) {
+    if (!ch_pipeline_exclusion_list.contains("merkquryfk")) {
         //
         // LOGIC:  REFORMAT A BUNCH OF CHANNELS FOR MERQUERYFK
         //
@@ -136,8 +137,7 @@ workflow EAR {
     //
     // LOGIC: STEP TO STOP BTK RUNNING IF SPECIFIED BY USER
     //
-    if (!ch_pipeline_exclusion_list.contains('btk')) {
-
+    if (!ch_pipeline_exclusion_list.contains("btk")) {
         //
         // MODULE: GENERATE_SAMPLESHEET creates a csv for the blobtoolkit pipeline
         //
@@ -172,7 +172,8 @@ workflow EAR {
     //
     // LOGIC: STEP TO STOP CURATION_PRETEXT RUNNING IF SPECIFIED BY USER
     //
-    if (!ch_pipeline_exclusion_list.contains('cpretext')) {
+    if (!ch_pipeline_exclusion_list.contains("cpretext")) {
+
         //
         // MODULE: Run SANGER-TOL/CurationPretext
         //
