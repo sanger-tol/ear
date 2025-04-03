@@ -46,14 +46,20 @@ workflow EAR {
     ch_btk_taxid
     ch_busco_lineages
     ch_busco_config
-    ch_pipeline_exclusion_list
 
     main:
     ch_versions     = Channel.empty()
     ch_align_bam    = Channel.empty()
 
-    if (!ch_pipeline_exclusion_list.contains("merk")) {
-        println "oooo i shouldn't be running... again"
+    //
+    // NOTE: THIS STAYS HERE | MOVING IT INTO PIPELINE INIT BREAKS IT
+    // LOGIC: SPLITS INPUT STEPS INTO A LIST THAT CONTROLLS PROCESSES ON EXISTENCE
+    //
+    exclude_steps   = params.steps ? params.steps.split(",") : "NONE"
+    full_list       = ["btk", "cpretext", "merquryfk", "NONE"]
+
+    if (!full_list.containsAll(exclude_steps)) {
+        exit 1, "There is an extra argument given on Command Line: \nCheck contents of: $exclude_steps\nMaster list is: $full_list"
     }
 
     //
@@ -104,7 +110,7 @@ workflow EAR {
     //
     // LOGIC: STEP TO STOP MERQURY_FK RUNNING IF SPECIFIED BY USER
     //
-    if (!ch_pipeline_exclusion_list.contains("merkquryfk")) {
+    if (!exclude_steps.contains("merquryfk")) {
         //
         // LOGIC:  REFORMAT A BUNCH OF CHANNELS FOR MERQUERYFK
         //
@@ -137,7 +143,7 @@ workflow EAR {
     //
     // LOGIC: STEP TO STOP BTK RUNNING IF SPECIFIED BY USER
     //
-    if (!ch_pipeline_exclusion_list.contains("btk")) {
+    if (!exclude_steps.contains("btk")) {
         //
         // MODULE: GENERATE_SAMPLESHEET creates a csv for the blobtoolkit pipeline
         //
@@ -172,7 +178,7 @@ workflow EAR {
     //
     // LOGIC: STEP TO STOP CURATION_PRETEXT RUNNING IF SPECIFIED BY USER
     //
-    if (!ch_pipeline_exclusion_list.contains("cpretext")) {
+    if (!exclude_steps.contains("cpretext")) {
 
         //
         // MODULE: Run SANGER-TOL/CurationPretext

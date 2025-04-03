@@ -70,13 +70,6 @@ workflow PIPELINE_INITIALISATION {
 
     YAML_INPUT (params.input)
 
-    exclude_steps   = params.steps ? params.steps.split(",") : "NONE"
-    full_list       = ["btk", "cpretext", "merquryfk", "NONE"]
-
-    if (!full_list.containsAll(exclude_steps)) {
-        exit 1, "There is an extra argument given on Command Line: \nCheck contents of: $exclude_steps\nMaster list is: $full_list"
-    }
-
     emit:
     sample_id                   = YAML_INPUT.out.sample_id
     reference_hap1              = YAML_INPUT.out.reference_hap1
@@ -95,7 +88,6 @@ workflow PIPELINE_INITIALISATION {
     btk_taxid                   = YAML_INPUT.out.btk_taxid
     busco_lineages              = YAML_INPUT.out.busco_lineages
     busco_config                = YAML_INPUT.out.busco_config
-    pipeline_exclusion_list     = exclude_steps
     versions                    = ch_versions
 }
 

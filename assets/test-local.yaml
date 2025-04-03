@@ -18,6 +18,7 @@ curationpretext:
   telomere_motif: TTAGGG
   hic_dir: /home/runner/work/ear/ear/TreeValTinyData/genomic_data/hic-arima/
 btk:
+  reads_layout: "SINGLE"
   taxid: 352914
   gca_accession: GCA_0001
   lineages: "fungi_odb10"
