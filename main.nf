@@ -71,8 +71,6 @@ workflow SANGERTOL_EAR {
         ch_busco_lineages,
         ch_busco_config
     )
-
-
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -118,7 +116,6 @@ workflow {
         PIPELINE_INITIALISATION.out.busco_lineages,
         PIPELINE_INITIALISATION.out.busco_config
     )
-
     //
     // SUBWORKFLOW: Run completion tasks
     //
@@ -129,7 +126,6 @@ workflow {
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        []
     )
 
 }
