@@ -38,9 +38,6 @@ lint:
   nextflow_config:
     - manifest.name
     - manifest.homePage
-    - params.show_hidden_params
-    - params.schema_ignore_params
-    - params.validationSchemaIgnoreParams
 nf_core_version: 3.2.0
 repository_type: pipeline
 template:
@@ -53,5 +50,9 @@ template:
   outdir: .
   skip_features:
     - igenomes
+    - codespaces
+    - fastqc
+    - adaptivecard
+    - seqera_platform
     - multiqc
-  version: 0.6.2
+  version: 0.7.0
