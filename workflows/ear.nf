@@ -201,18 +201,14 @@ workflow EAR {
     softwareVersionsToYAML(ch_versions)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
-            name:  'ear_software_'  + 'mqc_'  + 'versions.yml',
+            name:  'ear_software_'  + 'versions.yml',
             sort: true,
             newLine: true
         ).set { ch_collated_versions }
 
 
-    summary_params      = paramsSummaryMap(
-        workflow, parameters_schema: "nextflow_schema.json")
-    ch_workflow_summary = Channel.value(paramsSummaryMultiqc(summary_params))
-
     emit:
-    versions            = ch_versions                 // channel: [ path(versions.yml) ]
+    versions       = ch_versions                 // channel: [ path(versions.yml) ]
 
 }
 
