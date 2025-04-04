@@ -5,12 +5,12 @@
 */
 
 // Subpipeline imports
-include { SANGER_TOL_BTK            } from '../modules/local/sanger_tol_btk'
-include { SANGER_TOL_CPRETEXT       } from '../modules/local/sanger_tol_cpretext'
+include { SANGER_TOL_BTK            } from '../modules/local/sanger-tol/blobtoolkit/main'
+include { SANGER_TOL_CPRETEXT       } from '../modules/local/sanger-tol/curationpretext/main'
 
 // Module imports
 include { CAT_CAT                   } from '../modules/nf-core/cat/cat/main'
-include { GENERATE_SAMPLESHEET      } from '../modules/local/generate_samplesheet'
+include { GENERATE_SAMPLESHEET      } from '../modules/local/generate_samplesheet/main'
 include { GFASTATS                  } from '../modules/nf-core/gfastats/main'
 include { MERQURYFK_MERQURYFK       } from '../modules/nf-core/merquryfk/merquryfk/main'
 

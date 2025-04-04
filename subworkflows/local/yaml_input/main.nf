@@ -2,9 +2,9 @@
 
 import groovy.yaml.YamlSlurper
 
-include { GUNZIP as GUNZIP_1 } from '../../modules/nf-core/gunzip/main'
-include { GUNZIP as GUNZIP_2 } from '../../modules/nf-core/gunzip/main'
-include { GUNZIP as GUNZIP_3 } from '../../modules/nf-core/gunzip/main'
+include { GUNZIP as GUNZIP_1 } from '../../../modules/nf-core/gunzip/main'
+include { GUNZIP as GUNZIP_2 } from '../../../modules/nf-core/gunzip/main'
+include { GUNZIP as GUNZIP_3 } from '../../../modules/nf-core/gunzip/main'
 
 workflow YAML_INPUT {
     take:
