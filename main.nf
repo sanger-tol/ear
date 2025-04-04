@@ -13,9 +13,9 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { EAR  } from './workflows/ear'
-include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_ear_pipeline'
-include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_ear_pipeline'
+include { EAR                       } from './workflows/ear'
+include { PIPELINE_INITIALISATION   } from './subworkflows/local/utils_nfcore_ear_pipeline'
+include { PIPELINE_COMPLETION       } from './subworkflows/local/utils_nfcore_ear_pipeline'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     NAMED WORKFLOWS FOR PIPELINE
