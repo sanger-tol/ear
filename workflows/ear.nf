@@ -184,7 +184,7 @@ workflow EAR {
         // MODULE: Run SANGER-TOL/CurationPretext
         //
         SANGER_TOL_CPRETEXT(
-            ch_reference_hap1.map{it -> it[1]},
+            ch_reference_hap1,
             ch_longread_dir,
             ch_cpretext_hic_dir,
             ch_cpretext_telomotif.map{it -> it[1]},

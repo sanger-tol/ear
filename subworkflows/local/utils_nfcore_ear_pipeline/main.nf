@@ -67,8 +67,8 @@ workflow PIPELINE_INITIALISATION {
     //
     // Create channel from input file provided through params.input
     //
-
     YAML_INPUT (params.input)
+
 
     emit:
     sample_id                   = YAML_INPUT.out.sample_id
@@ -83,7 +83,8 @@ workflow PIPELINE_INITIALISATION {
     cpretext_aligner            = YAML_INPUT.out.cpretext_aligner
     btk_read_layout             = YAML_INPUT.out.btk_read_layout
     btk_un_diamond_database     = YAML_INPUT.out.btk_un_diamond_database
-    btk_nt_database             = YAML_INPUT.out.btk_nt_diamond_database
+    btk_nt_database             = YAML_INPUT.out.btk_nt_database
+    btk_nr_diamond_database     = YAML_INPUT.out.btk_nr_diamond_database
     btk_ncbi_taxonomy_path      = YAML_INPUT.out.btk_ncbi_taxonomy_path
     btk_taxid                   = YAML_INPUT.out.btk_taxid
     busco_lineages              = YAML_INPUT.out.busco_lineages

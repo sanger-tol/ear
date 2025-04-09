@@ -3,7 +3,7 @@ process SANGER_TOL_CPRETEXT {
     label 'process_low'
 
     input:
-    path(reference)
+    tuple val(meta), path(reference)
     path(longread_dir)
     path(cram_dir)
     val telomere_motif
@@ -41,7 +41,8 @@ process SANGER_TOL_CPRETEXT {
     """
     $executor 'nextflow run $pipeline_name \\
         -r $pipeline_version \\
-        -profile  $profiles \\
+        -profile $profiles \\
+        --sample $meta.id
         --input "\$(realpath $reference)" \\
         --outdir $output_dir \\
         --reads "\$(realpath $longread_dir)" \\
