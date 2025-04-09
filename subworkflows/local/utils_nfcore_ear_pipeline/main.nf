@@ -16,6 +16,7 @@ include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
 include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
+include { YAML_INPUT                } from '../yaml_input/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -66,30 +67,29 @@ workflow PIPELINE_INITIALISATION {
     //
     // Create channel from input file provided through params.input
     //
+    YAML_INPUT (params.input)
 
-    // Channel
-    //     .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
-    //     .map {
-    //         meta, fastq_1, fastq_2 ->
-    //             if (!fastq_2) {
-    //                 return [ meta.id, meta + [ single_end:true ], [ fastq_1 ] ]
-    //             } else {
-    //                 return [ meta.id, meta + [ single_end:false ], [ fastq_1, fastq_2 ] ]
-    //             }
-    //     }
-    //     .groupTuple()
-    //     .map { samplesheet ->
-    //         validateInputSamplesheet(samplesheet)
-    //     }
-    //     .map {
-    //         meta, fastqs ->
-    //             return [ meta, fastqs.flatten() ]
-    //     }
-    //     .set { ch_samplesheet }
 
     emit:
-    samplesheet = params.input
-    versions    = ch_versions
+    sample_id                   = YAML_INPUT.out.sample_id
+    reference_hap1              = YAML_INPUT.out.reference_hap1
+    reference_hap2              = YAML_INPUT.out.reference_hap2
+    reference_haplotigs         = YAML_INPUT.out.reference_haplotigs
+    fastk_hist                  = YAML_INPUT.out.fastk_hist
+    fastk_ktab                  = YAML_INPUT.out.fastk_ktab
+    longread_dir                = YAML_INPUT.out.longread_dir
+    cpretext_hic_dir_raw        = YAML_INPUT.out.cpretext_hic_dir_raw
+    cpretext_telomere_motif     = YAML_INPUT.out.cpretext_telomere_motif
+    cpretext_aligner            = YAML_INPUT.out.cpretext_aligner
+    btk_read_layout             = YAML_INPUT.out.btk_read_layout
+    btk_un_diamond_database     = YAML_INPUT.out.btk_un_diamond_database
+    btk_nt_database             = YAML_INPUT.out.btk_nt_database
+    btk_nr_diamond_database     = YAML_INPUT.out.btk_nr_diamond_database
+    btk_ncbi_taxonomy_path      = YAML_INPUT.out.btk_ncbi_taxonomy_path
+    btk_taxid                   = YAML_INPUT.out.btk_taxid
+    busco_lineages              = YAML_INPUT.out.busco_lineages
+    busco_config                = YAML_INPUT.out.busco_config
+    versions                    = ch_versions
 }
 
 /*
@@ -107,11 +107,9 @@ workflow PIPELINE_COMPLETION {
     outdir          //    path: Path to output directory where results will be published
     monochrome_logs // boolean: Disable ANSI colour codes in log output
     hook_url        //  string: hook URL for notifications
-    multiqc_report  //  string: Path to MultiQC report
 
     main:
     summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
-    def multiqc_reports = multiqc_report.toList()
 
     //
     // Completion email and summary
@@ -125,7 +123,7 @@ workflow PIPELINE_COMPLETION {
                 plaintext_email,
                 outdir,
                 monochrome_logs,
-                multiqc_reports.getVal(),
+                []
             )
         }
 
@@ -169,8 +167,6 @@ def toolCitationText() {
     // Uncomment function in methodsDescriptionText to render in MultiQC report
     def citation_text = [
             "Tools used in the workflow included:",
-            "FastQC (Andrews 2010),",
-            "MultiQC (Ewels et al. 2016)",
             "."
         ].join(' ').trim()
 
@@ -182,8 +178,6 @@ def toolBibliographyText() {
     // Can use ternary operators to dynamically construct based conditions, e.g. params["run_xyz"] ? "<li>Author (2023) Pub name, Journal, DOI</li>" : "",
     // Uncomment function in methodsDescriptionText to render in MultiQC report
     def reference_text = [
-            "<li>Andrews S, (2010) FastQC, URL: https://www.bioinformatics.babraham.ac.uk/projects/fastqc/).</li>",
-            "<li>Ewels, P., Magnusson, M., Lundin, S., & Käller, M. (2016). MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics , 32(19), 3047–3048. doi: /10.1093/bioinformatics/btw354</li>"
         ].join(' ').trim()
 
     return reference_text
