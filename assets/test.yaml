@@ -8,8 +8,8 @@ reference_haplotigs: /home/runner/work/ear/ear/TreeValTinyData/assembly/draft/gr
 mapped_bam: []
 
 merquryfk:
-  fastk_hist: "/home/runner/work/ear/ear/TreeValTinyData/genomic_data/pacbio/EAR_merquryfk_input/gfTriPseu1.50000.k31.hist"
-  fastk_ktab: "/home/runner/work/ear/ear/TreeValTinyData/genomic_data/pacbio/EAR_merquryfk_input/"
+  fastk_hist: /home/runner/work/ear/ear/TreeValTinyData/genomic_data/pacbio/EAR_merquryfk_input/gfTriPseu1.50000.k31.hist
+  fastk_ktab: /home/runner/work/ear/ear/TreeValTinyData/genomic_data/pacbio/EAR_merquryfk_input/
 
 # Used by both subpipelines
 longread:
