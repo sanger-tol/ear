@@ -30,16 +30,16 @@ Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologi
 
 ### Software dependencies
 
-| Dependency                   | Old version                | New version                           |
-| ---------------------------- | -------------------------- | ------------------------------------- |
-| sanger-tol/curationpretext\* | 1.1.0 (UNSC Delphi)        | 1.3.2 (UNSC Pillar-of-Autumn - Patch 2)           |
-| sanger-tol/blobtoolkit\*     | 0.6.0 (Bellsprout)         | 0.7.1 (Psyduck - Patch 1)                       |
-| MINIMAP2_ALIGN               | 2.28                       | REMOVED                               |
-| SAMTOOLS_MERGE               | 1.20--h50ea8bc_0           | REMOVED                               |
-| SAMTOOLS_SORT                | 1.21--h50ea8bc_0           | REMOVED                               |
-| GENERATE_SAMPLESHEET         | Python 3.9, v1.0.0         | coreutils=9.1, v1.1.0                 |
-| GFASTATS                     | 1.3.6                      | 1.3.10                                |
-| MERQURYFK                    | FK=1.0.1, MFK=1.1.0, R=4.2 | FK=1.1.0 MFK=pre-release 1.2.0 R=4.42 |
+| Dependency                   | Old version                | New version                             |
+| ---------------------------- | -------------------------- | --------------------------------------- |
+| sanger-tol/curationpretext\* | 1.1.0 (UNSC Delphi)        | 1.3.2 (UNSC Pillar-of-Autumn - Patch 2) |
+| sanger-tol/blobtoolkit\*     | 0.6.0 (Bellsprout)         | 0.7.1 (Psyduck - Patch 1)               |
+| MINIMAP2_ALIGN               | 2.28                       | REMOVED                                 |
+| SAMTOOLS_MERGE               | 1.20--h50ea8bc_0           | REMOVED                                 |
+| SAMTOOLS_SORT                | 1.21--h50ea8bc_0           | REMOVED                                 |
+| GENERATE_SAMPLESHEET         | Python 3.9, v1.0.0         | coreutils=9.1, v1.1.0                   |
+| GFASTATS                     | 1.3.6                      | 1.3.10                                  |
+| MERQURYFK                    | FK=1.0.1, MFK=1.1.0, R=4.2 | FK=1.1.0 MFK=pre-release 1.2.0 R=4.42   |
 
 ### Parameters
 
