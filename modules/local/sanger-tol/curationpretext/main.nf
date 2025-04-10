@@ -42,7 +42,7 @@ process SANGER_TOL_CPRETEXT {
     $executor 'nextflow run $pipeline_name \\
         -r $pipeline_version \\
         -profile $profiles \\
-        --sample $meta.id
+        --sample $meta.id \\
         --input "\$(realpath $reference)" \\
         --outdir $output_dir \\
         --reads "\$(realpath $longread_dir)" \\
