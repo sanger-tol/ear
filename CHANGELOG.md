@@ -14,7 +14,7 @@ Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologi
   - Removed all input parsing for the mapping.
 - NF-TEST implementation.
   - We have implemented an output file sanity check rather than rely solely on pipeline completion.
-- curationpretext has been updated to [1.3.1 - UNSC Pillar-of-Autumn](https://github.com/sanger-tol/curationpretext/releases/tag/1.3.1)
+- curationpretext has been updated to [1.3.2 - UNSC Pillar-of-Autumn Patch 2](https://github.com/sanger-tol/curationpretext/releases/tag/1.3.1)
   - Update the curationpretext module so that it takes all available cpretext params.
 - blobtoolkit has been updated to [0.7.1 - Psyduck Patch 1](https://github.com/sanger-tol/blobtoolkit/releases/tag/0.7.1)
 - Removed `-resume` from nested pipelines as it isn't particularly useful, resuming the main pipeline will re-start those processes rather than resume them.
@@ -32,8 +32,8 @@ Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologi
 
 | Dependency                   | Old version                | New version                           |
 | ---------------------------- | -------------------------- | ------------------------------------- |
-| sanger-tol/curationpretext\* | 1.1.0 (UNSC Delphi)        | 1.3.2 (UNSC Spirit-of-Fire)           |
-| sanger-tol/blobtoolkit\*     | 0.6.0 (Bellsprout)         | 0.7.1 (Psyduck)                       |
+| sanger-tol/curationpretext\* | 1.1.0 (UNSC Delphi)        | 1.3.2 (UNSC Pillar-of-Autumn - Patch 2)           |
+| sanger-tol/blobtoolkit\*     | 0.6.0 (Bellsprout)         | 0.7.1 (Psyduck - Patch 1)                       |
 | MINIMAP2_ALIGN               | 2.28                       | REMOVED                               |
 | SAMTOOLS_MERGE               | 1.20--h50ea8bc_0           | REMOVED                               |
 | SAMTOOLS_SORT                | 1.21--h50ea8bc_0           | REMOVED                               |
