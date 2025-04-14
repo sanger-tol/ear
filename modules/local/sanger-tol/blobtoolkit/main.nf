@@ -22,7 +22,7 @@ process SANGER_TOL_BTK {
     path "*_out/busco",                                             emit: busco_data
     path "*_out/multiqc",                                           emit: multiqc_report
     path "*_out/pipeline_info/blobtoolkit",                         emit: pipeline_info
-    path "*out/pipeline_info/blobtoolkit/software_versions.yml",    emit: versions
+    path "*out/pipeline_info/blobtoolkit/*versions.yml",            emit: versions
 
     script:
     def pipeline_name                       =   task.ext.pipeline_name
