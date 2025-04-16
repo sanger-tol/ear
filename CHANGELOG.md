@@ -6,8 +6,9 @@ Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologi
 
 ## v0.7.1 - Raymond Carhart (H1) [16/04/2025]
 
-- Update curationpretext version to latest release [1.4.0 - UNSC Nareih](https://github.com/sanger-tol/curationpretext/releases/tag/1.4.0)
+- Update `curationpretext` version to latest release [1.4.0 - UNSC Nareih](https://github.com/sanger-tol/curationpretext/releases/tag/1.4.0)
 - Update the NF-test to include software versions correctly.
+- Add `--mask` as default for `blobtoolkit`.
 
 ### Software dependencies
 
