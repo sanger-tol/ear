@@ -11,9 +11,9 @@ Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologi
 
 ### Software dependencies
 
-| Dependency                   | Old version                | New version                             |
-| ---------------------------- | -------------------------- | --------------------------------------- |
-| sanger-tol/curationpretext\* | 1.3.2 (UNSC Pillar-of-Autumn - Patch 2)        | 1.4.0 (UNSC Narieh) |
+| Dependency                   | Old version                             | New version         |
+| ---------------------------- | --------------------------------------- | ------------------- |
+| sanger-tol/curationpretext\* | 1.3.2 (UNSC Pillar-of-Autumn - Patch 2) | 1.4.0 (UNSC Narieh) |
 
 ## v0.7.0 - Raymond Carhart [08/03/2025]
 
