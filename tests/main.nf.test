@@ -28,7 +28,7 @@ nextflow_pipeline {
                     // Test for number of successful processes - should be 29 for a full run
                     workflow.trace.succeeded().size(),
 
-                    removeNextflowVersion("$outputDir/pipeline_info/ear_software_mqc_versions.yml"),
+                    removeNextflowVersion("$outputDir/pipeline_info/ear_software_versions.yml"),
 
                     stable_name,
                     // GFASTATS should be a stable file as it is measuring metrics of the files

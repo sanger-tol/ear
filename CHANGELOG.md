@@ -4,6 +4,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologists).
 
+## v0.7.1 - Raymond Carhart (H1) [16/04/2025]
+
+- Update curationpretext version to latest release [1.4.0 - UNSC Nareih](https://github.com/sanger-tol/curationpretext/releases/tag/1.4.0)
+- Update the NF-test to include software versions correctly.
+
+### Software dependencies
+
+| Dependency                   | Old version                | New version                             |
+| ---------------------------- | -------------------------- | --------------------------------------- |
+| sanger-tol/curationpretext\* | 1.3.2 (UNSC Pillar-of-Autumn - Patch 2)        | 1.4.0 (UNSC Narieh) |
+
 ## v0.7.0 - Raymond Carhart [08/03/2025]
 
 - Removing the mapping subworkflow as it is no longer needed.
