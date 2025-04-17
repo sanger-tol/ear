@@ -9,6 +9,7 @@ Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologi
 - Update `curationpretext` version to latest release [1.4.0 - UNSC Nareih](https://github.com/sanger-tol/curationpretext/releases/tag/1.4.0)
 - Update the NF-test to include software versions correctly.
 - Add `--mask` as default for `blobtoolkit`.
+- Fixed the patch for merquryfk by correcting version information.
 
 ### Software dependencies
 
@@ -51,7 +52,7 @@ Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologi
 | SAMTOOLS_SORT                | 1.21--h50ea8bc_0           | REMOVED                                 |
 | GENERATE_SAMPLESHEET         | Python 3.9, v1.0.0         | coreutils=9.1, v1.1.0                   |
 | GFASTATS                     | 1.3.6                      | 1.3.10                                  |
-| MERQURYFK                    | FK=1.0.1, MFK=1.1.0, R=4.2 | FK=1.1.0 MFK=pre-release 1.2.0 R=4.42   |
+| MERQURYFK                    | FK=1.0.1, MFK=1.1.0, R=4.2 | FK=1.1.0 (pre-release) MFK=1.2.0 R=4.42 |
 
 ### Parameters
 
