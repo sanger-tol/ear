@@ -2,9 +2,9 @@
 
 import groovy.yaml.YamlSlurper
 
-include { GUNZIP as GUNZIP_1 } from '../../modules/nf-core/gunzip/main'
-include { GUNZIP as GUNZIP_2 } from '../../modules/nf-core/gunzip/main'
-include { GUNZIP as GUNZIP_3 } from '../../modules/nf-core/gunzip/main'
+include { GUNZIP as GUNZIP_1 } from '../../../modules/nf-core/gunzip/main'
+include { GUNZIP as GUNZIP_2 } from '../../../modules/nf-core/gunzip/main'
+include { GUNZIP as GUNZIP_3 } from '../../../modules/nf-core/gunzip/main'
 
 workflow YAML_INPUT {
     take:
@@ -100,9 +100,10 @@ workflow YAML_INPUT {
     //
     // LOGIC: Building BlobToolKit specific channels
     //
+    btk_read_layout             = Channel.of(inputs.btk.reads_layout)
     btk_nt_database             = Channel.of(inputs.btk.nt_database)
     btk_nt_database_prefix      = Channel.of(inputs.btk.nt_database_prefix)
-    btk_nt_diamond_database     = Channel.of(inputs.btk.diamond_nr_database_path)
+    btk_nr_diamond_database     = Channel.of(inputs.btk.diamond_nr_database_path)
     btk_un_diamond_database     = Channel.of(inputs.btk.diamond_uniprot_database_path)
     btk_ncbi_taxonomy_path      = Channel.of(inputs.btk.ncbi_taxonomy_path)
     btk_ncbi_lineage_path       = Channel.of(inputs.btk.ncbi_rankedlineage_path)
