@@ -4,6 +4,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologists).
 
+## v0.7.1 - Raymond Carhart (H1) [16/04/2025]
+
+- Update `curationpretext` version to latest release [1.4.0 - UNSC Nareih](https://github.com/sanger-tol/curationpretext/releases/tag/1.4.0)
+- Update the NF-test to include software versions correctly.
+- Add `--mask` as default for `blobtoolkit`.
+- Fixed the patch for merquryfk by correcting version information.
+
+### Software dependencies
+
+| Dependency                   | Old version                             | New version         |
+| ---------------------------- | --------------------------------------- | ------------------- |
+| sanger-tol/curationpretext\* | 1.3.2 (UNSC Pillar-of-Autumn - Patch 2) | 1.4.0 (UNSC Narieh) |
+
 ## v0.7.0 - Raymond Carhart [08/03/2025]
 
 - Removing the mapping subworkflow as it is no longer needed.
@@ -14,7 +27,7 @@ Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologi
   - Removed all input parsing for the mapping.
 - NF-TEST implementation.
   - We have implemented an output file sanity check rather than rely solely on pipeline completion.
-- curationpretext has been updated to [1.3.1 - UNSC Pillar-of-Autumn](https://github.com/sanger-tol/curationpretext/releases/tag/1.3.1)
+- curationpretext has been updated to [1.4.0 - UNSC Nereid](https://github.com/sanger-tol/curationpretext/releases/tag/1.4.0)
   - Update the curationpretext module so that it takes all available cpretext params.
 - blobtoolkit has been updated to [0.7.1 - Psyduck Patch 1](https://github.com/sanger-tol/blobtoolkit/releases/tag/0.7.1)
 - Removed `-resume` from nested pipelines as it isn't particularly useful, resuming the main pipeline will re-start those processes rather than resume them.
@@ -30,16 +43,16 @@ Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologi
 
 ### Software dependencies
 
-| Dependency                   | Old version                | New version                           |
-| ---------------------------- | -------------------------- | ------------------------------------- |
-| sanger-tol/curationpretext\* | 1.1.0 (UNSC Delphi)        | 1.2.0 (UNSC Spirit-of-Fire)           |
-| sanger-tol/blobtoolkit\*     | 0.6.0 (Bellsprout)         | 0.7.0 (Psyduck)                       |
-| MINIMAP2_ALIGN               | 2.28                       | REMOVED                               |
-| SAMTOOLS_MERGE               | 1.20--h50ea8bc_0           | REMOVED                               |
-| SAMTOOLS_SORT                | 1.21--h50ea8bc_0           | REMOVED                               |
-| GENERATE_SAMPLESHEET         | Python 3.9, v1.0.0         | coreutils=9.1, v1.1.0                 |
-| GFASTATS                     | 1.3.6                      | 1.3.10                                |
-| MERQURYFK                    | FK=1.0.1, MFK=1.1.0, R=4.2 | FK=1.1.0 MFK=pre-release 1.2.0 R=4.42 |
+| Dependency                   | Old version                | New version                             |
+| ---------------------------- | -------------------------- | --------------------------------------- |
+| sanger-tol/curationpretext\* | 1.1.0 (UNSC Delphi)        | 1.4.0 (UNSC Nereid)                     |
+| sanger-tol/blobtoolkit\*     | 0.6.0 (Bellsprout)         | 0.7.1 (Psyduck - Patch 1)               |
+| MINIMAP2_ALIGN               | 2.28                       | REMOVED                                 |
+| SAMTOOLS_MERGE               | 1.20--h50ea8bc_0           | REMOVED                                 |
+| SAMTOOLS_SORT                | 1.21--h50ea8bc_0           | REMOVED                                 |
+| GENERATE_SAMPLESHEET         | Python 3.9, v1.0.0         | coreutils=9.1, v1.1.0                   |
+| GFASTATS                     | 1.3.6                      | 1.3.10                                  |
+| MERQURYFK                    | FK=1.0.1, MFK=1.1.0, R=4.2 | FK=1.1.0 (pre-release) MFK=1.2.0 R=4.42 |
 
 ### Parameters
 
