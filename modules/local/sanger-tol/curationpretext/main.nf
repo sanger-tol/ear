@@ -11,8 +11,8 @@ process SANGER_TOL_CPRETEXT {
     path(config_file)
 
     output:
-    tuple val(reference), path("*_out/*"),  emit: dataset
-    path "versions.yml",                    emit: versions
+    tuple val(meta), path("*curationpretext_out/*"),            emit: full_dataset
+    path "*curationpretext_out/pipeline_info/*_versions.yml",   emit: versions
 
     script:
     def pipeline_name                       =   task.ext.pipeline_name
@@ -36,8 +36,6 @@ process SANGER_TOL_CPRETEXT {
     // head jobs running in the same initial Nextflow head, this balloons memory
     // for LSF we can use -Is -tty to keep the output of this sub-pipeline in
     // terminal, keeping the job open until the pipeline completes
-
-    // the printf statement appends the subpipelines versions file to the main versions file
     """
     $executor 'nextflow run $pipeline_name \\
         -r $pipeline_version \\
@@ -59,14 +57,6 @@ process SANGER_TOL_CPRETEXT {
         executor system: $get_version
     END_VERSIONS
     """
-
-    // INFILE=${output_dir}/pipeline_info/software_versions.yml
-    // IFS=\$'\n'
-    // echo "$pipeline_name:" >> versions.yml
-    // for LINE in \$(cat "\$INFILE")
-    // do
-    //     echo "  \$LINE" >> versions.yml
-    // done
 
     stub:
     def pipeline_version                    =   task.ext.version        ?: "main"
