@@ -4,7 +4,7 @@
 
 ## Introduction
 
-<!-- TODO nf-core: Add documentation about anything specific to running your pipeline. For general topics, please point to (and add to) the main nf-core website. -->
+The EAR pipeline has been designed to generate a significant amount of the data required for ERGE ASSEMBLY REPORTs which allow for the democratised peer review of assemblies generated for ERGA.
 
 ## Yaml input
 
@@ -23,9 +23,6 @@ reference_hap1: <LOCATION OF PRIMARY ASSEMBLY FILE .FA>
 reference_hap2: <LOCATION OF HAPLOTYPE ASSEBMLY FILE .FA>
 reference_haplotigs: <LOCATION OF THE HAPLOTIGS FILE, REMOVED DURING CURATION .FA>
 
-# If a mapped bam already exists use the below + --mapped TRUE on the nextflow command else ignore it and the pipeline will create it.
-mapped_bam: <MAPPED BAM .BAM>
-
 merquryfk:
   fastk_hist: <THE PATH TO THE .HIST FILE>
   fastk_ktab: <PATH TO THE DIRECTORY CONTAINING THE KTAB FILES, ENSURE THE HIDDEN FILES ARE HERE TOO>
@@ -40,7 +37,8 @@ curationpretext:
   hic_dir: <DIRECTORY OF HIC READ FILES .CRAM AND .CRAI>
 btk:
   taxid: 1464561
-  lineages: <CSV LIST OF DATABASES TO USE: "insecta_odb10,diptera_odb10">
+  lineages: <CSV LIST OF DATABASES TO USE> "insecta_odb10,diptera_odb10"
+  reads_layout: A single value to represent the read_layout for all reads input to the pipeline "SINGLE" | "PAIRED"
   gca_accession: GCA_0001 <DEFAULT, DO NOT CHANGE UNLESS YOU HAVE A GCA_ACCESSION FOR YOUR SPECIES>
   nt_database: <DIRECTORY CONTAINING BLAST DB>
   nt_database_prefix: <BLASTDB PREFIX>

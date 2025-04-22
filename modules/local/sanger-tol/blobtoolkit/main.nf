@@ -16,24 +16,24 @@ process SANGER_TOL_BTK {
     path config
 
     output:
-    tuple val(meta), path("*_out/blobtoolkit/REFERENCE"),           emit: dataset
-    path "*_out/blobtoolkit/plots" ,                                emit: plots
-    path "*_out/blobtoolkit/REFERENCE/summary.json.gz",             emit: summary_json
-    path "*_out/busco",                                             emit: busco_data
-    path "*_out/multiqc",                                           emit: multiqc_report
-    path "*_out/pipeline_info/blobtoolkit",                         emit: pipeline_info
-    path "*out/pipeline_info/blobtoolkit/*versions.yml",            emit: versions
+    tuple val(meta), path("*_out/blobtoolkit/REFERENCE"),                   emit: dataset
+    path "*_out/blobtoolkit/plots" ,                                        emit: plots
+    path "*_out/blobtoolkit/REFERENCE/summary.json.gz",                     emit: summary_json
+    path "*_out/busco",                                                     emit: busco_data
+    path "*_out/multiqc",                                                   emit: multiqc_report
+    path "*_out/pipeline_info/blobtoolkit",                                 emit: pipeline_info
+    path "*out/pipeline_info/blobtoolkit/blobtoolkit_software*versions.yml",emit: versions
 
     script:
     def pipeline_name                       =   task.ext.pipeline_name
     def (pipeline_prefix,pipeline_suffix)   =   pipeline_name.split('/')
     def output_dir                          =   "${meta.id}_${pipeline_suffix}_out"
-    def args                                =   task.ext.args           ?:  ""
-    def executor                            =   task.ext.executor       ?:  ""
-    def profiles                            =   task.ext.profiles       ?:  ""
-    def get_version                         =   task.ext.version_data   ?:  "UNKNOWN - SETTING NOT SET"
-    def pipeline_version                    =   task.ext.version        ?: "main"
-    def config                              =   config                  ? " -c ${config}"               : ""
+    def args                                =   task.ext.args                       ?:  ""
+    def executor                            =   task.ext.executor                   ?:  ""
+    def profiles                            =   task.ext.profiles                   ?:  ""
+    def get_version                         =   task.ext.version_data               ?:  "UNKNOWN - SETTING NOT SET"
+    def pipeline_version                    =   task.ext.version                    ?: "main"
+    def config                              =   config                              ? " -c ${config}"               : ""
 
     // Seems to be an issue where a nested pipeline can't see the files in the same directory
     // Running realpath gets around this but the files copied into the folder are
@@ -47,7 +47,6 @@ process SANGER_TOL_BTK {
     // for LSF we can use -Is -tty to keep the output of this sub-pipeline in
     // terminal, keeping the job open until the pipeline completes
 
-    // the printf statement appends the subpipelines versions file to the main versions file
     """
     $executor 'nextflow run $pipeline_name \\
         -r $pipeline_version \\
@@ -73,14 +72,6 @@ process SANGER_TOL_BTK {
         executor system: $get_version
     END_VERSIONS
     """
-
-    // INFILE=${output_dir}/pipeline_info/software_versions.yml
-    // IFS=\$'\n'
-    // echo "$pipeline_name:" >> versions.yml
-    // for \${LINE} in \$(cat "\$INFILE")
-    // do
-    //     echo "  \${LINE}" >> versions.yml
-    // done
 
     stub:
     def pipeline_version    =   task.ext.version        ?: "main"
