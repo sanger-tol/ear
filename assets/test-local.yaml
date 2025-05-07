@@ -22,10 +22,10 @@ btk:
   taxid: 352914
   gca_accession: GCA_0001
   lineages: "fungi_odb10"
-  nt_database: /home/runner/work/ascc/ascc/NT_database/
-  nt_database_prefix: 18S_fungal_sequences
-  diamond_uniprot_database_path: /home/runner/work/ascc/ascc/diamond/UP000000212_1234679_tax.dmnd
-  diamond_nr_database_path: /home/runner/work/ascc/ascc/diamond/UP000000212_1234679_tax.dmnd
-  ncbi_taxonomy_path: /home/runner/work/ascc/ascc/ncbi_taxdump/
-  ncbi_rankedlineage_path: /home/runner/work/ascc/ascc/ncbi_taxdump/rankedlineage.dmp
-  config: /home/runner/work/ear/ear/conf/sanger-tol-btk.config
+  nt_database: /data/blastdb/Supported/NT/current
+  nt_database_prefix: nt
+  diamond_uniprot_database_path: /lustre/scratch123/tol/resources/uniprot_reference_proteomes/latest/reference_proteomes.dmnd
+  diamond_nr_database_path: /lustre/scratch123/tol/resources/nr/latest/nr.dmnd
+  ncbi_taxonomy_path: /lustre/scratch123/tol/resources/taxonomy/latest/new_taxdump/
+  ncbi_rankedlineage_path: /lustre/scratch123/tol/resources/taxonomy/latest/new_taxdump/rankedlineage.dmp
+  config: /nfs/treeoflife-01/teams/tola/users/dp24/ear/conf/sanger-tol-btk.config
