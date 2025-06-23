@@ -4,6 +4,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologists).
 
+## v0.7.2 - Raymond Carhart (H2) [06/06/2025]
+
+- Update `curationpretext` version to latest release [1.4.1 - UNSC Nareih (H1)](https://github.com/sanger-tol/curationpretext/releases/tag/1.4.1)
+- Update `blobtoolkit` version to latest release [0.8.0 - Sprigatito](https://github.com/sanger-tol/blobtoolkit/releases/tag/0.8.0)
+- Added parameters to support the `blobtoolkit` update including:
+  - busco_lineage_folder
+  - `--busco_gene_predictor miniprot` as a hardcoded parameter
+
+### Software dependencies
+
+| Dependency                   | Old version                | New version                             |
+| ---------------------------- | -------------------------- | --------------------------------------- |
+| sanger-tol/curationpretext\* | 1.4.0 (UNSC Nereid)        | 1.4.1 (UNSC Nereid (H1))                     |
+| sanger-tol/blobtoolkit\*     | 0.7.1 (Psyduck - Patch 1)         | 0.8.0               |
+
 ## v0.7.1 - Raymond Carhart (H1) [16/04/2025]
 
 - Update `curationpretext` version to latest release [1.4.0 - UNSC Nareih](https://github.com/sanger-tol/curationpretext/releases/tag/1.4.0)

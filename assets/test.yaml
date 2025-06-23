@@ -25,6 +25,7 @@ btk:
   taxid: 352914
   gca_accession: GCA_0001
   lineages: "fungi_odb10"
+  lineages_folder: /home/runner/work/ascc/ascc/busco/latest/lineages/
   nt_database: /home/runner/work/ascc/ascc/NT_database/
   nt_database_prefix: 18S_fungal_sequences
   diamond_uniprot_database_path: /home/runner/work/ascc/ascc/diamond/UP000000212_1234679_tax.dmnd

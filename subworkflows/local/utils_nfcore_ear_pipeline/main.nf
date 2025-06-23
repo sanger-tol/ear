@@ -88,6 +88,7 @@ workflow PIPELINE_INITIALISATION {
     btk_ncbi_taxonomy_path      = YAML_INPUT.out.btk_ncbi_taxonomy_path
     btk_taxid                   = YAML_INPUT.out.btk_taxid
     busco_lineages              = YAML_INPUT.out.busco_lineages
+    busco_lineages_folder       = YAML_INPUT.out.busco_lineages_folder
     busco_config                = YAML_INPUT.out.busco_config
     versions                    = ch_versions
 }
@@ -219,4 +220,3 @@ def methodsDescriptionText(mqc_methods_yaml) {
 
     return description_html.toString()
 }
-

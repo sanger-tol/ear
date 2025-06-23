@@ -22,7 +22,7 @@ process GENERATE_SAMPLESHEET {
     echo "sample,datatype,datafile,library_layout" > pre_samplesheet.csv
 
     i=0
-    for file in ${pacbio_path}/fasta/*.fasta.gz; do
+    for file in ${pacbio_path}/*.fasta.gz; do
         i=\$((i+1))
         echo "Debug line: Processing file \$file -- T\$i --${reads_layout}"
         echo "${meta.id}_T\$i,pacbio,\$file,${reads_layout}" >> pre_samplesheet.csv

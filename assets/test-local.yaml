@@ -5,8 +5,8 @@ reference_hap2: /nfs/treeoflife-01/teams/tola/users/dp24/ear/TreeValTinyData/ass
 reference_haplotigs: /nfs/treeoflife-01/teams/tola/users/dp24/ear/TreeValTinyData/assembly/draft/grTriPseu1-all_hap.fa
 
 merquryfk:
-  fastk_hist: "/nfs/treeoflife-01/teams/tola/users/dp24/ear/TreeValTinyData/genomic_data/pacbio/kmer.31/gfTriPseu1.50000.k31.hist"
-  fastk_ktab: "/nfs/treeoflife-01/teams/tola/users/dp24/ear/TreeValTinyData/genomic_data/pacbio/kmer.31/"
+  fastk_hist: /nfs/treeoflife-01/teams/tola/users/dp24/ear/TreeValTinyData/genomic_data/pacbio/kmer.31/gfTriPseu1.50000.k31.hist
+  fastk_ktab: /nfs/treeoflife-01/teams/tola/users/dp24/ear/TreeValTinyData/genomic_data/pacbio/kmer.31/
 
 # Used by both subpipelines
 longread:
@@ -16,16 +16,17 @@ longread:
 curationpretext:
   aligner: minimap2
   telomere_motif: TTAGGG
-  hic_dir: /home/runner/work/ear/ear/TreeValTinyData/genomic_data/hic-arima/
+  hic_dir: /nfs/treeoflife-01/teams/tola/users/dp24/ear/TreeValTinyData/genomic_data/hic-arima/
 btk:
   reads_layout: "SINGLE"
   taxid: 352914
   gca_accession: GCA_0001
+  lineages_folder: /data/tol/resources/busco/latest/lineages/
   lineages: "fungi_odb10"
-  nt_database: /data/blastdb/Supported/NT/current
+  nt_database: /data/tol/resources/nt/latest/
   nt_database_prefix: nt
-  diamond_uniprot_database_path: /lustre/scratch123/tol/resources/uniprot_reference_proteomes/latest/reference_proteomes.dmnd
-  diamond_nr_database_path: /lustre/scratch123/tol/resources/nr/latest/nr.dmnd
-  ncbi_taxonomy_path: /lustre/scratch123/tol/resources/taxonomy/latest/new_taxdump/
-  ncbi_rankedlineage_path: /lustre/scratch123/tol/resources/taxonomy/latest/new_taxdump/rankedlineage.dmp
-  config: /nfs/treeoflife-01/teams/tola/users/dp24/ear/conf/sanger-tol-btk.config
+  diamond_uniprot_database_path: /data/tol/resources/uniprot_reference_proteomes/latest/reference_proteomes.dmnd
+  diamond_nr_database_path: /data/tol/resources/nr/latest/nr.dmnd
+  ncbi_taxonomy_path: /data/tol/resources/taxonomy/latest/new_taxdump/
+  ncbi_rankedlineage_path: /data/tol/resources/taxonomy/latest/new_taxdump/rankedlineage.dmp
+  config: /nfs/treeoflife-01/teams/tola/users/dp24/ear/assets/sanger-tol-btk.config

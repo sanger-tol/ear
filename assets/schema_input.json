@@ -101,6 +101,10 @@
                         "type": "string",
                         "errorMessage": "CSV list of BUSCO lineages to run against"
                     },
+                    "lineages_folder": {
+                        "type": "string",
+                        "errorMessage": "Path to the lineages folder"
+                    },
                     "gca_accession": {
                         "type": "string",
                         "errorMessage": "gca_accession if applicable"

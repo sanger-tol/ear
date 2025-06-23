@@ -44,6 +44,7 @@ workflow SANGERTOL_EAR {
     ch_btk_ncbi_taxonomy_path
     ch_btk_taxid
     ch_busco_lineages
+    ch_busco_lineages_folder
     ch_busco_config
 
 
@@ -69,6 +70,7 @@ workflow SANGERTOL_EAR {
         ch_btk_ncbi_taxonomy_path,
         ch_btk_taxid,
         ch_busco_lineages,
+        ch_busco_lineages_folder,
         ch_busco_config
     )
 }
@@ -114,6 +116,7 @@ workflow {
         PIPELINE_INITIALISATION.out.btk_ncbi_taxonomy_path,
         PIPELINE_INITIALISATION.out.btk_taxid,
         PIPELINE_INITIALISATION.out.busco_lineages,
+        PIPELINE_INITIALISATION.out.busco_lineages_folder,
         PIPELINE_INITIALISATION.out.busco_config
     )
     //

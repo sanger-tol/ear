@@ -110,6 +110,7 @@ workflow YAML_INPUT {
     btk_taxid                   = Channel.of(inputs.btk.taxid)
     btk_gca_accession           = Channel.of(inputs.btk.gca_accession)
     busco_lineages              = Channel.of(inputs.btk.lineages)
+    busco_lineages_folder       = Channel.fromPath(inputs.btk.lineages_folder, type: "dir")
     busco_config                = Channel.of(inputs.btk.config)
 
     versions                    = ch_versions.ifEmpty(null)

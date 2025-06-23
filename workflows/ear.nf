@@ -45,6 +45,7 @@ workflow EAR {
     ch_btk_ncbi_taxonomy_path
     ch_btk_taxid
     ch_busco_lineages
+    ch_busco_lineages_folder
     ch_busco_config
 
     main:
@@ -61,6 +62,9 @@ workflow EAR {
     if (!full_list.containsAll(exclude_steps)) {
         exit 1, "There is an extra argument given on Command Line: \nCheck contents of: $exclude_steps\nMaster list is: $full_list"
     }
+
+    include_list = full_list - exclude_steps
+    println include_list
 
     //
     // LOGIC: IF HAPLOTIGS IS EMPTY THEN PASS ON HALPLOTYPE ASSEMBLY
@@ -110,7 +114,7 @@ workflow EAR {
     //
     // LOGIC: STEP TO STOP MERQURY_FK RUNNING IF SPECIFIED BY USER
     //
-    if (!exclude_steps.contains("merquryfk")) {
+    if (include_list.contains("merquryfk")) {
         //
         // LOGIC:  REFORMAT A BUNCH OF CHANNELS FOR MERQUERYFK
         //
@@ -143,42 +147,43 @@ workflow EAR {
     //
     // LOGIC: STEP TO STOP BTK RUNNING IF SPECIFIED BY USER
     //
-    if (!exclude_steps.contains("btk")) {
-        //
-        // MODULE: GENERATE_SAMPLESHEET creates a csv for the blobtoolkit pipeline
-        //
-        GENERATE_SAMPLESHEET(
-            ch_reference_hap1,
-            ch_longread_dir,
-            ch_btk_read_layout
-        )
-        ch_versions     = ch_versions.mix( GENERATE_SAMPLESHEET.out.versions )
+    // if (include_list.contains("btk")) {
+    //     //
+    //     // MODULE: GENERATE_SAMPLESHEET creates a csv for the blobtoolkit pipeline
+    //     //
+    //     GENERATE_SAMPLESHEET(
+    //         ch_reference_hap1,
+    //         ch_longread_dir,
+    //         ch_btk_read_layout
+    //     )
+    //     ch_versions     = ch_versions.mix( GENERATE_SAMPLESHEET.out.versions )
 
 
-        //
-        // MODULE: Run Sanger-ToL/BlobToolKit
-        //
-        SANGER_TOL_BTK (
-            ch_reference_hap1,
-            GENERATE_SAMPLESHEET.out.csv,
-            ch_longread_dir,
-            ch_btk_un_diamond_db,
-            ch_btk_nt_db,
-            ch_btk_un_diamond_db,
-            ch_btk_ncbi_taxonomy_path,
-            ch_busco_lineages,
-            ch_btk_taxid,
-            'GCA_0001',
-            ch_busco_config
-        )
-        ch_versions     = ch_versions.mix(SANGER_TOL_BTK.out.versions)
-    }
+    //     //
+    //     // MODULE: Run Sanger-ToL/BlobToolKit
+    //     //
+    //     //
+    //     SANGER_TOL_BTK (
+    //         ch_reference_hap1,
+    //         GENERATE_SAMPLESHEET.out.csv,
+    //         ch_longread_dir,
+    //         ch_btk_un_diamond_db,
+    //         ch_btk_nt_db,
+    //         ch_btk_un_diamond_db,
+    //         ch_btk_ncbi_taxonomy_path,
+    //         ch_busco_lineages_folder,
+    //         ch_busco_lineages,
+    //         ch_btk_taxid,
+    //         ch_busco_config
+    //     )
+    //     ch_versions     = ch_versions.mix(SANGER_TOL_BTK.out.versions)
+    // }
 
 
     //
     // LOGIC: STEP TO STOP CURATION_PRETEXT RUNNING IF SPECIFIED BY USER
     //
-    if (!exclude_steps.contains("cpretext")) {
+    if (include_list.contains("cpretext")) {
 
         //
         // MODULE: Run SANGER-TOL/CurationPretext

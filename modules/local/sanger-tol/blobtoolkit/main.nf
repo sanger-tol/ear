@@ -3,33 +3,30 @@ process SANGER_TOL_BTK {
     label 'process_low'
 
     input:
-    tuple val(meta), path(reference, stageAs: "REFERENCE.fa")
-    tuple val(meta2), path(samplesheet_csv, stageAs: "SAMPLESHEET.csv")
+    tuple val(meta),            path(reference)
+    tuple val(meta2),           path(samplesheet_csv)
     path pacbio_path
-    path blastp, stageAs: "blastp.dmnd"
+    path blastp,                stageAs: "blastp.dmnd"
     path blastn
     path blastx
     path tax_dump
+    val busco_lineages_folder
     val busco_lineages
     val taxon
-    val gca_accession
     path config
 
     output:
-    tuple val(meta), path("*_out/blobtoolkit/REFERENCE"),                   emit: dataset
-    path "*_out/blobtoolkit/plots" ,                                        emit: plots
-    path "*_out/blobtoolkit/REFERENCE/summary.json.gz",                     emit: summary_json
-    path "*_out/busco",                                                     emit: busco_data
-    path "*_out/multiqc",                                                   emit: multiqc_report
-    path "*_out/pipeline_info/blobtoolkit",                                 emit: pipeline_info
-    path "*out/pipeline_info/blobtoolkit/blobtoolkit_software*versions.yml",emit: versions
+    tuple val(meta), path("${meta.id}_btk_out/blobtoolkit/${meta.id}*"),    emit: dataset
+    path("${meta.id}_btk_out/blobtoolkit/plots"),                           emit: plots
+    path("${meta.id}_btk_out/blobtoolkit/${meta.id}*/summary.json.gz"),     emit: summary_json
+    path("${meta.id}_btk_out/busco"),                                       emit: busco_data
+    path("${meta.id}_btk_out/multiqc"),                                     emit: multiqc_report
+    path("blobtoolkit_pipeline_info"),                                      emit: pipeline_info
+    path "versions.yml",                                                    emit: versions
 
     script:
-    def pipeline_name                       =   task.ext.pipeline_name
-    def (pipeline_prefix,pipeline_suffix)   =   pipeline_name.split('/')
-    def output_dir                          =   "${meta.id}_${pipeline_suffix}_out"
+    def prefix                              =   task.ext.prefix                     ?:  "${meta.id}"
     def args                                =   task.ext.args                       ?:  ""
-    def executor                            =   task.ext.executor                   ?:  ""
     def profiles                            =   task.ext.profiles                   ?:  ""
     def get_version                         =   task.ext.version_data               ?:  "UNKNOWN - SETTING NOT SET"
     def pipeline_version                    =   task.ext.version                    ?: "main"
@@ -42,18 +39,15 @@ process SANGER_TOL_BTK {
 
     // blastx and blastp can use the same database hence the StageAs
 
-    // Running these as unique jobs means we don't have to worry about multiple pipeline
-    // head jobs running in the same initial Nextflow head, this balloons memory
-    // for LSF we can use -Is -tty to keep the output of this sub-pipeline in
-    // terminal, keeping the job open until the pipeline completes
-
     """
-    $executor 'nextflow run $pipeline_name \\
+    nextflow run sanger-tol/blobtoolkit \\
         -r $pipeline_version \\
         -profile  $profiles \\
+        --fasta $reference \\
         --input "\$(realpath $samplesheet_csv)" \\
-        --outdir ${meta.id}_btk_out \\
-        --fasta ./REFERENCE.fa \\
+        --outdir ${prefix}_btk_out \\
+        --input "\$(realpath $samplesheet_csv)" \\
+        --busco $busco_lineages_folder \\
         --busco_lineages $busco_lineages \\
         --taxon $taxon \\
         --taxdump "\$(realpath $tax_dump)" \\
@@ -63,13 +57,15 @@ process SANGER_TOL_BTK {
         --use_work_dir_as_temp true \\
         --align \\
         $args \\
-        $config'
+        $config
+
+        mv ${prefix}_btk_out/pipeline_info blobtoolkit_pipeline_info
+
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         Blobtoolkit: $pipeline_version
         Nextflow: \$(nextflow -v | cut -d " " -f3)
-        executor system: $get_version
     END_VERSIONS
     """
 
@@ -99,7 +95,6 @@ process SANGER_TOL_BTK {
     "${task.process}":
         Blobtoolkit: $pipeline_version
         Nextflow: \$(nextflow -v | cut -d " " -f3)
-        executor system: $get_version
     END_VERSIONS
     """
 }
