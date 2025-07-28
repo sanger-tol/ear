@@ -26,7 +26,7 @@ process GFASTATS {
     task.ext.when == null || task.ext.when
 
     script:
-    // def args   = task.ext.args ?: ''
+    def args   = task.ext.args   ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     // def agp    = agpfile ? "--agp-to-path $agpfile" : ""
     // def ibed   = include_bed ? "--include-bed $include_bed" : ""
@@ -40,8 +40,8 @@ process GFASTATS {
 
     """
     gfastats \\
+        ${args} \\
         --threads $task.cpus \\
-        --nstar-report \\
         --input-sequence $assembly \\
         > ${prefix}.assembly_summary
 

@@ -64,7 +64,7 @@ workflow EAR {
     }
 
     include_list = full_list - exclude_steps
-    println include_list
+    log.info "[CPretext info] Processes running are: $include_list"
 
     //
     // LOGIC: IF HAPLOTIGS IS EMPTY THEN PASS ON HALPLOTYPE ASSEMBLY
@@ -147,37 +147,37 @@ workflow EAR {
     //
     // LOGIC: STEP TO STOP BTK RUNNING IF SPECIFIED BY USER
     //
-    // if (include_list.contains("btk")) {
-    //     //
-    //     // MODULE: GENERATE_SAMPLESHEET creates a csv for the blobtoolkit pipeline
-    //     //
-    //     GENERATE_SAMPLESHEET(
-    //         ch_reference_hap1,
-    //         ch_longread_dir,
-    //         ch_btk_read_layout
-    //     )
-    //     ch_versions     = ch_versions.mix( GENERATE_SAMPLESHEET.out.versions )
+    if (include_list.contains("btk")) {
+        //
+        // MODULE: GENERATE_SAMPLESHEET creates a csv for the blobtoolkit pipeline
+        //
+        GENERATE_SAMPLESHEET(
+            ch_reference_hap1,
+            ch_longread_dir,
+            ch_btk_read_layout
+        )
+        ch_versions     = ch_versions.mix( GENERATE_SAMPLESHEET.out.versions )
 
 
-    //     //
-    //     // MODULE: Run Sanger-ToL/BlobToolKit
-    //     //
-    //     //
-    //     SANGER_TOL_BTK (
-    //         ch_reference_hap1,
-    //         GENERATE_SAMPLESHEET.out.csv,
-    //         ch_longread_dir,
-    //         ch_btk_un_diamond_db,
-    //         ch_btk_nt_db,
-    //         ch_btk_un_diamond_db,
-    //         ch_btk_ncbi_taxonomy_path,
-    //         ch_busco_lineages_folder,
-    //         ch_busco_lineages,
-    //         ch_btk_taxid,
-    //         ch_busco_config
-    //     )
-    //     ch_versions     = ch_versions.mix(SANGER_TOL_BTK.out.versions)
-    // }
+        //
+        // MODULE: Run Sanger-ToL/BlobToolKit
+        //
+        //
+        SANGER_TOL_BTK (
+            ch_reference_hap1,
+            GENERATE_SAMPLESHEET.out.csv,
+            ch_longread_dir,
+            ch_btk_un_diamond_db,
+            ch_btk_nt_db,
+            ch_btk_un_diamond_db,
+            ch_btk_ncbi_taxonomy_path,
+            ch_busco_lineages_folder,
+            ch_busco_lineages,
+            ch_btk_taxid,
+            file("${projectDir}/assets/blobtoolkit.config")
+        )
+        ch_versions     = ch_versions.mix(SANGER_TOL_BTK.out.versions)
+    }
 
 
     //

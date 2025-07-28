@@ -1,18 +1,34 @@
-Changes in module 'nf-core/gfastats'
+Changes in component 'nf-core/gfastats'
+'modules/nf-core/gfastats/meta.yml' is unchanged
+'modules/nf-core/gfastats/environment.yml' is unchanged
+Changes in 'gfastats/main.nf':
 --- modules/nf-core/gfastats/main.nf
 +++ modules/nf-core/gfastats/main.nf
-@@ -19,7 +19,6 @@
+@@ -19,32 +19,30 @@
  
      output:
      tuple val(meta), path("*.assembly_summary"), emit: assembly_summary
--    tuple val(meta), path("*.${out_fmt}.gz")   , emit: assembly
+-    tuple val(meta), path("*.${out_fmt}.gz")   , emit: assembly        , optional: true
++    // tuple val(meta), path("*.${out_fmt}.gz")   , emit: assembly        , optional: true
      path "versions.yml"                        , emit: versions
  
      when:
-@@ -32,18 +31,16 @@
-     def ibed = include_bed ? "--include-bed $include_bed" : ""
-     def ebed = exclude_bed ? "--exclude-bed $exclude_bed" : ""
-     def sak  = instructions ? "--swiss-army-knife $instructions" : ""
+     task.ext.when == null || task.ext.when
+ 
+     script:
+-    def args   = task.ext.args ?: ''
++    def args   = task.ext.args   ?: ''
+     def prefix = task.ext.prefix ?: "${meta.id}"
+-    def agp    = agpfile ? "--agp-to-path $agpfile" : ""
+-    def ibed   = include_bed ? "--include-bed $include_bed" : ""
+-    def ebed   = exclude_bed ? "--exclude-bed $exclude_bed" : ""
+-    def sak    = instructions ? "--swiss-army-knife $instructions" : ""
+-    def output_sequences = out_fmt ? "--out-format ${prefix}.${out_fmt}.gz" : ""
++    // def agp    = agpfile ? "--agp-to-path $agpfile" : ""
++    // def ibed   = include_bed ? "--include-bed $include_bed" : ""
++    // def ebed   = exclude_bed ? "--exclude-bed $exclude_bed" : ""
++    // def sak    = instructions ? "--swiss-army-knife $instructions" : ""
++    // def output_sequences = out_fmt ? "--out-format ${prefix}.${out_fmt}.gz" : ""
 +
 +    // Arguments have been removed due to causing errors with output values being 0
 +    // out-format seemed to be the main cause of this, in testing
@@ -21,18 +37,20 @@ Changes in module 'nf-core/gfastats'
      """
      gfastats \\
 -        $args \\
-+        --nstar-report \\
++        ${args} \\
          --threads $task.cpus \\
 -        $agp \\
 -        $ibed \\
 -        $ebed \\
 -        $sak \\
--        --out-format ${prefix}.${out_fmt}.gz \\
-         $assembly \\
+-        $output_sequences \\
+         --input-sequence $assembly \\
 -        $genome_size \\
 -        $target \\
          > ${prefix}.assembly_summary
  
      cat <<-END_VERSIONS > versions.yml
 
+'modules/nf-core/gfastats/tests/main.nf.test' is unchanged
+'modules/nf-core/gfastats/tests/main.nf.test.snap' is unchanged
 ************************************************************
