@@ -30,14 +30,14 @@ workflow YAML_INPUT {
     }
 
     if ( inputs.reference_hap2.endsWith('.gz') ) {
-        ch_unzipped_2 = GUNZIP_2 ( [[], inputs.reference_hap2] ).gunzip
+        ch_unzipped_2 = GUNZIP_2 ( [[], inputs.reference_hap2] ).gunzip.map { it -> it[1] }
         ch_versions = ch_versions.mix ( GUNZIP_2.out.versions.first() )
     } else {
         ch_unzipped_2 = Channel.fromPath(inputs.reference_hap2, checkIfExists: true)
     }
 
     if ( inputs.reference_haplotigs.endsWith('.gz') ) {
-        ch_unzipped_3 = GUNZIP_3 ( [[], inputs.reference_haplotigs] ).gunzip
+        ch_unzipped_3 = GUNZIP_3 ( [[], inputs.reference_haplotigs] ).gunzip.map { it -> it[1] }
         ch_versions = ch_versions.mix ( GUNZIP_3.out.versions.first() )
     } else {
         ch_unzipped_3 = Channel.fromPath(inputs.reference_haplotigs, checkIfExists: true)
