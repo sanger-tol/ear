@@ -67,7 +67,7 @@ workflow PIPELINE_INITIALISATION {
     //
     // Create channel from input file provided through params.input
     //
-    YAML_INPUT (params.input)
+    YAML_INPUT (input)
 
 
     emit:
@@ -78,10 +78,9 @@ workflow PIPELINE_INITIALISATION {
     fastk_hist                  = YAML_INPUT.out.fastk_hist
     fastk_ktab                  = YAML_INPUT.out.fastk_ktab
     longread_dir                = YAML_INPUT.out.longread_dir
-    cpretext_hic_dir_raw        = YAML_INPUT.out.cpretext_hic_dir_raw
+    cpretext_hic_dir            = YAML_INPUT.out.cpretext_hic_dir
     cpretext_telomere_motif     = YAML_INPUT.out.cpretext_telomere_motif
     cpretext_aligner            = YAML_INPUT.out.cpretext_aligner
-    btk_read_layout             = YAML_INPUT.out.btk_read_layout
     btk_un_diamond_database     = YAML_INPUT.out.btk_un_diamond_database
     btk_nt_database             = YAML_INPUT.out.btk_nt_database
     btk_nr_diamond_database     = YAML_INPUT.out.btk_nr_diamond_database

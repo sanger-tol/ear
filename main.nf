@@ -38,7 +38,6 @@ workflow SANGERTOL_EAR {
     ch_cpretext_hic_dir
     ch_cpretext_telomotif
     ch_cpretext_aligner
-    ch_btk_read_layout
     ch_btk_un_diamond_db
     ch_btk_nt_db
     ch_btk_ncbi_taxonomy_path
@@ -63,7 +62,6 @@ workflow SANGERTOL_EAR {
         ch_cpretext_hic_dir,
         ch_cpretext_telomotif,
         ch_cpretext_aligner,
-        ch_btk_read_layout,
         ch_btk_un_diamond_db,
         ch_btk_nt_db,
         ch_btk_ncbi_taxonomy_path,
@@ -105,10 +103,9 @@ workflow {
         PIPELINE_INITIALISATION.out.fastk_hist,
         PIPELINE_INITIALISATION.out.fastk_ktab,
         PIPELINE_INITIALISATION.out.longread_dir,
-        PIPELINE_INITIALISATION.out.cpretext_hic_dir_raw,
+        PIPELINE_INITIALISATION.out.cpretext_hic_dir,
         PIPELINE_INITIALISATION.out.cpretext_telomere_motif,
         PIPELINE_INITIALISATION.out.cpretext_aligner,
-        PIPELINE_INITIALISATION.out.btk_read_layout,
         PIPELINE_INITIALISATION.out.btk_un_diamond_database,
         PIPELINE_INITIALISATION.out.btk_nt_database,
         PIPELINE_INITIALISATION.out.btk_ncbi_taxonomy_path,
