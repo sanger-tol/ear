@@ -9,19 +9,19 @@ workflow YAML_INPUT {
     main:
     ch_versions = Channel.empty()
 
-    def inputs = new groovy.yaml.YamlSlurper().parse(file(input_file, checkIfExists: true))
+    inputs = new groovy.yaml.YamlSlurper().parse(file(input_file, checkIfExists: true))
 
     //
     // LOGIC: UN ZIP THE INPUT FILES
     //
-    def ch_hap1 = Channel.fromPath(inputs.reference_hap1, checkIfExists: true)
+    ch_hap1 = Channel.fromPath(inputs.reference_hap1, checkIfExists: true)
         .map { fasta -> tuple([id: inputs.assembly_id, file: 'hap1'], fasta) }
 
-    def ch_hap2 = inputs.reference_hap2
+    ch_hap2 = inputs.reference_hap2
         ? Channel.fromPath(inputs.reference_hap2, checkIfExists: true).map { fasta -> tuple([id: inputs.assembly_id, file: 'hap2'], fasta) }
         : Channel.empty()
 
-    def ch_haplotigs = inputs.reference_haplotigs
+    ch_haplotigs = inputs.reference_haplotigs
         ? Channel.fromPath(inputs.reference_haplotigs, checkIfExists: true).map { fasta -> tuple([id: inputs.assembly_id, file: 'haplotigs'], fasta) }
         : Channel.empty()
 
