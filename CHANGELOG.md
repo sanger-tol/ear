@@ -4,6 +4,36 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologists).
 
+## v0.8.0 - Marion Downs [##/##/2025]
+
+- `curationpretext` now uses NF-cascade (v2) @mahesh-panchal
+- `blobtoolkit` now uses NF-cascade (v2) @mahesh-panchal
+- Added config options so that the pipeline version is not hardcoded @mahesh-panchal
+- Removal of redundant param @mahesh-panchal
+- Addition of `{BTK,CPRETEXT}_INPUT` exec modules to generate a params-file json @mahesh-panchal
+- Re-written `GENERATE_SAMPLESHEET` as `GENERATE_BTK_SAMPLESHEET` which is now an exec module.
+- Re-organisation of `YAML_INPUT` @mahesh-panchal
+
+### Software dependencies
+
+| Dependency                   | Old version                             | New version         |
+| ---------------------------- | --------------------------------------- | ------------------- |
+| sanger-tol/curationpretext\* | 1.4.0 (UNSC Narieh) | Now User Configurable |
+| sanger-tol/blobtoolkit\*     | 0.7.1 (Psyduck - Patch 1)  | Now User Configurable |
+| GENERATE_SAMPLESHEET         | coreutils=9.1, v1.1.0         | NA |
+
+### Parameters
+
+| Old parameter | New parameter |
+| ------------- | ------------- |
+| -      | --btk_version              |
+| - | --btk_nf_params |
+| - | --btk_extra_config |
+| - | --cpretext_version |
+| - | --cpretext_nf_params |
+| - | --cpretext_extra_config |
+
+
 ## v0.7.1 - Raymond Carhart (H1) [16/04/2025]
 
 - Update `curationpretext` version to latest release [1.4.0 - UNSC Nareih](https://github.com/sanger-tol/curationpretext/releases/tag/1.4.0)
@@ -16,6 +46,7 @@ Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologi
 | Dependency                   | Old version                             | New version         |
 | ---------------------------- | --------------------------------------- | ------------------- |
 | sanger-tol/curationpretext\* | 1.3.2 (UNSC Pillar-of-Autumn - Patch 2) | 1.4.0 (UNSC Narieh) |
+
 
 ## v0.7.0 - Raymond Carhart [08/03/2025]
 

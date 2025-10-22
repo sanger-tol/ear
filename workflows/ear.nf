@@ -77,6 +77,10 @@ workflow EAR {
         }
         .set { processing_branch }
 
+
+    //
+    // MODULE: CAT FASTA FILES TOGETHER IF NEEDED
+    //
     CAT_CAT(processing_branch.concat_needed)
     ch_versions = ch_versions.mix(CAT_CAT.out.versions)
 
@@ -96,6 +100,7 @@ workflow EAR {
         [[], []],
     )
     ch_versions = ch_versions.mix(GFASTATS.out.versions)
+
 
     //
     // LOGIC: STEP TO STOP MERQURY_FK RUNNING IF SPECIFIED BY USER
@@ -119,6 +124,7 @@ workflow EAR {
             }
             .set { merquryfk_input }
 
+
         //
         // MODULE: MERQURYFK PLOTS OF GENOME
         //
@@ -130,20 +136,43 @@ workflow EAR {
         ch_versions = ch_versions.mix(MERQURYFK_MERQURYFK.out.versions)
     }
 
+
     //
     // LOGIC: STEP TO STOP BTK RUNNING IF SPECIFIED BY USER
     //
     if (!exclude_steps.contains("btk")) {
         //
-        // MODULE: GENERATE_SAMPLESHEET creates a csv for the blobtoolkit pipeline
+        // MODULE: GENERATE A CSV SAMPLESHEET REQUIRED FOR BTK
         //
         GENERATE_BTK_SAMPLESHEET(
             ch_sample_id,
             ch_longread_dir,
         )
 
+
         //
-        // MODULE: Run Sanger-ToL/BlobToolKit
+        // MODULE: GENERATE PARAMS FILE INPUT FOR BTK
+        //         NO VERSIONS OUTPUT FROM EXEC MODULE
+        //
+        BTK_INPUT(
+            ch_reference_hap1,
+            ch_btk_un_diamond_db,
+            ch_btk_nt_db,
+            ch_btk_un_diamond_db,
+            ch_btk_ncbi_taxonomy_path,
+            ch_busco_lineages,
+            ch_btk_taxid,
+            ch_busco_config.ifEmpty([]),
+            [
+                //  'accession': 'GCA_0001',
+                'use_work_dir_as_temp': true,
+                'align': true,
+            ],
+        )
+
+
+        //
+        // MODULE: RUN SANGER_TOL/BLOBTOOLKIT
         //
         SANGER_TOL_BTK(
             'sanger-tol/blobtoolkit',
@@ -154,21 +183,7 @@ workflow EAR {
                 "-ansi-log false",
                 params.btk_nf_params ?: "",
             ].minus("").join(" "),
-            BTK_INPUT(
-                ch_reference_hap1,
-                ch_btk_un_diamond_db,
-                ch_btk_nt_db,
-                ch_btk_un_diamond_db,
-                ch_btk_ncbi_taxonomy_path,
-                ch_busco_lineages,
-                ch_btk_taxid,
-                ch_busco_config.ifEmpty([]),
-                [
-                    //  'accession': 'GCA_0001',
-                    'use_work_dir_as_temp': true,
-                    'align': true,
-                ],
-            ).json_params_file,
+            BTK_INPUT.out.json_params_file,
             GENERATE_BTK_SAMPLESHEET.out.csv.map{ _meta, btk_samplesheet -> btk_samplesheet },
             params.btk_extra_config ? file(params.btk_extra_config, checkIfExists: true) : [],
             workflow.workDir.resolve('sanger-tol/blobtoolkit').toUriString(),
@@ -185,6 +200,20 @@ workflow EAR {
     if (!exclude_steps.contains("cpretext")) {
 
         //
+        // MODULE: GENERATE INPUT PARAMS FILE FOR CPRETEXT
+        //         NO VERSIONS OUTPUT FROM EXEC MODULE
+        //
+        CPRETEXT_INPUT(
+            ch_reference_hap1,
+            ch_longread_dir,
+            ch_cpretext_hic_dir,
+            ch_cpretext_telomotif.map { it -> it[1] },
+            ch_cpretext_aligner,
+            [:],
+        )
+
+
+        //
         // MODULE: Run SANGER-TOL/CurationPretext
         //
         SANGER_TOL_CPRETEXT(
@@ -196,14 +225,7 @@ workflow EAR {
                 "-ansi-log false",
                 params.cpretext_nf_params?: "",
             ].minus("").join(" "),
-            CPRETEXT_INPUT(
-                ch_reference_hap1,
-                ch_longread_dir,
-                ch_cpretext_hic_dir,
-                ch_cpretext_telomotif.map { it -> it[1] },
-                ch_cpretext_aligner,
-                [:],
-            ).json_params_file,
+            CPRETEXT_INPUT.out.json_params_file,
             ch_reference_hap1.map{ _meta, primary_assembly -> primary_assembly },
             params.cpretext_extra_config ? file(params.cpretext_extra_config, checkIfExists: true) : [],
             workflow.workDir.resolve('sanger-tol/curationpretext').toUriString(),

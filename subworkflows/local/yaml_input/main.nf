@@ -16,23 +16,32 @@ workflow YAML_INPUT {
     //
     def ch_hap1 = Channel.fromPath(inputs.reference_hap1, checkIfExists: true)
         .map { fasta -> tuple([id: inputs.assembly_id, file: 'hap1'], fasta) }
+
     def ch_hap2 = inputs.reference_hap2
         ? Channel.fromPath(inputs.reference_hap2, checkIfExists: true).map { fasta -> tuple([id: inputs.assembly_id, file: 'hap2'], fasta) }
         : Channel.empty()
+
     def ch_haplotigs = inputs.reference_haplotigs
         ? Channel.fromPath(inputs.reference_haplotigs, checkIfExists: true).map { fasta -> tuple([id: inputs.assembly_id, file: 'haplotigs'], fasta) }
         : Channel.empty()
-    GUNZIP(ch_hap1.mix(ch_hap2, ch_haplotigs).filter { _meta, fasta -> fasta.endsWith('.gz') })
+
+    GUNZIP(
+        ch_hap1
+            .mix(ch_hap2, ch_haplotigs)
+            .filter { _meta, fasta -> fasta.endsWith('.gz') }
+    )
     ch_versions = ch_versions.mix(GUNZIP.out.versions.first())
 
     reference_hap1 = ch_hap1
         .filter { _meta, fasta -> !fasta.endsWith('.gz') }
         .mix(GUNZIP.out.gunzip.filter { meta, _fasta -> meta.file == 'hap1' })
         .map { meta, fasta -> tuple(meta.subMap('id'), fasta) }
+
     reference_hap2 = ch_hap2
         .filter { _meta, fasta -> !fasta.endsWith('.gz') }
         .mix(GUNZIP.out.gunzip.filter { meta, _fasta -> meta.file == 'hap2' })
         .map { _meta, fasta -> fasta }
+
     reference_haplotigs = ch_haplotigs
         .filter { _meta, fasta -> !fasta.endsWith('.gz') }
         .mix(GUNZIP.out.gunzip.filter { meta, _fasta -> meta.file == 'haplotigs' })

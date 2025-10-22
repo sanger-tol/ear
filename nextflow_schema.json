@@ -43,6 +43,44 @@
                 }
             }
         },
+        "nested_pipeline_options": {
+            "title": "Options used to modify nested pipelines",
+            "type": "object",
+            "fa_icon": "fas fa-terminal",
+            "description": "Parameters used to describe options required for the CurationPretext and BlobToolKit pipelines nestes in EAR",
+            "properties": {
+                "btk_version": {
+                    "type": "string",
+                    "description": "The released tag version of the pipeline, e.g. 0.9.0",
+                    "default": "0.9.0"
+                },
+                "btk_nf_params": {
+                    "type": "string",
+                    "description": "Extra nextflow flags needed for pipeline customisation",
+                    "default": null
+                },
+                "btk_extra_config": {
+                    "type": "string",
+                    "description": "File containing custom configs, such as resources,for the pipeline",
+                    "default": null
+                },
+                "cpretext_version": {
+                    "type": "string",
+                    "description": "The released tag version of the pipeline, e.g. 1.5.1",
+                    "default": "1.5.1"
+                },
+                "cpretext_nf_params": {
+                    "type": "string",
+                    "description": "Extra nextflow flags needed for pipeline customisation",
+                    "default": null
+                },
+                "cpretext_extra_config": {
+                    "type": "string",
+                    "description": "File containing custom configs, such as resources,for the pipeline",
+                    "default": null
+                }
+            }
+        },
         "institutional_config_options": {
             "title": "Institutional config options",
             "type": "object",
@@ -172,6 +210,9 @@
         },
         {
             "$ref": "#/$defs/generic_options"
+        },
+        {
+            "$ref": "#/$defs/nested_pipeline_options"
         }
     ]
 }
