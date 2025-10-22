@@ -143,6 +143,7 @@ workflow EAR {
     if (!exclude_steps.contains("btk")) {
         //
         // MODULE: GENERATE A CSV SAMPLESHEET REQUIRED FOR BTK
+        //         NO VERSIONS OUTPUT FROM EXEC MODULE
         //
         GENERATE_BTK_SAMPLESHEET(
             ch_sample_id,
