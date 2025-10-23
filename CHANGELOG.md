@@ -13,6 +13,7 @@ Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologi
 - Addition of `{BTK,CPRETEXT}_INPUT` exec modules to generate a params-file json @mahesh-panchal
 - Re-written `GENERATE_SAMPLESHEET` as `GENERATE_BTK_SAMPLESHEET` which is now an exec module.
 - Re-organisation of `YAML_INPUT` @mahesh-panchal
+- Values of `[]` in the input yaml will create a Channel.empty() rather than error.
 
 ### Software dependencies
 
