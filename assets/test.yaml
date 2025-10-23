@@ -35,4 +35,4 @@ btk:
   diamond_uniprot_database_path: []
   diamond_nr_database_path: []
   ncbi_taxonomy_path: []
-  config: /home/runner/work/ear/ear/conf/sanger-tol-btk.config
+  config: /home/runner/work/ear/ear/assets/blobtoolkit.config
