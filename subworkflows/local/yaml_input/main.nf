@@ -49,24 +49,28 @@ workflow YAML_INPUT {
 
     emit:
     sample_id               = Channel.of([id: inputs.assembly_id])
-    longread_type           = Channel.of(inputs.longread.type)
-    longread_dir            = Channel.fromPath(inputs.longread.dir, checkIfExists: true, type: 'dir')
+    longread_type           = inputs.longread.type ? Channel.of(inputs.longread.type): Channel.empty()
+    longread_dir            = inputs.longread.dir ? Channel.fromPath(inputs.longread.dir, checkIfExists: true, type: 'dir') : Channel.empty()
     reference_hap1
     reference_hap2
     reference_haplotigs
-    cpretext_aligner        = Channel.of(inputs.curationpretext.aligner)
-    cpretext_telomere_motif = Channel.of([id: inputs.assembly_id], inputs.curationpretext.telomere_motif)
-    cpretext_hic_dir        = Channel.fromPath(inputs.curationpretext.hic_dir, checkIfExists: true, type: 'dir')
-    fastk_hist              = Channel.fromPath(inputs.merquryfk.fastk_hist, checkIfExists: true)
-    fastk_ktab              = Channel.fromPath(inputs.merquryfk.fastk_ktab, hidden: true).collect() // Collect as a list
-    btk_nt_database         = Channel.fromPath(inputs.btk.nt_database, checkIfExists: true)
-    btk_nt_database_prefix  = Channel.of(inputs.btk.nt_database_prefix)
-    btk_nr_diamond_database = Channel.fromPath(inputs.btk.diamond_nr_database_path, checkIfExists: true)
-    btk_un_diamond_database = Channel.fromPath(inputs.btk.diamond_uniprot_database_path, checkIfExists: true)
-    btk_ncbi_taxonomy_path  = Channel.fromPath(inputs.btk.ncbi_taxonomy_path, checkIfExists: true)
-    btk_taxid               = Channel.of(inputs.btk.taxid)
-    btk_gca_accession       = Channel.of(inputs.btk.gca_accession)
-    busco_lineages          = Channel.of(inputs.btk.lineages)
+
+    cpretext_aligner        = inputs.curationpretext.aligner ? Channel.of(inputs.curationpretext.aligner) : Channel.empty()
+    cpretext_telomere_motif = inputs.curationpretext.telomere_motif ? Channel.of([id: inputs.assembly_id], inputs.curationpretext.telomere_motif) : Channel.empty()
+    cpretext_hic_dir        = inputs.curationpretext.hic_dir ? Channel.fromPath(inputs.curationpretext.hic_dir, checkIfExists: true, type: 'dir') : Channel.empty()
+
+    fastk_hist              = inputs.merquryfk.fastk_hist ? Channel.fromPath(inputs.merquryfk.fastk_hist, checkIfExists: true) : Channel.empty()
+    fastk_ktab              = inputs.merquryfk.fastk_ktab ? Channel.fromPath(inputs.merquryfk.fastk_ktab, hidden: true).collect()  : Channel.empty() // Collect as a list
+
+    btk_nt_database         = inputs.btk.nt_database ? Channel.fromPath(inputs.btk.nt_database, checkIfExists: true) : Channel.empty()
+    btk_nt_database_prefix  = inputs.btk.nt_database_prefix ? Channel.of(inputs.btk.nt_database_prefix) : Channel.empty()
+    btk_nr_diamond_database = inputs.btk.diamond_nr_database_path ? Channel.fromPath(inputs.btk.diamond_nr_database_path, checkIfExists: true) : Channel.empty()
+    btk_un_diamond_database = inputs.btk.diamond_uniprot_database_path ? Channel.fromPath(inputs.btk.diamond_uniprot_database_path, checkIfExists: true) : Channel.empty()
+    btk_ncbi_taxonomy_path  = inputs.btk.ncbi_taxonomy_path ? Channel.fromPath(inputs.btk.ncbi_taxonomy_path, checkIfExists: true) : Channel.empty()
+    btk_taxid               = inputs.btk.taxid ? Channel.of(inputs.btk.taxid) : Channel.empty()
+    btk_gca_accession       = inputs.btk.gca_accession ? Channel.of(inputs.btk.gca_accession) : Channel.empty()
+    busco_lineages          = inputs.btk.lineages ? Channel.of(inputs.btk.lineages) : Channel.empty()
     busco_config            = inputs.btk.config ? Channel.fromPath(inputs.btk.config, checkIfExists: true) : Channel.empty()
+
     versions                = ch_versions
 }
