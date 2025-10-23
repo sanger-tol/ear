@@ -26,6 +26,11 @@ reference_haplotigs: <LOCATION OF THE HAPLOTIGS FILE, REMOVED DURING CURATION .F
 # If a mapped bam already exists use the below + --mapped TRUE on the nextflow command else ignore it and the pipeline will create it.
 mapped_bam: <MAPPED BAM .BAM>
 
+###
+# REPLACING ANY VALUE BEYOND THIS POINT WITH `[]` WILL STOP THAT
+# COMPONENT AND ANY RELIANT ON IT FROM RUNNING
+###
+
 merquryfk:
   fastk_hist: <THE PATH TO THE .HIST FILE>
   fastk_ktab: <PATH TO THE DIRECTORY CONTAINING THE KTAB FILES, ENSURE THE HIDDEN FILES ARE HERE TOO>
@@ -40,7 +45,7 @@ curationpretext:
   hic_dir: <DIRECTORY OF HIC READ FILES .CRAM AND .CRAI>
 btk:
   taxid: 1464561
-  lineages: <CSV LIST OF DATABASES TO USE: "insecta_odb10,diptera_odb10">
+  lineages: <CSV LIST OF DATABASES TO USE "insecta_odb10,diptera_odb10">
   gca_accession: GCA_0001 <DEFAULT, DO NOT CHANGE UNLESS YOU HAVE A GCA_ACCESSION FOR YOUR SPECIES>
   nt_database: <DIRECTORY CONTAINING BLAST DB>
   nt_database_prefix: <BLASTDB PREFIX>
