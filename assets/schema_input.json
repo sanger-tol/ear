@@ -131,13 +131,6 @@
                         "type": "string",
                         "errorMessage": "Directory for tax2taxid"
                     },
-                    "ncbi_rankedlineage_path": {
-                        "type": "string",
-                        "format": "file-path",
-                        "exists": true,
-                        "pattern": "^\\S+\\.dmp$",
-                        "errorMessage": "Taxonomy dump"
-                    },
                     "config": {
                         "type": "string",
                         "format": "file-path",

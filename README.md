@@ -70,7 +70,6 @@ btk:
   diamond_uniprot_database_path: <PATH TO reference_proteomes.dmnd FROM UNIPROT>
   diamond_nr_database_path: <PATH TO nr.dmnd>
   ncbi_taxonomy_path: <DIRECTORY CONTAINING THE TAXDUMP>
-  ncbi_rankedlineage_path: <FOLDER CONTAINING THE rankedlineage.dmp FILE>
   config: <PATH TO ear/conf/sanger-tol-btk.config TO OVERWRITE PROCESS LIMITS>
 ```
 
