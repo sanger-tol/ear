@@ -4,7 +4,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Naming based on: [Audiologists](https://en.wikipedia.org/wiki/Category:Audiologists).
 
-## v0.8.0 - Marion Downs [##/##/2025]
+## v0.8.0 - Marion Downs [28/10/2025]
 
 - `curationpretext` now uses NF-cascade (v2) @mahesh-panchal
 - `blobtoolkit` now uses NF-cascade (v2) @mahesh-panchal
