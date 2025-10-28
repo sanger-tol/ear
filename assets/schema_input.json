@@ -1,9 +1,9 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://raw.githubusercontent.com/sanger-tol/ear/master/assets/schema_input.json",
     "title": "sanger-tol/ear pipeline - params.input schema",
     "description": "Schema for the file provided with params.input",
-    "type": "array",
+    "type": "object",
     "items": {
         "type": "object",
         "properties": {
@@ -53,6 +53,9 @@
                     },
                     "fastk_ktab": {
                         "type": "string",
+                        "format": "file-path",
+                        "exists": true,
+                        "pattern": "^\\S+\\.ktab$",
                         "errorMessage": "Directory containing ktab files"
                     }
                 }
@@ -127,13 +130,6 @@
                     "ncbi_taxonomy_path": {
                         "type": "string",
                         "errorMessage": "Directory for tax2taxid"
-                    },
-                    "ncbi_rankedlineage_path": {
-                        "type": "string",
-                        "format": "file-path",
-                        "exists": true,
-                        "pattern": "^\\S+\\.dmp$",
-                        "errorMessage": "Taxonomy dump"
                     },
                     "config": {
                         "type": "string",

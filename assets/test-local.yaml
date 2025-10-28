@@ -1,0 +1,40 @@
+# General Vales for all subpiplines and modules
+assembly_id: grTriPseu1
+reference_hap1: /nfs/treeoflife-01/teams/tola/users/dp24/ear/TreeValTinyData/assembly/draft/grTriPseu1.fa
+reference_hap2: /nfs/treeoflife-01/teams/tola/users/dp24/ear/TreeValTinyData/assembly/draft/grTriPseu1-hap.fa
+reference_haplotigs: /nfs/treeoflife-01/teams/tola/users/dp24/ear/TreeValTinyData/assembly/draft/grTriPseu1-all_hap.fa
+
+# If a mapped bam already exists use the below + --mapped TRUE on the nextflow command else ignore.
+mapped_bam: []
+
+###
+# REPLACING ANY VALUE BEYOND THIS POINT WITH `[]` WILL STOP THAT
+# COMPONENT AND ANY RELIANT ON IT FROM RUNNING
+###
+merquryfk:
+  fastk_hist: /nfs/treeoflife-01/teams/tola/users/dp24/ear/TreeValTinyData/genomic_data/pacbio/kmer.31/gfTriPseu1.50000.k31.hist
+  fastk_ktab: /nfs/treeoflife-01/teams/tola/users/dp24/ear/TreeValTinyData/genomic_data/pacbio/kmer.31/
+
+# Used by both subpipelines
+longread:
+  type: hifi
+  dir: /nfs/treeoflife-01/teams/tola/users/dp24/ear/TreeValTinyData/genomic_data/pacbio/
+
+curationpretext:
+  aligner: minimap2
+  telomere_motif: TTAGGG
+  hic_dir: /nfs/treeoflife-01/teams/tola/users/dp24/ear/TreeValTinyData/genomic_data/hic-arima/
+btk:
+  reads_layout: "SINGLE"
+  taxid: 352914
+  lineages: "fungi_odb10"
+
+  # NO TOUCH
+  gca_accession: GCA_0001
+  nt_database: /lustre/scratch122/tol/resources/nt/latest/
+  nt_database_prefix: nt
+  diamond_uniprot_database_path: /lustre/scratch122/tol/resources/uniprot_reference_proteomes/latest/reference_proteomes.dmnd
+  diamond_nr_database_path: /lustre/scratch122/tol/resources/nr/latest/nr.dmnd
+  ncbi_taxonomy_path: /lustre/scratch122/tol/resources/taxonomy/latest/new_taxdump/
+  ncbi_rankedlineage_path: /lustre/scratch122/tol/resources/taxonomy/latest/new_taxdump/rankedlineage.dmp
+  config: /nfs/treeoflife-01/teams/tola/users/dp24/ear/assets/blobtoolkit.config
