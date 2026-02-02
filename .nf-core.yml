@@ -9,19 +9,39 @@ lint:
     - .github/workflows/awsfulltest.yml
     - conf/igenomes.config
   files_unchanged:
+    - LICENSE
     - CODE_OF_CONDUCT.md
+    - .prettierignore
     - assets/nf-core-ear_logo_light.png
     - docs/images/nf-core-ear_logo_light.png
     - docs/images/nf-core-ear_logo_dark.png
     - .github/ISSUE_TEMPLATE/bug_report.yml
-  multiqc_config:
-    - report_comment
+    - .github/CONTRIBUTING.md
+    - .github/PULL_REQUEST_TEMPLATE.md
+    - .github/workflows/branch.yml
+    - .github/workflows/linting_comment.yml
+    - .github/workflows/linting.yml
+    - assets/email_template.html
+    - assets/sendmail_template.txt
+  multiqc_config: false
   nextflow_config:
     - manifest.name
     - manifest.homePage
-nf_core_version: 2.14.1
+nf_core_version: 3.5.2
 repository_type: pipeline
 template:
-  prefix: sanger-tol
-  skip:
+  author: DLBPointon
+  description: ERGA Assembly Report pipeline
+  force: false
+  is_nfcore: false
+  name: ear
+  org: sanger-tol
+  outdir: .
+  skip_features:
     - igenomes
+    - codespaces
+    - fastqc
+    - adaptivecard
+    - seqera_platform
+    - multiqc
+  version: 0.8.0
