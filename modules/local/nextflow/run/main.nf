@@ -6,6 +6,7 @@ process NEXTFLOW_RUN {
     input:
     val pipeline_name     // String
     val nextflow_opts     // String
+    tuple val(meta), path(files) // Tuple meta, longread path
     val params_file       // pipeline params-file
     val samplesheet       // pipeline samplesheet
     val additional_config // custom configs
@@ -30,6 +31,7 @@ process NEXTFLOW_RUN {
         "--outdir ${task.workDir}/results",
     ].join(" ")
     // Copy command to shell script in work dir for reference/debugging.
+    // COPY THE INPUT TO THE FOLDER!!!
     file("${task.workDir}/nf-cmd.sh").text = nxf_cmd
     // Run nextflow command locally in cache directory
     def process = nxf_cmd.execute(null, cache_path.toFile())
