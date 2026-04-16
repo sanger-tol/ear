@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://raw.githubusercontent.com/sanger-tol/ear/main/nextflow_schema.json",
+    "$id": "https://raw.githubusercontent.com/sanger-tol/ear/master/nextflow_schema.json",
     "title": "sanger-tol/ear pipeline parameters",
     "description": "ERGA Assembly Report pipeline",
     "type": "object",
