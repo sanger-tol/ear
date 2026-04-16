@@ -1,7 +1,7 @@
 name: Fix linting from a comment
 on:
   issue_comment:
-    types: [ created ]
+    types: [created]
 
 jobs:
   fix-linting:
