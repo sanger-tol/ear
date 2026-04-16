@@ -11,7 +11,9 @@
                 "type": "string",
                 "pattern": "^\\S+$",
                 "errorMessage": "Sample name must be provided and cannot contain spaces",
-                "meta": ["id"]
+                "meta": [
+                    "id"
+                ]
             },
             "reference_hap1": {
                 "type": "string",
@@ -140,6 +142,10 @@
                 }
             }
         },
-        "required": ["sample", "reference_hap1", "reference_hap2"]
+        "required": [
+            "sample",
+            "reference_hap1",
+            "reference_hap2"
+        ]
     }
 }
