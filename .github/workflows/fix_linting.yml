@@ -1,17 +1,15 @@
 name: Fix linting from a comment
 on:
   issue_comment:
-    types: [ created ]
+    types: [created]
 
 jobs:
   fix-linting:
     # Only run if comment is on a PR with the main repo, and if it contains the magic keywords
     if: >
-<<<<<<< HEAD:.github/workflows/fix-linting.yml
-      contains(github.event.comment.html_url, '/pull/') && contains(github.event.comment.body, '@nf-core-bot fix linting') && github.repository == 'sanger-tol/treeval'
-=======
-      contains(github.event.comment.html_url, '/pull/') && contains(github.event.comment.body, '@nf-core-bot fix linting') && github.repository == 'sanger-tol/ear'
->>>>>>> 22beb48db30c36a209bf378c13922c5015ce45fc:.github/workflows/fix_linting.yml
+      contains(github.event.comment.html_url, '/pull/') &&
+      contains(github.event.comment.body, '@nf-core-bot fix linting') &&
+      github.repository == 'sanger-tol/ear'
     runs-on: ubuntu-latest
     steps:
       # Use the @nf-core-bot token to check out so we can push later
