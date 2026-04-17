@@ -9,11 +9,7 @@ repos:
     rev: v6.0.0
     hooks:
       - id: trailing-whitespace
-<<<<<<< HEAD
-        args: [ --markdown-linebreak-ext=md ]
-=======
         args: [--markdown-linebreak-ext=md]
->>>>>>> 22beb48db30c36a209bf378c13922c5015ce45fc
         exclude: |
           (?x)^(
               .*ro-crate-metadata.json$|
