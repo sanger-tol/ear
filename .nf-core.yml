@@ -11,23 +11,23 @@ lint:
   files_unchanged:
     - LICENSE
     - CODE_OF_CONDUCT.md
-    - .prettierignore
     - assets/nf-core-ear_logo_light.png
     - docs/images/nf-core-ear_logo_light.png
     - docs/images/nf-core-ear_logo_dark.png
-    - .github/ISSUE_TEMPLATE/bug_report.yml
     - .github/CONTRIBUTING.md
+    - .github/ISSUE_TEMPLATE/bug_report.yml
     - .github/PULL_REQUEST_TEMPLATE.md
     - .github/workflows/branch.yml
-    - .github/workflows/linting_comment.yml
     - .github/workflows/linting.yml
+    - .github/ISSUE_TEMPLATE/bug_report.yml
+    - .prettierignore
     - assets/email_template.html
     - assets/sendmail_template.txt
   multiqc_config: false
   nextflow_config:
     - manifest.name
     - manifest.homePage
-nf_core_version: 3.2.0
+nf_core_version: 3.5.2
 repository_type: pipeline
 template:
   author: DLBPointon
