@@ -5,7 +5,7 @@ name: nf-core linting
 on:
   pull_request:
   release:
-    types: [ published ]
+    types: [published]
 
 jobs:
   pre-commit:
